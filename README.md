@@ -2,6 +2,8 @@
 
 ### Persistent Heuristics I: Mini Monograph I
 
+Part of the [Persistent Heuristics](https://github.com/E-Peter-Shiller/Persistent_Heuristics) series.
+
 This repository contains the Python code accompanying the paper, which is available at two permanent open-access locations:
 
 **Zenodo**: [https://doi.org/10.5281/zenodo.18783098](https://doi.org/10.5281/zenodo.18783098)
