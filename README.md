@@ -1,6 +1,6 @@
-# Persistent Heuristics Part I
+# Unconditional Density Bounds for Quadratic Norm-Form Energies via Lorentzian Spectral Weights
 
-## Unconditional Density Bounds for Quadratic Norm-Form Energies via Lorentzian Spectral Weights
+### Persistent Heuristics I: Mini Monograph I
 
 This repository contains the Python code accompanying the paper:
 
