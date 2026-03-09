@@ -72,8 +72,10 @@ Algorithm
 Rigorousness checklist
 ----------------------
   (a) All arithmetic uses ARB ball arithmetic at 512-bit working precision
-      (~154 decimal digits).  No mpmath or float arithmetic is used inside
-      any certified computation.
+      (~154 decimal digits).  Subinterval endpoints are exact: T0_arb for
+      the first left endpoint, then exact integers arb(str(n)) for all
+      remaining endpoints.  No float arithmetic is used inside any certified
+      computation.
   (b) Each zero ordinate is loaded as an ARB ball; the ball radius encloses
       the rounding error of the 31-digit string representation.
   (c) The tail bound uses no numerical quadrature.  Every subinterval
@@ -87,9 +89,14 @@ Rigorousness checklist
 
 External dependencies
 ---------------------
-  zeta_zeros.py: first 6000 LMFDB Riemann zeta zeros at 31 decimal places.
-    This is the only external data dependency.  The Trudgian tail bound and
-    analytic remainder are purely analytic; no further zero data is used.
+  zeta_zeros.py: first 6000 LMFDB Riemann zeta zeros at 31 decimal places
+    (LMFDB, accessed 2026-03-06).  The zero ordinates are treated as trusted
+    input: this script certifies the bound S_zeta* relative to the imported
+    dataset, but does not independently certify the zero ordinates themselves.
+    The Trudgian tail bound and analytic remainder are purely analytic; no
+    further zero data is used.  A reader wishing a fully self-contained
+    certificate would need an independent verification of the 6000 LMFDB
+    ordinates (e.g., via sign changes of the Hardy Z-function).
 
 No L-function zero ordinate data from any appendix is used in this computation.
 
@@ -196,40 +203,49 @@ def compute_partial_sum():
 # Step 2: tail bound over [T0, 1e6]
 # ---------------------------------------------------------------------------
 
-def build_subintervals(T0_float):
+def build_subintervals_arb(T0_arb):
     """
-    Build the 235 subintervals covering [T0, 1e6].
+    Build the 235 subintervals covering [T0, 1e6] as pairs of ARB balls.
 
-    Width 100 for T0 <= t <= 20000, width 10000 for 20000 < t <= 1e6.
-    Endpoints are stored as Python floats for interval construction; each
-    is immediately converted to arb(str(...)) inside the tail computation.
+    All endpoints are exact: T0_arb for the first left endpoint, then
+    exact integers (arb(str(n))) for every subsequent endpoint.  No Python
+    float arithmetic is used.
+
+    Partition:
+      [T0_arb, arb("6400")],
+      [arb("6400"), arb("6500")], ..., [arb("19900"), arb("20000")],  (137 total)
+      [arb("20000"), arb("30000")], ..., [arb("990000"), arb("1000000")]  (98 total)
+    Total: 235 subintervals, matching the paper.
+
+    The first breakpoint 6400 is the smallest multiple of 100 exceeding
+    gamma_6000 + 0.01 ~ 6365.86; this is verified by the certified ARB
+    comparison arb("6400") > T0_arb in compute_tail_235.
     """
     subs = []
-    a = T0_float
-    while a < 20000.0:
-        b = min(a + 100.0, 20000.0)
-        subs.append((a, b))
-        a = b
-    while a < 1e6:
-        b = min(a + 10000.0, 1e6)
-        subs.append((a, b))
-        a = b
+    # First interval: [T0, 6400] (T0 is ARB; 6400 is an exact integer)
+    subs.append((T0_arb, arb("6400")))
+    # Remaining batch 1: exact integer endpoints, width 100
+    for a_int in range(6400, 20000, 100):
+        subs.append((arb(str(a_int)), arb(str(a_int + 100))))
+    # Batch 2: exact integer endpoints, width 10000
+    for a_int in range(20000, 1000000, 10000):
+        subs.append((arb(str(a_int)), arb(str(a_int + 10000))))
     return subs
 
 
-def compute_tail_235(T0_arb, T0_float):
+def compute_tail_235(T0_arb):
     """
     Compute the subinterval tail over [T0, 1e6].
 
-    Returns the certified ARB upper bound on sum_{gamma > T0} w(gamma)
-    restricted to the 235-subinterval range.
+    All subinterval endpoints are exact ARB expressions (see build_subintervals_arb).
+    Returns the certified ARB upper bound and the number of subintervals.
     """
-    subs   = build_subintervals(T0_float)
-    total  = arb(0)
-    for (a_f, b_f) in subs:
-        a     = arb(str(a_f))
-        b     = arb(str(b_f))
-        nu_b  = N_upper_arb(b, T0_arb)
+    assert bool(arb("6400") > T0_arb), \
+        "First breakpoint 6400 must exceed T0; check gamma_6000 value."
+    subs  = build_subintervals_arb(T0_arb)
+    total = arb(0)
+    for (a, b) in subs:
+        nu_b   = N_upper_arb(b, T0_arb)
         excess = nu_b - arb(K)
         if bool(excess > arb(0)):
             total += excess * antideriv(a, b)
@@ -275,9 +291,8 @@ if __name__ == "__main__":
     # Step 2
     gamma_K = arb(_META["gamma_6000"])
     T0_arb  = gamma_K + T0_OFFSET
-    T0_float = float(gamma_K) + 0.01
     print(f"Step 2: Tail bound over [T0, 1e6], T0 = gamma_6000 + 0.01 = {float(T0_arb):.6f}")
-    tail_235, n_subs = compute_tail_235(T0_arb, T0_float)
+    tail_235, n_subs = compute_tail_235(T0_arb)
     print(f"  Subintervals             : {n_subs}  (paper: 235)")
     print(f"  Subinterval tail         : {float(tail_235):.6e}  (paper: <= 4.31e-4)")
     print()
