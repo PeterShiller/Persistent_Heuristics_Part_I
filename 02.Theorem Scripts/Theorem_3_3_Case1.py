@@ -1,82 +1,87 @@
 """
-Theorem_3_3_Case1.py  —  Certified verification of Theorem 3.3 (Unconditional
-Cesaro Variance Bound), Case 1: d >= 14.
+Theorem 3.3: Unconditional Cesaro Variance Bound, Case 1
+=========================================================
+Ancillary data module for:
+    Shiller, P. (2026). Unconditional Density Bounds for Quadratic
+    Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
+    https://doi.org/10.5281/zenodo.18783098
 
-  "For every squarefree d >= 14 and every T > 0,
-   <S_L^2>_T  >  (S_zeta*)^2 / d."
+This module certifies Case 1 of Theorem 3.3 of the above reference.  For
+every squarefree d >= 14 and every T > 0,
 
-Citation
---------
-  Shiller, P. (2026). Unconditional Density Bounds for Quadratic Norm-Form
-  Energies via Lorentzian Spectral Weights. Zenodo.
-  https://doi.org/10.5281/zenodo.18783098
+    h(T) := <S_L^2>_T  >  (S_zeta*)^2 / d,
 
-Proof structure and certification
-----------------------------------
-The Cesaro average h(T) = <S_L^2>_T is evaluated at the worst-case five-zero
-configuration
+where h(T) is the Cesaro average of the squared spectral sum evaluated at the
+worst-case five-zero configuration gamma' in {6.0, 7.25, 8.5, 9.75, 11.0}
+with weights b_k = 2 / (1 + gamma_k'^2).
 
-    gamma' in {6.0, 7.25, 8.5, 9.75, 11.0},   b_k = 2 / (1 + gamma_k^2),
+Algorithm
+---------
+  h(T) is evaluated via the explicit bilinear form
 
-via the explicit bilinear form
+      h(T) = sum_{j,k} b_j b_k F(gamma_j', gamma_k', T),
 
-    h(T) = sum_{j,k} b_j b_k F(gamma_j', gamma_k', T),
+  where
+      F(a, a, T) = 1/2 + sin(2aT) / (4aT),
+      F(a, b, T) = sin((a-b)T) / (2(a-b)T) + sin((a+b)T) / (2(a+b)T).
 
-where
-    F(a, a, T) = 1/2 + sin(2aT) / (4aT),
-    F(a, b, T) = sin((a-b)T) / (2(a-b)T) + sin((a+b)T) / (2(a+b)T),  a != b.
-
-The proof uses three regions that together cover all T > 0.
+  Three regions cover all T > 0:
 
   Region 1  T in (0, 0.01]
-    As T -> 0+, h(T) -> h(0) = (sum b_k)^2 = W_1(L)^2.  Since h is Lipschitz
-    with constant L = (1/2) * sum_{j,k} b_j b_k max(gamma_j', gamma_k'), the
-    bound h(T) >= h(0) - L * T holds for all T.  At T = 0.01 this gives a
-    certified lower bound of 0.02325, exceeding the threshold by 137x.
+    h is Lipschitz with constant L = (1/2) * sum_{j,k} b_j b_k max(g_j, g_k).
+    The bound h(T) >= h(0) - L * T, with h(0) = (sum b_k)^2, certifies the
+    inequality for all T in (0, 0.01].  Certified lower bound 0.02325,
+    exceeding the threshold by 137x.
 
   Region 2  T in [0.01, 50]
-    A grid scan over 99981 equally spaced points (spacing Delta = 5e-4) evaluates
-    h(T) in ARB ball arithmetic at each grid point.  Nodes are generated as
+    A grid scan over 99981 equally spaced ARB points (spacing Delta = 5e-4)
+    evaluates h(T) in ARB ball arithmetic.  Nodes are generated as
     GRID_START + arb(n) * DELTA for integer n; no float-driven accumulation.
     The Lipschitz bound certifies that the continuous minimum is at least
-    (grid minimum) - L * Delta.  The certified minimum is 0.001953,
-    exceeding the threshold by 11.5x.
+    (grid minimum) - L * Delta.  Certified minimum 0.001953, exceeding the
+    threshold by 11.5x.
 
   Region 3  T >= 50
-    The analytic bound h(T) >= c_0 * W_2 - I / T holds for all T > 0, where
-      c_0 = (pi - 1) / (2*pi)   [lower bound on F(a, a, T) for all T],
-      W_2 = sum_k b_k^2         [second moment of the weights],
-      I   = sum_{j!=k} b_j b_k [1/(2|g_j-g_k|) + 1/(2(g_j+g_k))]  [interference].
-    The critical threshold T_crit = I / (c_0 * W_2 - threshold) is certified
-    in ARB; since T_crit < 50, the bound holds for all T >= 50.
+    The analytic bound h(T) >= c_0 * W_2 - I / T applies for all T, where
+      c_0 = (pi - 1) / (2*pi),   W_2 = sum_k b_k^2,
+      I = sum_{j!=k} b_j b_k [1/(2|g_j-g_k|) + 1/(2(g_j+g_k))].
+    T_crit = I / (c_0 * W_2 - threshold) is certified < 50 in ARB, so the
+    bound holds for all T >= 50.
 
-The three regions overlap at T = 0.01 and T = 50, jointly covering all T > 0.
+  The threshold is (S_zeta*)^2 / 14, where S_zeta* = 0.04871 is the certified
+  upper bound from Proposition [Explicit value of S_zeta] of the paper,
+  established via 6000 LMFDB Riemann zeta zeros and a Trudgian tail bound.
+  It is used here as a certified constant; this script does not re-derive it.
+  The five-zero configuration is the worst-case hypothetical extremal; every
+  actual squarefree d >= 14 has more zeros and a strictly better margin.
 
 Rigorousness checklist
------------------------
-  (a) All function evaluations inside h_arb use ARB ball arithmetic (arb.sin,
-      arb arithmetic).  Grid nodes in Region 2 are generated as
-      GRID_START + arb(n) * DELTA for integer n; no float-driven state updates.
-  (b) The Lipschitz constant, h(0), W_2, I, c_0, threshold, and T_crit are all
-      computed and stored as ARB balls.
-  (c) The grid scan produces a certified interval with radius below 1e-150 at
-      each of the 99981 grid points.  The Lipschitz discretization error L*Delta
-      is subtracted as an ARB quantity before comparison.
+----------------------
+  (a) All function evaluations inside h_arb use ARB ball arithmetic
+      (arb.sin, arb arithmetic).  Grid nodes in Region 2 are generated as
+      GRID_START + arb(n) * DELTA for integer n; no float-driven state
+      updates are used inside any certified computation.
+  (b) The Lipschitz constant, h(0), W_2, I, c_0, threshold, and T_crit
+      are all computed and stored as ARB balls.
+  (c) The grid scan produces a certified interval with radius below 1e-150
+      at each grid point.  The Lipschitz discretization error L*Delta is
+      subtracted as an ARB quantity before the threshold comparison.
   (d) All pass/fail predicates are evaluated as ARB comparisons.  float()
       conversion is used only after all certification is complete, for display.
-  (e) This function is never called at T = 0; Region 1 uses the exact value
-      h(0) = (sum b_k)^2 directly.  The grid scan starts at T = 0.01, so all
-      sinc arguments are nonzero and every division is well-defined.
-
-External dependencies
----------------------
-  S_zeta* = 0.04871: certified upper bound from Proposition [S_zeta value],
-    established via 6000 LMFDB Riemann zeta zeros and a Trudgian tail bound.
-    Used here as a certified constant; not re-derived by this script.
-  Five-zero configuration: worst-case hypothetical extremal, not appendix data.
-    Every actual squarefree d >= 14 has more zeros and a better margin.
+  (e) h_arb is never called at T = 0; Region 1 uses h(0) = (sum b_k)^2
+      directly.  The grid scan starts at T = 0.01, so all sinc arguments
+      are nonzero and every division is well-defined.
 
 No zero ordinate data from any appendix is used in this computation.
+
+Requirements
+------------
+  python-flint >= 0.8.0   (provides ARB ball arithmetic)
+  Python >= 3.10
+
+Usage
+-----
+  python Theorem_3_3_Case1.py
 """
 
 from flint import arb, ctx
