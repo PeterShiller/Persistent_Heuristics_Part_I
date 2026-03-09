@@ -1,5 +1,5 @@
 """
-Proposition_2_2.py  —  Certified verification of Proposition [Explicit value of S_zeta]
+Proposition_2_2(Szeta_star).py  —  Certified verification of Proposition [Explicit value of S_zeta]
 ================================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
@@ -102,7 +102,7 @@ Requirements
 
 Usage
 -----
-  python Proposition_2_2.py
+  python "Proposition_2_2(Szeta_star).py"
 """
 
 import sys
