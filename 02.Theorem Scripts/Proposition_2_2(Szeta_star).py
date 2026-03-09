@@ -65,7 +65,7 @@ Algorithm
 
   Step 4: Certified result.
     Combining in ARB:
-        S_zeta <= S_zeta^(6000) + tail_235 + analytic_rem
+        S_zeta <= S_zeta^(6000) + tail_sub + analytic_rem
                in [0.046240 +/- 2.8e-152].
     The upper endpoint 0.046240... < 0.04625, which is 5.1% below S_zeta* = 0.04871.
 
@@ -219,7 +219,7 @@ def build_subintervals_arb(T0_arb):
 
     The first breakpoint 6400 is the smallest multiple of 100 exceeding
     gamma_6000 + 0.01 ~ 6365.86; this is verified by the certified ARB
-    comparison arb("6400") > T0_arb in compute_tail_235.
+    comparison arb("6400") > T0_arb in compute_tail_subinterval_bound.
     """
     subs = []
     # First interval: [T0, 6400] (T0 is ARB; 6400 is an exact integer)
@@ -233,7 +233,7 @@ def build_subintervals_arb(T0_arb):
     return subs
 
 
-def compute_tail_235(T0_arb):
+def compute_tail_subinterval_bound(T0_arb):
     """
     Compute the subinterval tail over [T0, 1e6].
 
@@ -292,9 +292,9 @@ if __name__ == "__main__":
     gamma_K = arb(_META["gamma_6000"])
     T0_arb  = gamma_K + T0_OFFSET
     print(f"Step 2: Tail bound over [T0, 1e6], T0 = gamma_6000 + 0.01 = {float(T0_arb):.6f}")
-    tail_235, n_subs = compute_tail_235(T0_arb)
+    tail_sub, n_subs = compute_tail_subinterval_bound(T0_arb)
     print(f"  Subintervals             : {n_subs}  (paper: 235)")
-    print(f"  Subinterval tail         : {float(tail_235):.6e}  (paper: <= 4.31e-4)")
+    print(f"  Subinterval tail         : {float(tail_sub):.6e}  (paper: <= 4.31e-4)")
     print()
 
     # Step 3
@@ -304,7 +304,7 @@ if __name__ == "__main__":
     print()
 
     # Step 4: combine
-    S_total = S_partial + tail_235 + analytic_rem
+    S_total = S_partial + tail_sub + analytic_rem
     print("Step 4: Combined bound")
     print(f"  S_zeta <= {float(S_total):.8f}  (ARB ball midpoint)")
     print(f"  S_zeta radius            : {float(S_total.rad()):.3e}")
