@@ -194,6 +194,17 @@ def make_pairs(gammas, B):
 
     Avoids redundant recomputation of b_j * b_k and frequencies inside
     the inner loop of the grid scan.
+
+    Note on symmetry: the paper's Reproducibility paragraph describes the
+    bilinear form as having M(M+1)/2 distinct sinc terms (M diagonal terms
+    plus M(M-1)/2 upper-triangle terms each carrying an implicit factor of 2).
+    This code instead iterates all M^2 pairs, summing both the (j,k) and (k,j)
+    off-diagonal entries separately.  The two approaches are mathematically
+    identical: the off-diagonal kernel F_off(gamma_j, gamma_k, T) is symmetric
+    in j,k (since sinc is even), so each unordered pair {j,k} contributes
+    2 * b_j * b_k * F_off, whether counted once with coefficient 2 or twice
+    with coefficient 1.  The M^2 iteration is slightly less efficient but
+    produces the same certified result.
     """
     n = len(gammas)
     pairs = []
