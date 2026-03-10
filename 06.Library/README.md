@@ -72,10 +72,10 @@ ph1-compute-zeros --d 5 --nzeros 1000 --high-precision
 | 3  | 12          | 1043  | yes    | 1000   |
 | 5  | 5           | 1004  | yes    | 1094   |
 | 6  | 24          | 1039  | yes    | 912    |
-| 7  | 28          | 1000  | —      | —      |
-| 10 | 40          | 1000  | —      | —      |
-| 11 | 44          | 1000  | —      | —      |
-| 13 | 13          | 1000  | —      | —      |
+| 7  | 28          | 1044  | yes    | 899    |
+| 10 | 40          | 1040  | yes    | 859    |
+| 11 | 44          | 1038  | yes    | 848    |
+| 13 | 13          | 1020  | yes    | 970    |
 
 All sealed zeros are certified by ARB interval arithmetic at 1500-bit working
 precision. Certified bounds |L(1/2 + i*gamma)| are returned as (mantissa,
