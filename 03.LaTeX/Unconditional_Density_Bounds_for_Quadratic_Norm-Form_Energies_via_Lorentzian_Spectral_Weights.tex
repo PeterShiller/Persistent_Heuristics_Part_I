@@ -968,7 +968,7 @@ A brute-force search at double precision found no exact resonances among
 orders-3 and orders-4 combinations and no pairwise relation with $|n_j|,|n_k| \leq 50$.
 The nearest misses were $|\gamma_4'+\gamma_{10}'+\gamma_{12}'-\gamma_{19}'| = 0.00037$ (order-4) and
 $|3\gamma_3' - \gamma_{14}'| = 0.0079$ (pairwise), consistent with
-Proposition~\ref{prop:resonance-cert}~(i).  (The bound $\|\mathbf{m}\|_1 \geq 184$ mentioned in \S\ref{subsec:pslq} comes from a separate precision-control test at 20-digit input, not the primary 70-digit certification.)
+Proposition~\ref{prop:resonance-cert}~(i).
 \end{remark}
 
 \begin{remark}[Near-resonances]\label{rem:nearres}
@@ -2321,20 +2321,6 @@ $\gamma_j'/\gamma_k' = p/q$ with $\max(|p|,|q|) \leq 10{,}000$.
 
 \begin{remark}[Rigorous certification via Ferguson--Bailey--Arno bounds]
 The PSLQ algorithm provides rigorous lower bounds on the norm of any undetected integer relation as a byproduct of its operation.  Specifically, Theorem~1 of~\cite{FBA1999} establishes that after any number of iterations $k$ (presuming no relation has yet been found), any integer relation $\mathbf{m}$ must satisfy $|\mathbf{m}| \geq 1/\max_j |h_{j,j}(k)|$, where $h_{j,j}(k)$ are the diagonal elements of the current $H$ matrix.  As stated in the abstract of~\cite{FBA1999}: ``PSLQ$(\tau)$ can be used to prove that there are no relations for $x$ of norm less than a given size.''  When PSLQ terminates without finding a relation at coefficient bound $H$, the algorithm certifies that no relation with $\|\mathbf{n}\|_\infty \leq H$ exists, provided the input precision exceeds the precision loss incurred during the algorithm's iterations.  For our 20-dimensional search with $H = 1000$ and pairwise searches with $H = 10{,}000$, the 70-digit input with 80-digit working precision provides adequate margin.  The \texttt{None} results therefore rigorously certify the absence of bounded integer relations.
-\end{remark}
-
-\begin{remark}[Cautionary experiment]
-As a precision control, PSLQ was also applied to the original $20$-digit values at
-$40$-digit working precision with $\max|n_k| \leq 1000$.  This returned the vector
-\[
-  \mathbf{n} = (3,\,9,\,7,\,-9,\,7,\,9,\,-2,\,-6,\,7,\,-19,\,2,\,-13,\,-10,\,9,\,18,\,-12,\,-11,\,11,\,14,\,-6),
-\]
-with $\max|n_k| = 19$ and $\ell^1$ norm $184$, whose weighted sum vanishes to all $20$
-displayed digits.  Evaluating at $70$-digit precision gives
-$\sum n_k\gamma_k' = 2.72\times 10^{-18}$, unambiguously nonzero.  The spurious
-detection is explained by the effective precision of a linear combination of $20$ terms
-with $\ell^1$ norm $184$: $20 - \log_{10}(184) \approx 17.7$ digits, below the residual
-threshold.  The $70$-digit certification provides ample margin above this threshold.
 \end{remark}
 
 \subsection{Bessel tail bound}\label{subsec:bessel-tail}
