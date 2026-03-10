@@ -67,40 +67,52 @@ def available_characters():
     return _mod.available_characters()
 
 def info(d):
-    """Print metadata for character chi_d."""
+    """Return a metadata dict for character chi_d (conductor, field, zero count, precision)."""
     _check_d(d)
     return _mod.info(d)
 
 def get_zero(d, k, as_string=False):
-    """Return the k-th zero ordinate of L(s, chi_d) as a Decimal (1-indexed)."""
+    """Return the k-th zero ordinate of L(s, chi_d) as a Decimal (1-indexed).
+    Emits a warning if the table for d has not been globally sealed."""
     _check_d(d)
     _warn_if_unsealed(d)
     return _mod.get_zero(d, k, as_string=as_string)
 
 def get_zeros(d, n=None, dp=70, as_strings=False):
-    """Return the first n zero ordinates of L(s, chi_d) as a list of Decimals."""
+    """Return the first n zero ordinates of L(s, chi_d) as a list of Decimals.
+    Emits a warning if the table for d has not been globally sealed."""
     _check_d(d)
     _warn_if_unsealed(d)
     return _mod.get_zeros(d, n=n, dp=dp, as_strings=as_strings)
 
 def get_bound(d, k):
-    """Return the certified |L(1/2+i*gamma_k)| bound as (mantissa, exponent)."""
+    """Return the certified |L(1/2+i*gamma_k)| bound as (mantissa, exponent).
+    The bound holds for the individual zero regardless of seal status, but
+    the table may be incomplete if the character is not yet sealed.  Emits
+    a warning if the table for d has not been globally sealed."""
     _check_d(d)
+    _warn_if_unsealed(d)
     return _mod.get_bound(d, k)
 
 def get_bounds(d, n=None):
-    """Return certified bounds for the first n zeros as a list of (mantissa, exponent)."""
+    """Return certified bounds for the first n zeros as a list of (mantissa, exponent).
+    Emits a warning if the table for d has not been globally sealed."""
     _check_d(d)
+    _warn_if_unsealed(d)
     return _mod.get_bounds(d, n=n)
 
 def get_seal(d):
-    """Return seal metadata dict for chi_d, or None if not yet sealed."""
+    """Return seal metadata dict for chi_d, or None if not yet sealed.
+    A None return means global completeness has not been verified: individual
+    zeros are Newton-certified but the table may be incomplete."""
     _check_d(d)
     return _mod.get_seal(d)
 
 def get_bound_stats(d):
-    """Return summary statistics for the certified bounds of chi_d."""
+    """Return summary statistics for the certified bounds of chi_d.
+    Emits a warning if the table for d has not been globally sealed."""
     _check_d(d)
+    _warn_if_unsealed(d)
     return _mod.get_bound_stats(d)
 
 __all__ = [

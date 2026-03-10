@@ -42,45 +42,55 @@ if not _COMPUTE.exists():
         "from a cloned copy of the Persistent_Heuristics_Part_I repository."
     )
 
-_mod = None
+_mod  = None
+_lock = None  # initialised lazily to avoid import-time threading overhead
 
 def _load():
     """Load compute_Lfunc_zeros.py on first use.  Deferred so that importing
     this module does not require python-flint to be installed.  The compute
     directory is added to sys.path only for the duration of exec_module and
-    removed immediately after to avoid permanent namespace pollution."""
-    global _mod
+    removed immediately after to avoid permanent namespace pollution.
+    Thread-safe: a lock ensures only one thread executes exec_module."""
+    global _mod, _lock
     if _mod is not None:
         return _mod
-    try:
-        import flint  # noqa: F401
-    except ImportError:
-        raise ImportError(
-            "python-flint is required to use persistent_heuristics_I.compute_dirichlet_zeros.\n"
-            "Install it with:\n"
-            "    pip install 'persistent-heuristics-I[compute]'\n"
-            "or independently with:\n"
-            "    pip install python-flint"
-        ) from None
-    _path_inserted = str(_COMPUTE_DIR) not in sys.path
-    if _path_inserted:
-        sys.path.insert(0, str(_COMPUTE_DIR))
-    try:
-        spec = importlib.util.spec_from_file_location("_compute_Lfunc_zeros", _COMPUTE)
-        mod  = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-    finally:
+    import threading
+    if _lock is None:
+        # Two threads could race here, but both would create equivalent Lock
+        # objects; the second assignment is harmless.
+        _lock = threading.Lock()
+    with _lock:
+        if _mod is not None:   # re-check inside lock
+            return _mod
+        try:
+            import flint  # noqa: F401
+        except ImportError:
+            raise ImportError(
+                "python-flint is required to use persistent_heuristics_I.compute_dirichlet_zeros.\n"
+                "Install it with:\n"
+                "    pip install 'persistent-heuristics-I[compute]'\n"
+                "or independently with:\n"
+                "    pip install python-flint"
+            ) from None
+        _path_inserted = str(_COMPUTE_DIR) not in sys.path
         if _path_inserted:
-            try:
-                sys.path.remove(str(_COMPUTE_DIR))
-            except ValueError:
-                pass
-        # Remove internal modules from sys.modules so they are not
-        # importable as a side effect of loading the compute pipeline.
-        for _key in ("Kronecker_character_data", "_compute_Lfunc_zeros"):
-            sys.modules.pop(_key, None)
-    _mod = mod
-    return _mod
+            sys.path.insert(0, str(_COMPUTE_DIR))
+        try:
+            spec = importlib.util.spec_from_file_location("_compute_Lfunc_zeros", _COMPUTE)
+            mod  = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+        finally:
+            if _path_inserted:
+                try:
+                    sys.path.remove(str(_COMPUTE_DIR))
+                except ValueError:
+                    pass
+            # Remove internal modules from sys.modules so they are not
+            # importable as a side effect of loading the compute pipeline.
+            for _key in ("Kronecker_character_data", "_compute_Lfunc_zeros"):
+                sys.modules.pop(_key, None)
+        _mod = mod
+        return _mod
 
 
 def compute_zeros(*args, **kwargs):
