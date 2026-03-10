@@ -2,12 +2,24 @@
 persistent_heuristics_I.dirichlet
 ----------------------------------
 Re-exports the public API of L_function_zeros.py.
-"""
-import importlib.util, pathlib
 
-_DATA = (pathlib.Path(__file__).resolve().parent.parent.parent
-         / "01.Computed L(s, \u03c7) Zeros and Imported \u03b6 Zeros"
-         / "L_function_zeros.py")
+This module uses runtime path resolution to locate L_function_zeros.py
+in the repository tree.  It requires an editable install (pip install -e)
+from a cloned copy of the repository; a standalone wheel is not supported.
+"""
+import importlib.util
+import pathlib
+
+# persistent_heuristics_I/ -> 06.Library/ -> repo root
+_REPO = pathlib.Path(__file__).resolve().parent.parent.parent
+_DATA = _REPO / "01.Computed L(s, \u03c7) Zeros and Imported \u03b6 Zeros" / "L_function_zeros.py"
+
+if not _DATA.exists():
+    raise FileNotFoundError(
+        f"L_function_zeros.py not found at expected path:\n  {_DATA}\n"
+        "This package must be installed in editable mode (pip install -e) "
+        "from a cloned copy of the Persistent_Heuristics_Part_I repository."
+    )
 
 _spec = importlib.util.spec_from_file_location("_L_function_zeros", _DATA)
 _mod  = importlib.util.module_from_spec(_spec)

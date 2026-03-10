@@ -30,5 +30,7 @@ ph1-compute-zeros = "persistent_heuristics_I.compute:main"
 where = ["."]
 include = ["persistent_heuristics_I*"]
 
-[tool.setuptools.package-data]
-persistent_heuristics_I = ["_data/*.py"]
+# Note: this package requires an editable install (pip install -e ./06.Library)
+# from a cloned copy of the repository.  The zero data files are not bundled
+# into the package; they are loaded at runtime from their canonical locations
+# in the repository tree.  A standalone wheel distribution is not supported.

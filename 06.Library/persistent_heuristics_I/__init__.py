@@ -7,6 +7,17 @@ ARB-certified zero tables and theorem scripts for:
     Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
     https://doi.org/10.5281/zenodo.18783098
 
+Installation
+------------
+This package requires an editable install from a cloned copy of the
+repository.  The zero data files are not bundled; they are loaded at
+runtime from their canonical locations in the repository tree.
+
+    git clone https://github.com/PeterShiller/Persistent_Heuristics_Part_I
+    pip install -e Persistent_Heuristics_Part_I/06.Library
+
+A standalone wheel distribution is not supported.
+
 Public API
 ----------
 Dirichlet L-function zeros (quadratic characters):
