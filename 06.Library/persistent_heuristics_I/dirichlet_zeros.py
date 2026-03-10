@@ -80,9 +80,12 @@ def get_zero(d, k, as_string=False):
 
 def get_zeros(d, n=None, dp=70, as_strings=False):
     """Return the first n zero ordinates of L(s, chi_d) as a list of Decimals.
+    dp controls decimal places (0..70, default 70); n=None returns all zeros.
     Emits a warning if the table for d has not been globally sealed."""
     _check_d(d)
     _warn_if_unsealed(d)
+    if dp is None:
+        dp = 70
     return _mod.get_zeros(d, n=n, dp=dp, as_strings=as_strings)
 
 def get_bound(d, k):
@@ -96,9 +99,15 @@ def get_bound(d, k):
 
 def get_bounds(d, n=None):
     """Return certified bounds for the first n zeros as a list of (mantissa, exponent).
+    n=None returns bounds for all stored zeros.
     Emits a warning if the table for d has not been globally sealed."""
     _check_d(d)
     _warn_if_unsealed(d)
+    total = _mod.info(d)["num_zeros"]
+    if n is not None and not isinstance(n, int):
+        raise TypeError(f"n must be an int or None, got {type(n).__name__!r}")
+    if n is not None and not (1 <= n <= total):
+        raise ValueError(f"n={n} out of range [1, {total}]")
     return _mod.get_bounds(d, n=n)
 
 def get_seal(d):

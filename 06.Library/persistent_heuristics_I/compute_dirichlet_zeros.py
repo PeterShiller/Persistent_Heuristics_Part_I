@@ -42,8 +42,10 @@ if not _COMPUTE.exists():
         "from a cloned copy of the Persistent_Heuristics_Part_I repository."
     )
 
+import threading as _threading
+
 _mod  = None
-_lock = None  # initialised lazily to avoid import-time threading overhead
+_lock = _threading.Lock()
 
 def _load():
     """Load compute_Lfunc_zeros.py on first use.  Deferred so that importing
@@ -54,11 +56,6 @@ def _load():
     global _mod, _lock
     if _mod is not None:
         return _mod
-    import threading
-    if _lock is None:
-        # Two threads could race here, but both would create equivalent Lock
-        # objects; the second assignment is harmless.
-        _lock = threading.Lock()
     with _lock:
         if _mod is not None:   # re-check inside lock
             return _mod
