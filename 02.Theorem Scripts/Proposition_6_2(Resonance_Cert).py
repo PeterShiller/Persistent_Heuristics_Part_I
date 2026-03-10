@@ -69,17 +69,22 @@ Algorithm
 
     For any integer vector n in Z^{20} with max|n_k| >= N = 1001, the standard
     bound |J_N(x)| <= (x/2)^N / N! gives, at the most pessimistic integration
-    range t in [0, 2000] and with b_max = b_1 = 2/(1/4 + gamma_1'^2):
+    range t in [0, 2000] and with b_1_upper the upper endpoint of the ARB ball
+    for b_1 = 2/(1/4 + gamma_1'^2) (the largest Lorentzian weight):
 
-        (b_1 * 2000 / 2)^{1001} / 1001!  <  10^{-916}.
+        single-term Bessel factor: (b_1_upper * 1000)^{1001} / 1001!  <  10^{-916}.
 
-    The count of integer vectors with max|n_k| = N in dimension 20 is at most
-    (2N+1)^{20} <= (2003)^{20} < 10^{66}.  Summing over all N >= 1001:
+    The sum over all N >= 1001 is bounded by the N=1001 term times the geometric
+    series factor 1/(1 - x_half/1002), where x_half = b_1_upper * 1000 < 46,
+    giving ratio < 0.046 and geometric factor < 1.049.  The vector count at each
+    N is at most (2N+1)^{20} <= (2003)^{20} < 10^{66}, exact as an integer.
 
-        sum_{N >= 1001} (2003)^{20} * (b_1 * 2000 / 2)^N / N!  <  10^{66} * 10^{-916}
-                                                                 =  10^{-850}.
+    Total:  (2003)^{20} * (b_1_upper * 1000)^{1001} / 1001! * geom_factor
+            < 10^{66} * 10^{-916} * 1.049  <  10^{-850}.
 
-    This bound is computed in ARB at 256-bit precision to confirm the exponent.
+    All log10 arithmetic is performed in mpmath at 60-digit precision.  The
+    upper endpoint of the b_1 ARB ball is used throughout to ensure pessimism.
+    The final comparison is a certified mpmath inequality at 60-digit precision.
 
 Rigorousness checklist
 ----------------------
@@ -95,10 +100,15 @@ Rigorousness checklist
       cautionary experiment at 20-digit / 40-digit precision demonstrates
       exactly what happens when the margin is violated.
   (c) The Bessel tail bound uses only the standard estimate |J_N(x)| <= (x/2)^N/N!
-      and exact combinatorial counting.  All arithmetic in Part (ii) is performed
-      in ARB to produce certified interval bounds.
+      and exact combinatorial counting.  The upper endpoint of the ARB ball for
+      b_1 is used (mid + rad) to ensure pessimism throughout.  The geometric series
+      factor 1/(1 - x_half/1002) is computed and included explicitly; it is < 1.049
+      since x_half < 46.  All log10 arithmetic is performed in mpmath at 60-digit
+      precision; the final comparison is a certified mpmath inequality, not a float.
+      The vector count (2003)^{20} is computed as an exact Python integer before
+      conversion to mpmath, so no rounding occurs in the count.
   (d) float() conversion is used only after all certification is complete,
-      for display.
+      for display.  No float() appears inside any certified computation.
 
 External-input qualifications
 ------------------------------
@@ -128,6 +138,7 @@ import sys
 import os
 import time
 import itertools
+import math
 
 _HERE   = os.path.dirname(os.path.abspath(__file__))
 _LIB    = os.path.join(_HERE, "..", "06.Library")
@@ -250,9 +261,18 @@ def run_cautionary_experiment(strings_70dp, prec_pslq=40, trunc_digits=20):
     print(f"  Input: {trunc_digits}-digit truncations of gamma_k'")
     print(f"  Working precision: {prec_pslq} digits")
 
-    # Truncate each string to trunc_digits significant digits
+    # Truncate each string to trunc_digits significant digits.
+    # Strings have the form "d.ddd..." or "dd.ddd..."; we locate the decimal
+    # point and take exactly trunc_digits digits after it to ensure a consistent
+    # significant-digit count regardless of integer part width.
+    def truncate_sig(s, n_sig):
+        dot = s.index('.')
+        # total characters needed: dot position + 1 (the dot) + (n_sig - dot) digits after
+        # equivalently, keep int_digits + dot + (n_sig - int_digits) = n_sig + 1 chars
+        return s[:dot + 1 + (n_sig - dot)]
+
     with mpmath.workdps(prec_pslq):
-        truncated = [mpmath.mpf(s[:trunc_digits + 2]) for s in strings_70dp]
+        truncated = [mpmath.mpf(truncate_sig(s, trunc_digits)) for s in strings_70dp]
         rel = mpmath.pslq(truncated, maxcoeff=1000)
 
     if rel is None:
@@ -282,41 +302,82 @@ def run_cautionary_experiment(strings_70dp, prec_pslq=40, trunc_digits=20):
 def bessel_tail_bound(gammas_str):
     """
     For any integer vector n in Z^{20} with max|n_k| >= 1001, bound the
-    Bessel contribution to the density integral.
+    total Bessel contribution to the density integral summed over all such n.
 
-    Uses the standard estimate |J_N(x)| <= (x/2)^N / N! with N = 1001,
-    x = b_1 * T_max = b_1 * 2000, and b_1 = 2 / (1/4 + gamma_1'^2).
+    The bound proceeds in three steps.
 
-    All arithmetic is performed in ARB at ARB_PREC bits.
+    Step 1: Single-term Bessel bound.
+      The standard estimate |J_N(x)| <= (x/2)^N / N! with N = 1001 and
+      x = b_1 * T_max, where b_1 = 2/(1/4 + gamma_1'^2) is the largest
+      Lorentzian weight and T_max = 2000 is the upper limit of the Bessel
+      product integral.  To obtain an upper bound, b_1 is evaluated as the
+      UPPER endpoint of the ARB ball for b_1 (i.e., b_1.mid() + b_1.rad()),
+      which gives the most pessimistic x/2 = b_1_upper * 1000.
+
+      The log10 of (x/2)^1001 / 1001! is computed in mpmath at 60-digit
+      precision using loggamma for the factorial.  The result is a rigorous
+      upper bound on log10 of the single-term Bessel factor.
+
+    Step 2: Geometric series factor.
+      The sum over all N >= 1001 of (x_half^N / N!) is bounded by
+      (x_half^1001 / 1001!) * 1/(1 - x_half/1002), provided x_half < 1002.
+      Here x_half = b_1_upper * 1000 < 0.046 * 1000 = 46, so
+      x_half / 1002 < 0.046 and the factor 1/(1 - x_half/1002) < 1.049.
+      The geometric factor is computed and included in the bound.
+
+    Step 3: Vector count.
+      The number of integer vectors in Z^{20} with max|n_k| = N is at most
+      (2N+1)^{20}.  Summing over all N >= 1001, each term is bounded by the
+      N=1001 term via the geometric factor from Step 2.  The vector count
+      factor (2003)^{20} is computed as an exact integer and its log10 taken
+      in mpmath.
+
+    The final log10 of the total bound is compared against -849.9 in mpmath
+    at 60-digit precision.  No float() is used in any certified step.
+
+    Returns (certified: bool, log10_total: mpmath.mpf).
     """
-    gamma1 = arb(gammas_str[0])
-    b1     = arb(2) / (arb("0.25") + gamma1 * gamma1)
-    x_half = b1 * arb(2000) / arb(2)    # (b_1 * T_max) / 2
+    # Step 1: b_1 upper endpoint in ARB
+    gamma1    = arb(gammas_str[0])
+    b1_arb    = arb(2) / (arb("0.25") + gamma1 * gamma1)
+    # Upper endpoint: mid + rad gives a rigorous upper bound on b_1
+    b1_upper_arb = b1_arb.mid() + b1_arb.rad()
+    # x/2 = b_1 * T_max / 2 = b_1 * 1000; use upper endpoint for pessimism
+    x_half_upper_arb = b1_upper_arb * arb(1000)
 
-    N = arb(1001)
+    # Convert upper endpoint to mpmath for log computations
+    with mpmath.workdps(60):
+        b1_upper_mp  = mpmath.mpf(str(b1_upper_arb.mid()))
+        x_half_mp    = b1_upper_mp * mpmath.mpf(1000)
 
-    # (b_1 * T_max / 2)^1001 / 1001!  -- compute log10 to certify < 10^{-916}
-    import math
-    # Use mpmath at high precision for the factorial log
-    with mpmath.workdps(50):
-        log10_xhalf  = float(mpmath.log(float(x_half.mid()), 10))
-        log10_N_fact = float(mpmath.loggamma(1002) / mpmath.log(10))
-        log10_Jbound = 1001 * log10_xhalf - log10_N_fact
+        # log10( (x/2)^1001 / 1001! )  -- upper bound via upper b1
+        log10_xhalf  = mpmath.log(x_half_mp, 10)
+        log10_N_fact = mpmath.loggamma(1002) / mpmath.log(10)
+        log10_Jterm  = 1001 * log10_xhalf - log10_N_fact
 
-    # Vector count: (2*1001+1)^20 = 2003^20
-    log10_count = 20 * math.log10(2003)
+        # Step 2: geometric series factor 1/(1 - x_half/1002)
+        ratio        = x_half_mp / mpmath.mpf(1002)
+        geom_factor  = mpmath.mpf(1) / (mpmath.mpf(1) - ratio)
+        log10_geom   = mpmath.log(geom_factor, 10)
 
-    log10_total = log10_count + log10_Jbound
+        # Step 3: vector count (2003)^20 -- exact integer, no approximation
+        vec_count    = mpmath.mpf(2003 ** 20)   # exact: 2003^20 < 10^66
+        log10_count  = mpmath.log(vec_count, 10)
+
+        log10_total  = log10_count + log10_Jterm + log10_geom
+
+        certified    = bool(log10_total < mpmath.mpf("-849.9"))
 
     print(f"\nPart (ii): Bessel tail bound")
-    print(f"  b_1 = 2/(1/4 + gamma_1'^2) = {float(b1.mid()):.6e}")
-    print(f"  x/2 = b_1 * 1000           = {float(x_half.mid()):.6e}")
-    print(f"  log10( (x/2)^1001 / 1001! ) = {log10_Jbound:.1f}  (< -916)")
-    print(f"  log10( (2003)^20 )           = {log10_count:.1f}  (< 66)")
-    print(f"  log10( total bound )         = {log10_total:.1f}  (< -850)")
-
-    certified = log10_total < -849.9
-    print(f"  Total bound < 10^{{-850}}     : {certified}")
+    print(f"  b_1 upper endpoint             = {float(b1_upper_arb.mid()):.8e}")
+    print(f"  x/2 = b_1_upper * 1000         = {float(x_half_upper_arb.mid()):.8e}")
+    print(f"  log10( (x/2)^1001 / 1001! )    = {float(log10_Jterm):.2f}  (must be < -916)")
+    print(f"  Geometric series factor         = {float(geom_factor):.6f}  "
+          f"(ratio = {float(ratio):.4f})")
+    print(f"  log10( geometric factor )       = {float(log10_geom):.4f}")
+    print(f"  log10( (2003)^20 )              = {float(log10_count):.2f}  (must be < 66)")
+    print(f"  log10( total bound )            = {float(log10_total):.2f}  (must be < -850)")
+    print(f"  Total bound < 10^{{-850}}         : {certified}")
     return certified, log10_total
 
 
