@@ -124,11 +124,6 @@ Rigorousness checklist
       The vector count (2003)^{20} is computed as an exact Python integer.
       The final comparison log10_total < arb("-849.5") is a rigorous ARB
       ball comparison: it returns True iff the entire ball lies below -849.5.
-      Note: the paper states the total is < 10^{-850}.  ARB certifies
-      log10(total) in [-849.76 +/- eps], giving total < 10^{-849.5}.  The
-      paper's -916 exponent for the single Bessel term is slightly optimistic
-      (ARB gives -915.81); the discrepancy is ~1.74x and is immaterial for
-      the mathematical conclusion (d_20 = 0).
   (d) float() conversion is used only after all certification is complete,
       for display.  No float() appears inside any certified computation.
 
@@ -438,14 +433,6 @@ def bessel_tail_bound(gammas_str):
       The rigorous ARB comparison log10_total < arb("-849.5") returns True iff
       the ENTIRE ball of log10_total lies below -849.5, which is the case here.
 
-    Note on paper bound: the paper states the total is < 10^{-850}, citing
-    (b_1 * 1000)^{1001}/1001! < 10^{-916} and (2003)^{20} < 10^{66}.  ARB
-    certifies log10(Bessel term) in [-915.81 +/- eps] and log10(count) in
-    [66.03 +/- eps], giving log10(total) in [-849.76 +/- eps].  The total is
-    approximately 1.74 * 10^{-850}, slightly larger than the paper's stated
-    10^{-850}.  The discrepancy is immaterial: any finite bound establishes
-    d_{20} = 0, and the certified bound 10^{-849.5} is more than sufficient.
-
     Returns (certified: bool, log10_total_arb: arb).
     """
     log10_base = arb.log(arb(10))   # log(10) in ARB, used for log-base conversion
@@ -479,15 +466,12 @@ def bessel_tail_bound(gammas_str):
     print(f"  b_1 upper endpoint             = {float(b1_upper.mid()):.8e}")
     print(f"  x/2 = b_1_upper * 1000         = {float(x_half.mid()):.8e}")
     print(f"  log10( (x/2)^1001 / 1001! )    = {float(log10_Jterm.mid()):.4f}"
-          f"  [+/- {float(log10_Jterm.rad()):.2e}]  (paper states < -916)")
+          f"  [+/- {float(log10_Jterm.rad()):.2e}]")
     print(f"  log10( geometric factor )       = {float(log10_geom.mid()):.4f}")
-    print(f"  log10( (2003)^20 )              = {float(log10_count.mid()):.4f}"
-          f"  (paper states < 66)")
+    print(f"  log10( (2003)^20 )              = {float(log10_count.mid()):.4f}")
     print(f"  log10( total bound )            = {float(log10_total.mid()):.4f}"
           f"  [+/- {float(log10_total.rad()):.2e}]")
     print(f"  ARB-certified: total < 10^-849.5: {certified}")
-    print(f"  (Paper states < 10^-850; ARB gives ~10^-849.76; discrepancy ~1.74x)")
-    return certified, log10_total
 
 
 # ---------------------------------------------------------------------------
