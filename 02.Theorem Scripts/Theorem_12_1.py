@@ -1,12 +1,12 @@
 """
-Theorem_9_1.py  —  Certified verification of Theorem 9.1 (Unique null crossing)
+Theorem_12_1.py  —  Certified verification of Theorem 12.1 (Unique null crossing)
 ===============================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
     Norm-Form Energies via Lorentzian Spectral Weights.
     arXiv:2603.00301.  Zenodo: https://doi.org/10.5281/zenodo.18783098
 
-This module certifies the null crossing table in Theorem 9.1 of the above
+This module certifies the null crossing table in Theorem 12.1 of the above
 reference.  For each squarefree d in {2, 3, 5, 7, 13}, it computes:
 
     s_*(d) : the unique s > 1 satisfying G(s) := zeta(s) / L(s, chi_d) = sqrt(d),
@@ -39,7 +39,7 @@ Algorithm
       > 0 on the final bracket (denominator safety), and the residual
       is certified < 1e-60 as an ARB predicate.
 
-  (B) Integer crossing (d = 3): s_*(3) = 2 exactly (Theorem 9.2).
+  (B) Integer crossing (d = 3): s_*(3) = 2 exactly (Theorem 12.2).
       The ARB bisection approach is inapplicable here because G(2) =
       sqrt(3) holds as an identity; eventually the midpoint coincides
       with the answer and no decisive comparison is possible.  Instead,
@@ -84,7 +84,7 @@ Requirements
 
 Usage
 -----
-  python Theorem_9_1.py
+  python Theorem_12_1.py
 """
 
 from flint import arb, acb, ctx
@@ -322,7 +322,7 @@ def find_null_crossing_bisection(d, n_steps=220, max_prec_escalations=5):
 # ---------------------------------------------------------------------------
 # Strategy B: direct integer crossing for d = 3
 #
-# s_*(3) = 2 exactly (Theorem 9.2).  The bisection approach is structurally
+# s_*(3) = 2 exactly (Theorem 12.2).  The bisection approach is structurally
 # inapplicable: when the midpoint reaches 2, G(2) = sqrt(3) holds as an
 # identity, so neither G > sqrt(3) nor G < sqrt(3) can be certified.
 # Instead, three ARB predicates are checked directly:
@@ -399,7 +399,7 @@ def arb_str(x, digits=10):
 
 
 # ---------------------------------------------------------------------------
-# Main: reproduce Table 1 from Theorem 9.1, all predicates on ARB objects
+# Main: reproduce Table 1 from Theorem 12.1, all predicates on ARB objects
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
@@ -408,7 +408,7 @@ if __name__ == "__main__":
     paper_s_star = {2: 2.5635, 3: 2.0000, 5: 2.0492, 7: 1.4445, 13: 1.4608}
     paper_L1     = {2: 0.6232, 3: 0.7603, 5: 0.4304, 7: 1.0465, 13: 0.6627}
 
-    print("Theorem 9.1: Null Crossing Table")
+    print("Theorem 12.1: Null Crossing Table")
     print(f"ARB base precision : {BASE_PREC} bits (~{int(BASE_PREC*0.301)} decimal digits)")
     print("Certification      : decisive trichotomy bisection (d != 3);")
     print("                     direct integer-crossing check (d = 3)")

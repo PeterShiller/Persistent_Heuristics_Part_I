@@ -1,5 +1,5 @@
 """
-Theorem_9_2.py  —  Certified verification of Theorem 9.2 (Integer crossing obstruction)
+Theorem_12_2.py  —  Certified verification of Theorem 12.2 (Integer crossing obstruction)
 =======================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
@@ -293,7 +293,7 @@ def certify_case5():
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    print("Theorem 9.2: Integer Crossing Obstruction")
+    print("Theorem 12.2: Integer Crossing Obstruction")
     print(f"ARB working precision : {BASE_PREC} bits (~{int(BASE_PREC * 0.30103)} decimal digits)")
     print()
 
