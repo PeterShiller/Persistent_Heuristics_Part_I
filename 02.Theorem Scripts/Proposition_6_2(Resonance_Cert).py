@@ -472,6 +472,7 @@ def bessel_tail_bound(gammas_str):
     print(f"  log10( total bound )            = {float(log10_total.mid()):.4f}"
           f"  [+/- {float(log10_total.rad()):.2e}]")
     print(f"  ARB-certified: total < 10^-849.5: {certified}")
+    return certified, log10_total
 
 
 # ---------------------------------------------------------------------------
