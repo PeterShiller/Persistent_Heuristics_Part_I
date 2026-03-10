@@ -127,6 +127,9 @@ Rigorousness checklist
   (d) float() conversion is used only after all certification is complete,
       for display.  No float() appears inside any certified computation.
 
+  Overall qualification: certified modulo trusted zero input and the
+  documented mpmath PSLQ norm-bound interface.
+
 External-input qualifications
 ------------------------------
   Zero ordinates gamma_1', ..., gamma_20' are the first 20 zero ordinates of
@@ -540,6 +543,8 @@ if __name__ == "__main__":
     print(f"Part (i)  -- PSLQ searches certified      : {part_i_ok}")
     print(f"Part (ii) -- Bessel tail < 10^-849.5 (ARB): {part_ii_ok}")
     print(f"Proposition 6.2 fully certified            : {all_ok}")
+    print(f"Qualification: certified modulo trusted zero input and the")
+    print(f"  documented mpmath PSLQ norm-bound interface.")
     print(f"Total elapsed time: {elapsed:.1f}s")
     print()
     if all_ok:
