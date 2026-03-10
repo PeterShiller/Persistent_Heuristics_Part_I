@@ -12,9 +12,9 @@ each squarefree d in {2, 3, 5, 6, 7, 10, 11, 13} and every T > 0,
     h(T) := <S_L^2>_T  >  (S_zeta*)^2 / d,
 
 where h(T) is the Cesaro average of the squared spectral sum evaluated using
-the first M = 20 ARB-certified zero ordinates of L(s, chi_d) from the sealed
-data in L_function_zeros.py, with on-line Lorentzian weights
-b_k = 2 / (1/4 + gamma_k'^2).
+the first M = 20 ARB-certified zero ordinates of L(s, chi_d) at 20 decimal
+places, from the sealed data in L_function_zeros.py, with on-line Lorentzian
+weights b_k = 2 / (1/4 + gamma_k'^2).
 
 The on-line weight (denominator 1/4 + gamma'^2) is correct for gamma'_knw
 zeros individually verified to lie on the critical line by ARB certification.
