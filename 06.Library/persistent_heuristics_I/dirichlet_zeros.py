@@ -15,12 +15,12 @@ This module uses runtime path resolution to locate L_function_zeros.py
 in the repository tree.  It requires an editable install (pip install -e)
 from a cloned copy of the repository; a standalone wheel is not supported.
 """
-import importlib.util
-import pathlib
-import warnings
+import importlib.util as _importlib_util
+import pathlib as _pathlib
+import warnings as _warnings
 
 # persistent_heuristics_I/ -> 06.Library/ -> repo root
-_REPO = pathlib.Path(__file__).resolve().parent.parent.parent
+_REPO = _pathlib.Path(__file__).resolve().parent.parent.parent
 _DATA = _REPO / "01.Computed L(s, \u03c7) Zeros and Imported \u03b6 Zeros" / "L_function_zeros.py"
 
 if not _DATA.exists():
@@ -30,8 +30,8 @@ if not _DATA.exists():
         "from a cloned copy of the Persistent_Heuristics_Part_I repository."
     )
 
-_spec = importlib.util.spec_from_file_location("_L_function_zeros", _DATA)
-_mod  = importlib.util.module_from_spec(_spec)
+_spec = _importlib_util.spec_from_file_location("_L_function_zeros", _DATA)
+_mod  = _importlib_util.module_from_spec(_spec)
 _spec.loader.exec_module(_mod)
 
 # ---------------------------------------------------------------------------
@@ -39,22 +39,24 @@ _spec.loader.exec_module(_mod)
 # ---------------------------------------------------------------------------
 
 def _check_d(d):
-    """Require d to be a plain int.  Reject float, str, etc."""
-    if not isinstance(d, int):
+    """Require d to be a plain int (not bool, not numpy.int64, etc.).
+    Users with numpy scalars should pass int(d)."""
+    if isinstance(d, bool) or not isinstance(d, int):
         raise TypeError(
-            f"d must be an int, got {type(d).__name__!r}.  "
-            f"Valid values: {_mod.available_characters()}"
+            f"d must be a Python int, got {type(d).__name__!r}.  "
+            f"Valid values: {_mod.available_characters()}.  "
+            f"If d comes from numpy, pass int(d)."
         )
 
 def _warn_if_unsealed(d):
     """Emit a warning if the zero table for d has not been globally sealed."""
     seal = _mod.get_seal(d)
     if seal is None:
-        warnings.warn(
+        _warnings.warn(
             f"The zero table for chi_{d} has not been globally sealed: "
-            "completeness by argument-principle winding number has not been "
-            "verified.  Individual zeros are Newton-certified but the table "
-            "may be incomplete.  Use get_seal({d}) to check status.".format(d=d),
+            f"completeness by argument-principle winding number has not been "
+            f"verified.  Individual zeros are Newton-certified but the table "
+            f"may be incomplete.  Use get_seal({d}) to check status.",
             stacklevel=3,
         )
 
