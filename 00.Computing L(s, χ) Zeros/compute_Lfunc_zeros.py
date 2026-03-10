@@ -6,6 +6,70 @@ Ancillary data module for:
     Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
     https://doi.org/10.5281/zenodo.18783098
 
+Methodology and prior work
+--------------------------
+The standard method for large-scale certified zero counting of L-functions
+is Turing's method (Turing, 1953; generalized to Dirichlet L-functions by
+Rumely, 1993, and Booker, 2006).  Turing's method works entirely on the
+critical line: sign changes of the Hardy Z-function provide a lower bound
+on the zero count, and an analytic bound on the integral of S(T,chi)
+certifies completeness without any off-line evaluation.  This approach
+dominates all major verified computations, including Platt's verification
+of GRH for all primitive characters with conductor q <= 400,000 (Platt,
+Math. Comp. 85, 2016).
+
+This module uses direct contour integration of L'/L around the rectangle
+[-0.5, 1.5] x [t_lo, T_max] instead.  The choice is deliberate and rests
+on three properties that are advantageous at the scale of this computation:
+
+  (i)  Self-containedness.  The contour integral yields a provably correct
+       integer zero count with no dependence on character-specific analytic
+       bounds on S(T,chi) or Backlund-type estimates.  The only inputs are
+       the L-function values themselves, evaluated in ARB.
+
+  (ii) Simplicity.  A single interval-arithmetic winding number computation
+       constitutes the completeness certificate.  There are no auxiliary
+       analytic ingredients to verify or import.
+
+  (iii) Adequacy at moderate height.  For the eight characters treated here
+        (conductors q = 5 to 44, heights T ~ 900 to 1100) the efficiency
+        penalty relative to Turing's method is negligible.  Turing's method
+        is essential at Platt's scale (q up to 400,000, T up to 10,000);
+        at the present scale either approach is computationally trivial.
+
+Published precedent for direct contour integration of zeta'/zeta with ARB
+ball arithmetic appears in Johansson, "Numerical integration in arbitrary-
+precision ball arithmetic," ICMS 2018 (arXiv:1802.07942), which explicitly
+computes N(T) for zeta(s) via a rectangular contour integral and notes that
+the result is "a ball that provably determines N(T) as an integer."  The
+present module applies the same approach to Dirichlet L-functions.
+
+As an independent cross-check, the winding number count returned by Phase 4
+is compared against the analytic lower bound on N(T,chi) supplied by the
+BMOR explicit formula (Bennett-Martin-O'Bryant-Rechnitzer, Math. Comp. 90,
+2021).  Agreement between the contour count and the BMOR lower bound at
+each seal height provides a secondary validation that is methodologically
+independent of both the contour integral and the individual zero locations.
+
+References
+----------
+Johansson, F.  Arb: Efficient arbitrary-precision midpoint-radius interval
+    arithmetic.  IEEE Trans. Comput. 66(8), 2017.
+    https://doi.org/10.1109/TC.2017.2690633
+
+Johansson, F.  Numerical integration in arbitrary-precision ball arithmetic.
+    ICMS 2018.  arXiv:1802.07942.
+
+Bennett, M., Martin, G., O'Bryant, K., Rechnitzer, A.  Counting zeros of
+    Dirichlet L-functions.  Math. Comp. 90, 2021.
+    https://doi.org/10.1090/mcom/3599
+
+Platt, D.  Numerical computations concerning the GRH.  Math. Comp. 85, 2016.
+    https://doi.org/10.1090/mcom/3077
+
+Rumely, R.  Numerical computations concerning the ERH.  Math. Comp. 61, 1993.
+    https://doi.org/10.1090/S0025-5718-1993-1195435-0
+
 Algorithm
 ---------
 The rigorous flow is:
@@ -75,7 +139,11 @@ zero with a bound weaker than the table-wide floor to 2200-bit.
     tracking.  If the count equals the certified zero count the table
     is complete.  If not, a CompletenessError is raised and the
     recovery path (Phases 5 and 6) is invoked, followed by a second
-    run of Phase 4 on the repaired table.
+    run of Phase 4 on the repaired table.  As a secondary validation,
+    the winding number count is compared against the analytic lower
+    bound from the BMOR explicit formula (Bennett-Martin-O'Bryant-
+    Rechnitzer, Math. Comp. 90, 2021); the contour count must be at
+    least as large as the BMOR bound at T_max.
 
   Phase 5: Missing zero seed location (recovery).
     Strip-by-strip winding checks identify which inter-zero gaps are
