@@ -93,13 +93,22 @@ Rigorousness checklist
       at 80-digit precision.  The conversion adds no more than one-digit
       rounding error, leaving at least 69 certified digits available for
       PSLQ input.
-  (b) Ferguson--Bailey--Arno [FBA1999] Theorem 1 guarantees that a None return
-      from mpmath.pslq at coefficient bound H certifies absence of all integer
-      relations with ||n||_inf <= H, provided working precision is adequate.
-      At 80-digit precision with H = 1000 and dimension 20, precision loss
-      during PSLQ iterations is well below the available margin.  The
-      cautionary experiment at 20-digit / 40-digit precision demonstrates
-      exactly what happens when the margin is violated.
+  (b) The rigorousness of PSLQ as a certification tool is established by
+      Theorem 1 of Ferguson--Bailey--Arno [FBA1999] ("Analysis of PSLQ, an
+      integer relation finding algorithm," Math. Comp. 68, 1999).  That theorem
+      guarantees that after any number of iterations without finding a relation,
+      any integer relation m must satisfy |m| >= 1/max_j |h_{jj}|, where h_{jj}
+      are the diagonal elements of the current H matrix.  As stated in the
+      abstract of [FBA1999]: "PSLQ(tau) can be used to prove that there are no
+      relations for x of norm less than a given size."  This is documented in
+      the paper as a remark ("Rigorous certification via Ferguson--Bailey--Arno
+      bounds") in Section subsec:pslq.  A None return from mpmath.pslq at
+      coefficient bound H therefore certifies absence of all integer relations
+      with ||n||_inf <= H, provided working precision is adequate.  At 80-digit
+      precision with H = 1000 and dimension 20, precision loss during PSLQ
+      iterations is well below the available margin.  The cautionary experiment
+      at 20-digit / 40-digit precision demonstrates exactly what happens when
+      the margin is violated.
   (c) The Bessel tail bound uses only the standard estimate |J_N(x)| <= (x/2)^N/N!
       and exact combinatorial counting.  The upper endpoint of the ARB ball for
       b_1 is used (mid + rad) to ensure pessimism throughout.  The geometric series
