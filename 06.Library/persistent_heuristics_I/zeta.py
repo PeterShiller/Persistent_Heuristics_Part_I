@@ -15,11 +15,11 @@ This module uses runtime path resolution to locate zeta_zeros.py in the
 repository tree.  It requires an editable install (pip install -e) from
 a cloned copy of the repository; a standalone wheel is not supported.
 """
-import importlib.util
-import pathlib
+import importlib.util as _importlib_util
+import pathlib as _pathlib
 
 # persistent_heuristics_I/ -> 06.Library/ -> repo root
-_REPO = pathlib.Path(__file__).resolve().parent.parent.parent
+_REPO = _pathlib.Path(__file__).resolve().parent.parent.parent
 _DATA = _REPO / "01.Computed L(s, \u03c7) Zeros and Imported \u03b6 Zeros" / "zeta_zeros.py"
 
 if not _DATA.exists():
@@ -29,8 +29,8 @@ if not _DATA.exists():
         "from a cloned copy of the Persistent_Heuristics_Part_I repository."
     )
 
-_spec = importlib.util.spec_from_file_location("_zeta_zeros", _DATA)
-_mod  = importlib.util.module_from_spec(_spec)
+_spec = _importlib_util.spec_from_file_location("_zeta_zeros", _DATA)
+_mod  = _importlib_util.module_from_spec(_spec)
 _spec.loader.exec_module(_mod)
 
 available = _mod.available

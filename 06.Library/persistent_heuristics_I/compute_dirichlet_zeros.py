@@ -25,12 +25,12 @@ Usage (Python):
     compute_zeros(d=5, nzeros=20, high_precision=True)
 """
 
-import importlib.util
-import pathlib
-import sys
+import importlib.util as _importlib_util
+import pathlib as _pathlib
+import sys as _sys
 
 # persistent_heuristics_I/ -> 06.Library/ -> repo root
-_HERE        = pathlib.Path(__file__).resolve().parent
+_HERE        = _pathlib.Path(__file__).resolve().parent
 _REPO        = _HERE.parent.parent
 _COMPUTE_DIR = _REPO / "00.Computing L(s, \u03c7) Zeros"
 _COMPUTE     = _COMPUTE_DIR / "compute_Lfunc_zeros.py"
@@ -50,10 +50,10 @@ _lock = _threading.Lock()
 def _load():
     """Load compute_Lfunc_zeros.py on first use.  Deferred so that importing
     this module does not require python-flint to be installed.  The compute
-    directory is added to sys.path only for the duration of exec_module and
+    directory is added to _sys.path only for the duration of exec_module and
     removed immediately after to avoid permanent namespace pollution.
     Thread-safe: a lock ensures only one thread executes exec_module."""
-    global _mod, _lock
+    global _mod
     if _mod is not None:
         return _mod
     with _lock:
@@ -69,23 +69,23 @@ def _load():
                 "or independently with:\n"
                 "    pip install python-flint"
             ) from None
-        _path_inserted = str(_COMPUTE_DIR) not in sys.path
+        _path_inserted = str(_COMPUTE_DIR) not in _sys.path
         if _path_inserted:
-            sys.path.insert(0, str(_COMPUTE_DIR))
+            _sys.path.insert(0, str(_COMPUTE_DIR))
         try:
-            spec = importlib.util.spec_from_file_location("_compute_Lfunc_zeros", _COMPUTE)
-            mod  = importlib.util.module_from_spec(spec)
+            spec = _importlib_util.spec_from_file_location("_compute_Lfunc_zeros", _COMPUTE)
+            mod  = _importlib_util.module_from_spec(spec)
             spec.loader.exec_module(mod)
         finally:
             if _path_inserted:
                 try:
-                    sys.path.remove(str(_COMPUTE_DIR))
+                    _sys.path.remove(str(_COMPUTE_DIR))
                 except ValueError:
                     pass
-            # Remove internal modules from sys.modules so they are not
+            # Remove internal modules from _sys.modules so they are not
             # importable as a side effect of loading the compute pipeline.
             for _key in ("Kronecker_character_data", "_compute_Lfunc_zeros"):
-                sys.modules.pop(_key, None)
+                _sys.modules.pop(_key, None)
         _mod = mod
         return _mod
 
