@@ -386,7 +386,7 @@ The Hurwitz decomposition $L(s,\chi_2) = 8^{-s}\sum_{a=1}^8 \chi_2(a)\,\zeta(s,a
 \gamma'_{2,\mathrm{knw}} = 7.6284288417693978341, \quad
 \gamma'_{3,\mathrm{knw}} = 10.806588163861712014,
 \]
-each satisfying $|L(\tfrac{1}{2} + i\gamma', \chi_2)| < 10^{-149}$ (see Appendix~\ref{app:chi8-zeros}).  Any additional zeros below height $11$ would only increase $S_L$.  Therefore
+each satisfying $|L(\tfrac{1}{2} + i\gamma', \chi_2)| < 10^{-450}$ (see Appendix~\ref{app:chi8-zeros}).  Any additional zeros below height $11$ would only increase $S_L$.  Therefore
 \[
   S_L \geq w(\gamma'_{1,\mathrm{knw}}) + w(\gamma'_{2,\mathrm{knw}}) + w(\gamma'_{3,\mathrm{knw}}) = \frac{2}{0.25 + 24.010} + \frac{2}{0.25 + 58.193} + \frac{2}{0.25 + 116.782} = 0.08246 + 0.03421 + 0.01710 = 0.13377 > S_\zeta^*.
 \]
@@ -942,7 +942,7 @@ applied to each factor of $e^{itS_L^{(M)}(\delta)} = \prod_{k=1}^M e^{itb_k\cos(
 \begin{proposition}[Resonance absence at $M = 20$]\label{prop:resonance-cert}
 Let $\gamma_1',\ldots,\gamma_{20}'$ be the first $20$ zero ordinates of $L(s,\chi_5)$,
 certified to $70$ decimal places with individual ARB bounds
-$|L(\tfrac{1}{2}+i\gamma_k',\chi_5)| < 4\times 10^{-371}$
+$|L(\tfrac{1}{2}+i\gamma_k',\chi_5)| < 10^{-449}$
 (Appendices~\ref{app:chi5-highprec} and~\ref{app:certification}).
 \begin{enumerate}[label=\textup{(\roman*)}]
 \item \textup{(Small coefficients.)} No integer relation $\sum_{k=1}^{20} n_k\gamma_k' = 0$
@@ -2165,7 +2165,7 @@ where $s = \tfrac{1}{2} + it$.  The Hardy $Z$-function $Z_\chi(t) = e^{i\theta_\
 \medskip\noindent\textbf{Phase 3: Newton refinement.}  Refine each seed by Newton iteration applied to $Z_\chi(t)$.  The derivative is approximated by the finite difference $(Z_\chi(t+h) - Z_\chi(t))/h$; the midpoint of the resulting ARB ball is extracted after each Newton step (see Remark~\ref{rem:pitfalls} below).  Two modes are used depending on the target precision:
 \begin{itemize}
 \item \emph{Standard mode} (128-bit, $h = 10^{-8}$): from a six-digit seed, quadratic convergence reaches $\sim$20 correct digits in two to three iterations.  Certification threshold: $|L(\tfrac{1}{2}+i\gamma', \chi_d)| < 10^{-18}$.
-\item \emph{High-precision mode} (1500-bit, $h = 10^{-50}$): from a six-digit seed, seven to eight iterations reach full working precision ($\approx 451$ digits), with certified bounds on $|L(\tfrac{1}{2}+i\gamma', \chi_d)|$ typically in the range $10^{-358}$--$10^{-450}$.  Certification threshold: $|L(\tfrac{1}{2}+i\gamma', \chi_d)| < 10^{-68}$.
+\item \emph{High-precision mode} (1500-bit, $h = 10^{-50}$): from a six-digit seed, seven to eight iterations reach full working precision ($\approx 451$ digits), with certified bounds on $|L(\tfrac{1}{2}+i\gamma', \chi_d)|$ typically in the range $10^{-449}$--$10^{-452}$.  Certification threshold: $|L(\tfrac{1}{2}+i\gamma', \chi_d)| < 10^{-68}$.
 \end{itemize}
 In both modes, the convergence is quadratic: each iteration approximately doubles the number of correct digits.
 
@@ -2955,7 +2955,7 @@ Due to its length (approximately 181 pages), this appendix is archived separatel
 \noindent Available at \url{https://doi.org/10.5281/zenodo.18783098}.
 
 \medskip
-\noindent The companion document tabulates the first 1000 zeros of $L(s,\chi_d)$ to 70 decimal places for each of the eight quadratic characters $\chi_2$, $\chi_3$, $\chi_5$, $\chi_6$, $\chi_7$, $\chi_{10}$, $\chi_{11}$, and $\chi_{13}$ (8000 zeros in total).  All zeros were computed using the methodology of \S\ref{subsec:Lfunc-method} at 1500-bit working precision and rigorously certified using ARB interval arithmetic (\S\ref{subsec:software}).  Certified upper bounds on $|L(\tfrac{1}{2}+i\gamma_k',\chi_d)|$ are provided for every zero, with all bounds below $10^{-447}$.  This dataset extends and supersedes the tables in Appendices~\ref{app:chi5-highprec} and~\ref{app:zero-data} of the present paper.
+\noindent The companion document tabulates the first 1000 zeros of $L(s,\chi_d)$ to 70 decimal places for each of the eight quadratic characters $\chi_2$, $\chi_3$, $\chi_5$, $\chi_6$, $\chi_7$, $\chi_{10}$, $\chi_{11}$, and $\chi_{13}$ (8000 zeros in total).  All zeros were computed using the methodology of \S\ref{subsec:Lfunc-method} at 1500-bit working precision and rigorously certified using ARB interval arithmetic (\S\ref{subsec:software}).  Certified upper bounds on $|L(\tfrac{1}{2}+i\gamma_k',\chi_d)|$ are provided for every zero, with all bounds below $10^{-448}$.  This dataset extends and supersedes the tables in Appendices~\ref{app:chi5-highprec} and~\ref{app:zero-data} of the present paper.
 
 \begin{thebibliography}{99}
 
