@@ -950,9 +950,9 @@ exists with $\max|n_k| \leq 1000$. For all $190$ pairs $(j,k)$, no pairwise rela
 exists with $\max(|n_j|,|n_k|) \leq 10{,}000$. For all $120$ triples drawn from the
 first $10$ zeros, no triple relation exists with $\max|n_k| \leq 500$.
 \item \textup{(Large coefficients.)} For any integer vector with $\max|n_k| \geq 1001$,
-the Bessel contribution to the density integral is bounded by $10^{-850}$.
+the Bessel contribution to the density integral is bounded by $10^{-849.5}$.
 \end{enumerate}
-Parts~(i) and~(ii) together cover all nonzero $\mathbf{n} \in \Z^{20}$: part~(i) certifies nonexistence for $\max|n_k| \leq 1000$ via PSLQ at 70-digit precision, and part~(ii) bounds the contribution of any $\mathbf{n}$ with $\max|n_k| \geq 1001$ via Bessel decay.  Consequently, the density formula
+Parts~(i) and~(ii) together cover all nonzero $\mathbf{n} \in \Z^{20}$: part~(i) certifies nonexistence for $\max|n_k| \leq 1000$ via PSLQ at 70-digit precision, and part~(ii) bounds the contribution of any $\mathbf{n}$ with $\max|n_k| \geq 1001$ via Bessel decay (ARB-certified total $< 10^{-849.5}$).  Consequently, the density formula
 \[
   f_{S_L^{(20)}}(0) = \frac{1}{\pi}\int_0^\infty \prod_{k=1}^{20} J_0(b_k t)\,dt
 \]
@@ -2341,15 +2341,17 @@ threshold.  The $70$-digit certification provides ample margin above this thresh
 
 For any integer vector $\mathbf{n}$ with $\max|n_k| \geq N = 1001$, the standard bound
 $|J_N(x)| \leq (x/2)^N/N!$ gives, at the most pessimistic integration range $T = 2000$
-and with $b_{\max} = b_1 = 4.499\times 10^{-2}$:
+and with $b_{\max} = b_1 = 4.499\times 10^{-2}$ (upper endpoint of the ARB ball):
 \[
-  \left(\frac{b_1 \cdot 2000}{2}\right)^{1001}\frac{1}{1001!} < 10^{-916}.
+  \left(\frac{b_1 \cdot 2000}{2}\right)^{1001}\frac{1}{1001!} < 10^{-915.8}.
 \]
+The sum over all $N \geq 1001$ acquires a geometric series factor $1/(1 - b_1\cdot 1000/1002) < 1.05$.
 The count of integer vectors with $\max|n_k| = N$ in dimension $20$ is at most
-$(2N+1)^{20} \leq (2003)^{20} < 10^{66}$.  Summing over all $N \geq 1001$ gives total
-resonance contribution bounded by $10^{66}\cdot 10^{-916} = 10^{-850}$.
+$(2N+1)^{20} \leq (2003)^{20} < 10^{66.1}$.  Summing over all $N \geq 1001$ gives total
+resonance contribution bounded by $10^{66.1}\cdot 10^{-915.8} \cdot 1.05 < 10^{-849.5}$,
+ARB-certified with $\log_{10}(\text{total}) \in [-849.759 \pm 10^{-72}]$.
 
-The resonance correction is bounded by $10^{-850}$ and does not affect any
+The resonance correction is bounded by $10^{-849.5}$ and does not affect any
 reported digit of $f_{S_L^{(20)}}(0) = 8.3129$.  The PSLQ search (\S\ref{subsec:pslq}) and Bessel tail bound together certify $d_{20} = 0$.  This completes the proof of Proposition~\ref{prop:resonance-cert}. \qed
 
 \subsection{Reproducibility}
