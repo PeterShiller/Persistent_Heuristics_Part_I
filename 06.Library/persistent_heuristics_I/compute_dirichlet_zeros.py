@@ -1,4 +1,11 @@
 """
+compute_dirichlet_zeros.py  —  ARB-certified zero computation pipeline for quadratic Dirichlet L-functions
+==========================================================================================================
+Ancillary data module for:
+    Shiller, P. (2026). Unconditional Density Bounds for Quadratic
+    Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
+    https://doi.org/10.5281/zenodo.18783098
+
 persistent_heuristics_I.compute_dirichlet_zeros
 -------------------------------------------------
 Exposes the ARB-certified zero computation pipeline for quadratic Dirichlet
@@ -50,7 +57,7 @@ def _load():
         import flint  # noqa: F401
     except ImportError:
         raise ImportError(
-            "python-flint is required to use persistent_heuristics_I.compute.\n"
+            "python-flint is required to use persistent_heuristics_I.compute_dirichlet_zeros.\n"
             "Install it with:\n"
             "    pip install 'persistent-heuristics-I[compute]'\n"
             "or independently with:\n"

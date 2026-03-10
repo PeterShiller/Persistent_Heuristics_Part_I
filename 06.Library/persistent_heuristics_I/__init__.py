@@ -1,4 +1,11 @@
 """
+__init__.py  —  persistent_heuristics_I: ARB-certified zero tables for quadratic Dirichlet L-functions
+=======================================================================================================
+Ancillary data module for:
+    Shiller, P. (2026). Unconditional Density Bounds for Quadratic
+    Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
+    https://doi.org/10.5281/zenodo.18783098
+
 persistent_heuristics_I
 =======================
 ARB-certified zero tables and theorem scripts for:
@@ -21,7 +28,6 @@ python-flint must be installed:
 
 python-flint is not installed automatically because it is a compiled
 extension and is not needed to access the precomputed zero tables.
-The compute module is in compute_dirichlet_zeros.py:
 
 This package requires an editable install from a cloned copy of the
 repository.  The zero data files are not bundled; they are loaded at
