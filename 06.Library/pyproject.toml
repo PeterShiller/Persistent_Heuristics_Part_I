@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools >= 68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "persistent-heuristics-I"
+version = "0.1.0"
+description = "ARB-certified zeros of quadratic Dirichlet L-functions and ancillary theorem scripts for Persistent Heuristics Mini Monograph I."
+authors = [{ name = "Peter Shiller" }]
+license = { text = "CC BY 4.0" }
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["python-flint >= 0.8.0"]
+keywords = ["number theory", "L-functions", "Dirichlet", "zeros", "ARB", "interval arithmetic"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Intended Audience :: Science/Research",
+]
+
+[project.urls]
+"arXiv" = "https://arxiv.org/abs/2603.00301"
+"Zenodo" = "https://doi.org/10.5281/zenodo.18783098"
+"GitHub" = "https://github.com/PeterShiller/Persistent_Heuristics_Part_I"
+
+[project.scripts]
+ph1-compute-zeros = "persistent_heuristics_I.compute:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["persistent_heuristics_I*"]
+
+[tool.setuptools.package-data]
+persistent_heuristics_I = ["_data/*.py"]

@@ -1,0 +1,59 @@
+"""
+persistent_heuristics_I
+=======================
+ARB-certified zero tables and theorem scripts for:
+
+    Shiller, P. (2026). Unconditional Density Bounds for Quadratic
+    Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
+    https://doi.org/10.5281/zenodo.18783098
+
+Public API
+----------
+Dirichlet L-function zeros (quadratic characters):
+
+    from persistent_heuristics_I import get_zeros, get_bound, get_seal
+    from persistent_heuristics_I import available_characters, info
+
+    zeros = get_zeros(5, n=20)           # first 20 zeros of L(s, chi_5)
+    zero  = get_zero(5, 1)               # first zero as arb ball
+    bound = get_bound(5, 1)              # certified |L(1/2+i*gamma)| bound
+    seal  = get_seal(5)                  # seal height and zero count
+
+Riemann zeta zeros:
+
+    from persistent_heuristics_I import zeta
+    zeros = zeta.get_zeros(n=60)
+    zero  = zeta.get_zero(1)
+
+Precision note
+--------------
+All zero ordinates are stored at 70 decimal places (digits after the
+decimal point).  get_zeros() returns arb balls at that precision by
+default; pass dp=N to clip to N digits, or as_strings=True for string
+output.  The certified bound for each zero satisfies |L(1/2+i*gamma)| <
+10^{-420} at the table-wide floor (some zeros exceed 10^{-500}).
+"""
+
+from .dirichlet import (
+    available_characters,
+    info,
+    get_zero,
+    get_zeros,
+    get_bound,
+    get_bounds,
+    get_seal,
+    get_bound_stats,
+)
+from . import zeta
+
+__all__ = [
+    "available_characters",
+    "info",
+    "get_zero",
+    "get_zeros",
+    "get_bound",
+    "get_bounds",
+    "get_seal",
+    "get_bound_stats",
+    "zeta",
+]
