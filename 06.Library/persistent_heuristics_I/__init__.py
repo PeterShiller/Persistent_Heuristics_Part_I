@@ -54,14 +54,17 @@ Riemann zeta zeros:
 
 Precision note
 --------------
-All zero ordinates are stored at 70 decimal places (digits after the
-decimal point).  get_zeros() returns a list of decimal.Decimal objects
-at that precision by default; pass dp=N to clip to N digits, or
-as_strings=True for string output.  The certified bound for each zero
-is returned as a tuple (mantissa, exponent) by get_bound(), meaning
-|L(1/2 + i*gamma)| < mantissa * 10^exponent.  The table-wide floor
+Dirichlet L-function zero ordinates are stored at 70 decimal places (digits
+after the decimal point).  get_zeros() returns a list of decimal.Decimal
+objects at that precision by default; pass dp=N to clip to N digits (0..70),
+or as_strings=True for string output.  The certified bound for each zero
+is returned as a (float, int) tuple (mantissa, exponent) by get_bound(),
+meaning |L(1/2 + i*gamma)| < mantissa * 10^exponent.  The table-wide floor
 across all sealed characters is 10^{-409} (chi_2); most zeros have
 bounds in the range 10^{-420} to 10^{-660}.
+
+Riemann zeta zeros (accessible via the zeta submodule) are sourced from the
+LMFDB and stored at 31 decimal places; they are not ARB-certified.
 """
 
 from .dirichlet_zeros import (
@@ -75,6 +78,15 @@ from .dirichlet_zeros import (
     get_bound_stats,
 )
 from . import zeta
+
+try:
+    from importlib.metadata import version as _version
+    __version__ = _version("persistent-heuristics-I")
+except Exception:
+    __version__ = "0.1.0"
+
+__author__  = "Peter Shiller"
+__license__ = "CC BY 4.0"
 
 __all__ = [
     "available_characters",

@@ -34,17 +34,21 @@ _spec = _importlib_util.spec_from_file_location("_L_function_zeros", _DATA)
 _mod  = _importlib_util.module_from_spec(_spec)
 _spec.loader.exec_module(_mod)
 
+# Fixed set of available squarefree discriminants.  Defined here as a constant
+# so that _check_d does not depend on _mod being healthy.
+_VALID_D = (2, 3, 5, 6, 7, 10, 11, 13)
+
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
 
 def _check_d(d):
-    """Require d to be a plain int (not bool, not numpy.int64, etc.).
+    """Require d to be a plain int in _VALID_D (not bool, not numpy.int64, etc.).
     Users with numpy scalars should pass int(d)."""
     if isinstance(d, bool) or not isinstance(d, int):
         raise TypeError(
             f"d must be a Python int, got {type(d).__name__!r}.  "
-            f"Valid values: {_mod.available_characters()}.  "
+            f"Valid values: {list(_VALID_D)}.  "
             f"If d comes from numpy, pass int(d)."
         )
 
