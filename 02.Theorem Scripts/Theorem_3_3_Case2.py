@@ -61,7 +61,7 @@ Algorithm
 Zero data
 ---------
   The first M = 20 zero ordinates of L(s, chi_d) are loaded from
-  L_function_zeros.py (sealed, ARB-certified at 70 decimal places, 1500-bit
+  L_function_zeros.py (sealed, ARB-certified at 20 decimal places, 1500-bit
   working precision).  Each ordinate is ingested as an arb() ball via the
   string representation, preserving all certified digits.
 
@@ -91,7 +91,7 @@ External-input qualifications
   tail bound); it is not re-derived in this script.
 
   Zero ordinates are trusted certified strings from the sealed library
-  (L_function_zeros.py, ARB-certified at 1500-bit working precision to 70
+  (L_function_zeros.py, ARB-certified at 1500-bit working precision to 20
   decimal places).  This script ingests them via arb(string) and does not
   re-execute the ARB zero certification.
 
@@ -161,9 +161,8 @@ def load_zeros_arb(d, m):
     Load the first m certified zero ordinates of L(s, chi_d) as ARB balls.
 
     Each ordinate is ingested via arb(str_value), where str_value is the
-    70-decimal-place string from the sealed data.  The resulting ARB ball
-    has radius commensurate with the last digit of the string representation;
-    for all characters this is at most 10^{-69}.
+    20-decimal-place string from the sealed data.  The resulting ARB ball
+    has radius commensurate with the last digit of the string representation.
     """
     zero_strings = get_zeros(d, n=m, as_strings=True)
     return [arb(s) for s in zero_strings]
