@@ -9,14 +9,23 @@ ARB-certified zero tables and theorem scripts for:
 
 Installation
 ------------
-This package requires an editable install from a cloned copy of the
-repository.  The zero data files are not bundled; they are loaded at
-runtime from their canonical locations in the repository tree.
+The data API (get_zeros, get_bound, etc.) requires no binary dependencies:
 
     git clone https://github.com/PeterShiller/Persistent_Heuristics_Part_I
     pip install -e Persistent_Heuristics_Part_I/06.Library
 
-A standalone wheel distribution is not supported.
+To also use the computation pipeline (ph1-compute-zeros, compute_zeros()),
+python-flint must be installed:
+
+    pip install -e 'Persistent_Heuristics_Part_I/06.Library[compute]'
+
+python-flint is not installed automatically because it is a compiled
+extension and is not needed to access the precomputed zero tables.
+
+This package requires an editable install from a cloned copy of the
+repository.  The zero data files are not bundled; they are loaded at
+runtime from their canonical locations in the repository tree.  A
+standalone wheel distribution is not supported.
 
 Public API
 ----------

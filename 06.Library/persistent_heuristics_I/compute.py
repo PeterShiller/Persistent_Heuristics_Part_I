@@ -36,11 +36,40 @@ if not _COMPUTE.exists():
 if str(_COMPUTE_DIR) not in sys.path:
     sys.path.insert(0, str(_COMPUTE_DIR))
 
-_spec = importlib.util.spec_from_file_location("_compute_Lfunc_zeros", _COMPUTE)
-_mod  = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(_mod)
+_mod = None
 
-compute_zeros = _mod.compute_zeros
-main          = _mod.main
+def _load():
+    """Load compute_Lfunc_zeros.py on first use.  Deferred so that importing
+    this module does not require python-flint to be installed."""
+    global _mod
+    if _mod is not None:
+        return _mod
+    try:
+        import flint  # noqa: F401
+    except ImportError:
+        raise ImportError(
+            "python-flint is required to use persistent_heuristics_I.compute.\n"
+            "Install it with:\n"
+            "    pip install 'persistent-heuristics-I[compute]'\n"
+            "or independently with:\n"
+            "    pip install python-flint"
+        ) from None
+    spec = importlib.util.spec_from_file_location("_compute_Lfunc_zeros", _COMPUTE)
+    mod  = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    _mod = mod
+    return _mod
+
+
+def compute_zeros(*args, **kwargs):
+    """Compute zeros of a quadratic Dirichlet L-function.  See
+    compute_Lfunc_zeros.py for full documentation."""
+    return _load().compute_zeros(*args, **kwargs)
+
+
+def main():
+    """CLI entry point for ph1-compute-zeros."""
+    return _load().main()
+
 
 __all__ = ["compute_zeros", "main"]

@@ -10,7 +10,10 @@ authors = [{ name = "Peter Shiller" }]
 license = { text = "CC BY 4.0" }
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["python-flint >= 0.8.0"]
+dependencies = []
+
+[project.optional-dependencies]
+compute = ["python-flint >= 0.8.0"]
 keywords = ["number theory", "L-functions", "Dirichlet", "zeros", "ARB", "interval arithmetic"]
 classifiers = [
     "Programming Language :: Python :: 3",
