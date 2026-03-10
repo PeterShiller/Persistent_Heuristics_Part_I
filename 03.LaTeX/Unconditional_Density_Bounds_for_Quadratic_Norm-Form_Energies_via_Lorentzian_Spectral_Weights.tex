@@ -1843,9 +1843,9 @@ $d$ & $L(1,\chi_d)$ & $s_*(d)$ \\
 \caption{Null crossing $s_*(d)$ for small discriminants.}\label{table:null-crossing}
 \end{table}
 
-Values of $L(1,\chi_d)$ were computed from the class number formula
-$L(1,\chi_d) = 2hR/\sqrt{|\Delta_K|}$,
-where $h$ is the class number and $R = \log\varepsilon$ is the regulator with fundamental unit $\varepsilon$ of $\mathcal{O}_K$; all five fields have $h = 1$.
+Values of $L(1,\chi_d)$ were computed via the digamma formula
+$L(1,\chi_d) = -\tfrac{1}{q}\sum_{a=1}^{q}\chi_d(a)\,\psi(a/q)$,
+where $\psi$ denotes the digamma function; each value $\psi(a/q)$ is evaluated as a certified ARB ball via \texttt{acb.digamma}.
 The null crossings $s_*(d)$ were found by bisecting $G(s) = \zeta(s)/L(s,\chi_d)$
 against the target $\sqrt{d}$, with $L(s,\chi_d)$ evaluated via the Hurwitz decomposition
 $L(s,\chi_d) = q^{-s}\sum_{a=1}^{q}\chi_d(a)\,\zeta(s,a/q)$
