@@ -49,8 +49,7 @@ Algorithm
         via Theorem 1 of Ferguson--Bailey--Arno [FBA1999], that no integer relation
         with ||n||_inf <= H exists, provided the working precision exceeds the
         precision loss incurred during the algorithm's iterations.  At 80-digit
-        precision with H = 1000 and dimension 20, the margin is adequate (see the
-        cautionary experiment below).
+        precision with H = 1000 and dimension 20, the margin is adequate.
 
       Class B -- All 190 pairwise searches.
         For each pair (j, k) with 0 <= j < k <= 19, mpmath.pslq([gamma_j', gamma_k'],
@@ -62,15 +61,6 @@ Algorithm
       Class C -- All 120 triple searches from first 10 zeros.
         For each triple (j, k, l) with 0 <= j < k < l <= 9, mpmath.pslq(
         [gamma_j', gamma_k', gamma_l'], maxcoeff=500) is called.
-
-    Cautionary experiment (precision control, documented in the paper):
-    PSLQ is applied to the same 20 ordinates truncated to 20 significant digits,
-    at 40-digit working precision with maxcoeff=1000.  This returns a spurious
-    vector n with ||n||_1 = 184 and max|n_k| = 19.  Evaluating the weighted sum
-    sum n_k * gamma_k' at 70-digit precision gives 2.72e-18, unambiguously nonzero.
-    The spurious detection is explained by the effective precision of a linear
-    combination of 20 terms with l^1 norm 184: 20 - log10(184) ~ 17.7 digits,
-    below the residual threshold.  The 70-digit certification eliminates this risk.
 
   Part (ii): Bessel tail bound.
 
@@ -347,52 +337,6 @@ def run_class_C(gammas, prec):
     return results
 
 
-def run_cautionary_experiment(strings_70dp, prec_pslq=40, trunc_digits=20):
-    """
-    Cautionary experiment from the paper: apply PSLQ to ordinates truncated
-    to trunc_digits significant digits at prec_pslq working precision.
-
-    Documents the spurious relation with ||n||_1 = 184 that arises from
-    insufficient precision, and confirms it is nonzero at 70-digit precision.
-    """
-    print("\nCautionary experiment (precision control)")
-    print(f"  Input: {trunc_digits}-digit truncations of gamma_k'")
-    print(f"  Working precision: {prec_pslq} digits")
-
-    # Truncate each string to trunc_digits significant digits.
-    # Strings have the form "d.ddd..." or "dd.ddd..."; we locate the decimal
-    # point and take exactly trunc_digits digits after it to ensure a consistent
-    # significant-digit count regardless of integer part width.
-    def truncate_sig(s, n_sig):
-        dot = s.index('.')
-        # total characters needed: dot position + 1 (the dot) + (n_sig - dot) digits after
-        # equivalently, keep int_digits + dot + (n_sig - int_digits) = n_sig + 1 chars
-        return s[:dot + 1 + (n_sig - dot)]
-
-    with mpmath.workdps(prec_pslq):
-        truncated = [mpmath.mpf(truncate_sig(s, trunc_digits)) for s in strings_70dp]
-        rel = mpmath.pslq(truncated, maxcoeff=1000)
-
-    if rel is None:
-        print("  Result: None (no spurious relation found at this precision)")
-        return
-
-    l1_norm = sum(abs(n) for n in rel)
-    linf_norm = max(abs(n) for n in rel)
-    print(f"  Spurious relation found: {rel}")
-    print(f"  ||n||_inf = {linf_norm},  ||n||_1 = {l1_norm}")
-
-    # Evaluate the weighted sum at 70-digit precision using the full strings
-    with mpmath.workdps(80):
-        gammas_70 = [mpmath.mpf(s) for s in strings_70dp]
-        residual  = sum(rel[k] * gammas_70[k] for k in range(len(rel)))
-    print(f"  sum n_k * gamma_k' at 70dp precision = {mpmath.nstr(residual, 5)}")
-    eff_prec = trunc_digits - mpmath.log(l1_norm, 10)
-    print(f"  Effective precision of linear combination: "
-          f"{trunc_digits} - log10({l1_norm}) ~ {float(eff_prec):.1f} digits")
-    print(f"  Conclusion: spurious detection; residual is unambiguously nonzero.")
-
-
 # ---------------------------------------------------------------------------
 # Part (ii): Bessel tail bound
 # ---------------------------------------------------------------------------
@@ -525,9 +469,6 @@ if __name__ == "__main__":
     print(f"  Class A (20-dim,    H=1000)   : {A_ok}")
     print(f"  Class B (190 pairs, H=10000)  : {B_ok}")
     print(f"  Class C (120 triples, H=500)  : {C_ok}")
-
-    # --- Cautionary experiment ----------------------------------------------
-    run_cautionary_experiment(gammas_str)
 
     # --- Part (ii) ----------------------------------------------------------
     part_ii_ok, log10_bound = bessel_tail_bound(gammas_str)
