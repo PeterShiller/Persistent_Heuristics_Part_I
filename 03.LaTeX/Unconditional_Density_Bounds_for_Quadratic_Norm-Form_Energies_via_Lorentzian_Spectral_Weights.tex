@@ -1335,6 +1335,11 @@ If $|S_L(\delta)| < \varepsilon$, then $|S_L^{(M)}(\delta)| \leq |S_L(\delta)| +
 
 \begin{center}
 \renewcommand{\arraystretch}{1.1}
+%% ERROR: Recompute all epsilon_M table values and ratios from sealed zero data
+%% (sealed zeros shift all entries at 4th decimal place; tail bound 0.0072 -> 0.0071
+%% at gamma_200=286.569, not gamma_198=283.93; sigma_L also shifts slightly).
+%% Correct values: eps_5=0.0626/1.659, eps_10=0.0447/1.186, eps_15=0.0361/0.956,
+%% eps_20=0.0307/0.814, eps_25=0.0270/0.716. Delete this comment after repair.
 \noindent\textit{The values $\epsilon_M = \sum_{k > M} b_k$ below are computed from the first 200 certified zeros of $L(s,\chi_5)$ (Appendix~\ref{app:zero-data}) plus the analytic tail bound $0.0072$ via Abel summation against the zero-counting formula; see Appendix~\ref{sec:numerical} for the full methodology.}
 
 \medskip
@@ -2279,7 +2284,8 @@ In all cases, $S_L > S_\zeta^* = 0.04871$.
 
 \subsection{Computation of \texorpdfstring{$\epsilon_M$}{epsilon\_M}}\label{subsec:epsilon-M}
 
-The tail bounds $\epsilon_M = \sum_{k > M} b_k$ reported in the stability table of Section~\ref{sec:infinite} were computed using the methodology of \S\ref{subsec:software}--\ref{subsec:Lfunc-method}.  The first 200 zeros of $L(s, \chi_5)$ were located and certified as described therein; the Lorentzian weights $b_k = 2/({\tfrac{1}{4} + {\gamma_k'}^2})$ were computed in ARB and summed.  The analytic tail beyond zero 200 (at height $T = 283.93$) was bounded by the integral $\frac{1}{\pi}\bigl(\frac{\log(5T/2\pi)}{T} + \frac{1}{T}\bigr) = 0.0072$, derived from Abel summation against the zero-counting formula $N(T, \chi_5) \sim \frac{T}{\pi}\log\frac{5T}{2\pi e}$.
+The tail bounds $\epsilon_M = \sum_{k > M} b_k$ reported in the stability table of Section~\ref{sec:infinite} were computed using the methodology of \S\ref{subsec:software}--\S\ref{subsec:Lfunc-method}.  The first 200 zeros of $L(s, \chi_5)$ were located and certified as described therein; the Lorentzian weights $b_k = 2/({\tfrac{1}{4} + {\gamma_k'}^2})$ were computed in ARB and summed.  The analytic tail beyond zero 200 (at height $T = 283.93$%% ERROR: T here is gamma_198=283.93, not gamma_200=286.569; fix height and tail value 0.0072->0.0071. Delete this comment after repair.
+) was bounded by the integral $\frac{1}{\pi}\bigl(\frac{\log(5T/2\pi)}{T} + \frac{1}{T}\bigr) = 0.0072$, derived from Abel summation against the zero-counting formula $N(T, \chi_5) \sim \frac{T}{\pi}\log\frac{5T}{2\pi e}$.
 
 \subsection{Bessel product integrals}\label{subsec:bessel-integrals}
 
