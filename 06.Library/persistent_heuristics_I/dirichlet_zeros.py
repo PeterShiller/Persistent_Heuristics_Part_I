@@ -11,6 +11,12 @@ persistent_heuristics_I.dirichlet_zeros
 Re-exports the public data API of L_function_zeros.py: precomputed
 ARB-certified zeros of quadratic Dirichlet L-functions at 70 decimal places.
 
+This module is a retrieval interface for pre-certified data; it does not
+re-execute the ARB certification on import.  Rigorous downstream scripts
+should ingest zero ordinates via get_zeros(..., as_strings=True) into arb(),
+not as Decimal objects.  The Decimal return path is suitable for display,
+inspection, and plotting only.
+
 This module uses runtime path resolution to locate L_function_zeros.py
 in the repository tree.  It requires an editable install (pip install -e)
 from a cloned copy of the repository; a standalone wheel is not supported.
