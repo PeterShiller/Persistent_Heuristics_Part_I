@@ -1,10 +1,10 @@
 """
 Proposition_2_2(Szeta_star).py  —  Certified verification of Proposition [Explicit value of S_zeta]
-================================================================================================
+===================================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
-    Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
-    https://doi.org/10.5281/zenodo.18783098
+    Norm-Form Energies via Lorentzian Spectral Weights.
+    arXiv:2603.00301.  Zenodo: https://doi.org/10.5281/zenodo.18783098
 
 This module certifies the bound
 

@@ -3,8 +3,8 @@ Theorem_9_2.py  —  Certified verification of Theorem 9.2 (Integer crossing obs
 =======================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
-    Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
-    https://doi.org/10.5281/zenodo.18783098
+    Norm-Form Energies via Lorentzian Spectral Weights.
+    arXiv:2603.00301.  Zenodo: https://doi.org/10.5281/zenodo.18783098
 
 Proof structure and certification strategy per case
 -----------------------------------------------------

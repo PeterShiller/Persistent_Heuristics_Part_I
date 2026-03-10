@@ -1,10 +1,11 @@
 """
-Tables of zeros of quadratic Dirichlet L-functions of small conductor.
+L_function_zeros.py  —  ARB-certified zeros of quadratic Dirichlet L-functions
+==============================================================================
 
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
-    Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
-    https://doi.org/10.5281/zenodo.18783098
+    Norm-Form Energies via Lorentzian Spectral Weights.
+    arXiv:2603.00301.  Zenodo: https://doi.org/10.5281/zenodo.18783098
 
 Contains the first 1000 zeros of L(s, chi_d) on the critical line
 Re(s) = 1/2 for all eight squarefree d with 2 <= d <= 13, computed

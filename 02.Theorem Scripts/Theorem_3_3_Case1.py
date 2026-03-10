@@ -1,10 +1,10 @@
 """
-Theorem 3.3: Unconditional Cesaro Variance Bound, Case 1
-=========================================================
+Theorem_3_3_Case1.py  —  Certified verification of Theorem 3.3, Case 1 (d >= 14)
+================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
-    Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
-    https://doi.org/10.5281/zenodo.18783098
+    Norm-Form Energies via Lorentzian Spectral Weights.
+    arXiv:2603.00301.  Zenodo: https://doi.org/10.5281/zenodo.18783098
 
 This module certifies Case 1 of Theorem 3.3 of the above reference.  For
 every squarefree d >= 14 and every T > 0,

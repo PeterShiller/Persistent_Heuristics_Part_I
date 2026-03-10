@@ -3,8 +3,8 @@ Kronecker_character_data.py  —  Kronecker character data for quadratic Dirichl
 ============================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
-    Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
-    https://doi.org/10.5281/zenodo.18783098
+    Norm-Form Energies via Lorentzian Spectral Weights.
+    arXiv:2603.00301.  Zenodo: https://doi.org/10.5281/zenodo.18783098
 
 This module tabulates the Kronecker character chi_d for each squarefree
 discriminant d covered by the above reference.  The character values feed the Hurwitz
