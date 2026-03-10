@@ -29,13 +29,14 @@ pip install -e 'Persistent_Heuristics_Part_I/06.Library[compute]'
 ## Usage
 
 ```python
-from persistent_heuristics_I import get_zeros, get_bound, get_seal
-from persistent_heuristics_I import available_characters
+from persistent_heuristics_I import (
+    get_zero, get_zeros, get_bound, get_seal, available_characters
+)
 
 # Available characters
 available_characters()          # [2, 3, 5, 6, 7, 10, 11, 13]
 
-# First 20 zeros of L(s, chi_5) as arb balls at 70 decimal places
+# First 20 zeros of L(s, chi_5) as Decimal objects at 70 decimal places
 zeros = get_zeros(5, n=20)
 
 # As strings
@@ -44,8 +45,9 @@ zeros = get_zeros(5, n=20, as_strings=True)
 # Single zero
 zero = get_zero(5, 1)
 
-# Certified |L(1/2 + i*gamma)| bound for zero k
-bound = get_bound(5, 1)         # e.g. 1.4e-447
+# Certified |L(1/2 + i*gamma)| bound for zero k, returned as (mantissa, exponent)
+# meaning |L(1/2 + i*gamma)| < mantissa * 10^exponent
+bound = get_bound(5, 1)         # e.g. (1.56, -450)
 
 # Seal metadata (height, zero count, working precision, date)
 seal = get_seal(5)

@@ -38,4 +38,8 @@ info      = _mod.info
 get_zero  = _mod.get_zero
 get_zeros = _mod.get_zeros
 
+# Note: get_zeros accepts an optional start parameter (default 1) allowing
+# retrieval of any contiguous slice, e.g. get_zeros(n=100, start=500) returns
+# zeros 500 through 599.  get_zero(k) is 1-indexed.  Both return Decimal objects.
+
 __all__ = ["available", "info", "get_zero", "get_zeros"]

@@ -38,11 +38,11 @@ Public API
 ----------
 Dirichlet L-function zeros (quadratic characters):
 
-    from persistent_heuristics_I import get_zeros, get_bound, get_seal
+    from persistent_heuristics_I import get_zero, get_zeros, get_bound, get_seal
     from persistent_heuristics_I import available_characters, info
 
-    zeros = get_zeros(5, n=20)           # first 20 zeros of L(s, chi_5)
-    zero  = get_zero(5, 1)               # first zero as arb ball
+    zeros = get_zeros(5, n=20)           # first 20 zeros of L(s, chi_5) as Decimals
+    zero  = get_zero(5, 1)               # first zero ordinate as Decimal
     bound = get_bound(5, 1)              # certified |L(1/2+i*gamma)| bound
     seal  = get_seal(5)                  # seal height and zero count
 
