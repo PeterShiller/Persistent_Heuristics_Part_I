@@ -59,9 +59,13 @@ after the decimal point).  get_zeros() returns a list of decimal.Decimal
 objects at that precision by default; pass dp=N to clip to N digits (0..70),
 or as_strings=True for string output.  The certified bound for each zero
 is returned as a (float, int) tuple (mantissa, exponent) by get_bound(),
-meaning |L(1/2 + i*gamma)| < mantissa * 10^exponent.  The table-wide floor
-across all sealed characters is 10^{-409} (chi_2); most zeros have
-bounds in the range 10^{-420} to 10^{-660}.
+meaning |L(1/2 + i*gamma)| < mantissa * 10^exponent.  All zeros are
+Newton-certified at a minimum of 1500-bit working precision; zeros whose
+bound at 1500-bit was weaker than the table-wide floor are boosted to
+2200-bit.  The table-wide floor across all sealed characters is 10^{-409}
+(chi_2); most zeros have bounds in the range 10^{-420} to 10^{-660}.
+Completeness of each table is guaranteed by a global argument-principle
+winding number at 192-bit working precision.
 
 Riemann zeta zeros (accessible via the zeta submodule) are sourced from the
 LMFDB and stored at 31 decimal places; they are not ARB-certified.
