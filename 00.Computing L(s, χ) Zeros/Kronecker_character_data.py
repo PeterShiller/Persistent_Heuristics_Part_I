@@ -1,6 +1,6 @@
 """
-Kronecker character data for quadratic Dirichlet L-functions.
-
+Kronecker_character_data.py  —  Kronecker character data for quadratic Dirichlet L-functions
+============================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
     Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
