@@ -1,6 +1,6 @@
 """
-Rigorous computation of zeros of quadratic Dirichlet L-functions using ARB.
-
+compute_Lfunc_zeros.py  —  Rigorous computation of zeros of quadratic Dirichlet L-functions using ARB
+=====================================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
     Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.

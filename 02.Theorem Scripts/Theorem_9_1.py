@@ -1,6 +1,6 @@
 """
-Theorem 9.1: Null Crossing Computation
-========================================
+Theorem_9_1.py  —  Certified verification of Theorem 9.1 (Unique null crossing)
+===============================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
     Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.

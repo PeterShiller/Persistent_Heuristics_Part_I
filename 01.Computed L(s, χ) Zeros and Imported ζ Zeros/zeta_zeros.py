@@ -1,17 +1,10 @@
 """
-Riemann zeta zero data module.
-
-Contains the first 6000 nontrivial zeros gamma_k of the Riemann zeta
-function on the critical line Re(s) = 1/2, i.e. the positive imaginary
-parts satisfying  zeta(1/2 + i*gamma_k) = 0.
-
-Precision: 31 decimal places per zero.
-
-Ancillary data module for
--------------------------
-Shiller, P. (2026). Unconditional Density Bounds for Quadratic
-Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
-https://doi.org/10.5281/zenodo.18783098
+zeta_zeros.py  —  Riemann zeta zero data module
+===============================================
+Ancillary data module for:
+    Shiller, P. (2026). Unconditional Density Bounds for Quadratic
+    Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
+    https://doi.org/10.5281/zenodo.18783098
 
 Data source
 -----------

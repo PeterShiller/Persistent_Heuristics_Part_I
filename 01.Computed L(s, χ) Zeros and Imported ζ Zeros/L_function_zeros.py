@@ -1,6 +1,6 @@
 """
-Tables of zeros of quadratic Dirichlet L-functions of small conductor.
-
+L_function_zeros.py  —  Tables of zeros of quadratic Dirichlet L-functions of small conductor
+=============================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
     Norm-Form Energies via Lorentzian Spectral Weights. Zenodo.
