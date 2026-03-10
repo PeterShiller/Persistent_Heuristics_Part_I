@@ -29,8 +29,10 @@ Algorithm
   Part (i): PSLQ integer relation search.
 
     Input: the first 20 zero ordinates gamma_1', ..., gamma_20' of L(s, chi_5),
-    loaded from the sealed library (L_function_zeros.py, ARB-certified at 1500-bit
-    working precision to 70 decimal places; Appendix app:chi5-highprec of the paper).
+    drawn from the 200 zeros certified to 70 decimal places in the sealed library
+    (L_function_zeros.py, ARB-certified at 1500-bit working precision;
+    Appendix app:chi5-highprec of the paper).  Only the first M = 20 are used
+    for the PSLQ search; the remaining 180 are not accessed by this script.
     Each ordinate is converted to an mpmath mpf at 80-digit working precision for
     input to mpmath.pslq.
 
@@ -89,9 +91,11 @@ Algorithm
 Rigorousness checklist
 ----------------------
   (a) Zero ordinates are loaded as 70-decimal-place strings from the sealed
-      library and converted to mpmath mpf objects at 80-digit precision.  The
-      conversion adds no more than one-digit rounding error, leaving at least
-      69 certified digits available for PSLQ input.
+      library, which contains 200 zeros of L(s, chi_5) at 70dp (Appendix
+      app:chi5-highprec).  Only the first 20 are used here.  Each string is
+      converted to an mpmath mpf at 80-digit precision.  The conversion adds
+      no more than one-digit rounding error, leaving at least 69 certified
+      digits available for PSLQ input.
   (b) Ferguson--Bailey--Arno [FBA1999] Theorem 1 guarantees that a None return
       from mpmath.pslq at coefficient bound H certifies absence of all integer
       relations with ||n||_inf <= H, provided working precision is adequate.
@@ -112,11 +116,12 @@ Rigorousness checklist
 
 External-input qualifications
 ------------------------------
-  Zero ordinates gamma_1', ..., gamma_20' are trusted certified strings from
-  the sealed library (L_function_zeros.py, ARB-certified at 1500-bit working
-  precision to 70 decimal places; Appendix app:chi5-highprec of the paper).
-  This script ingests them as mpmath mpf objects and does not re-execute the
-  ARB zero certification.
+  Zero ordinates gamma_1', ..., gamma_20' are the first 20 of the 200 zeros
+  of L(s, chi_5) certified to 70 decimal places in the sealed library
+  (L_function_zeros.py, ARB-certified at 1500-bit working precision;
+  Appendix app:chi5-highprec of the paper).  This script ingests them as
+  mpmath mpf objects and does not re-execute the ARB zero certification.
+  The remaining 180 zeros in the library are not accessed here.
 
 Requirements
 ------------
@@ -393,7 +398,7 @@ if __name__ == "__main__":
     print(f"PSLQ working precision : {PSLQ_PREC} decimal digits")
     print(f"ARB working precision  : {ARB_PREC} bits  "
           f"(~{int(ARB_PREC * 0.30103)} decimal digits)")
-    print(f"Zeros per character    : M = {M}  (chi_5, 70dp, from sealed library)")
+    print(f"Zeros per character    : M = {M} used  (chi_5, 200 available at 70dp, first {M} loaded)")
     print()
 
     t_total = time.time()
