@@ -76,9 +76,11 @@ ph1-compute-zeros --d 5 --nzeros 1000 --high-precision
 | 13 | 13          | 1000  | —      | —      |
 
 All sealed zeros are certified by ARB interval arithmetic at 1500-bit working
-precision with certified bounds |L(1/2 + i*gamma)| < 10^{-420} at the
-table-wide floor. Completeness is guaranteed by a global argument-principle
-winding number on the rectangle [-0.5, 1.5] x [0.5, T_seal].
+precision. Certified bounds |L(1/2 + i*gamma)| are returned as (mantissa,
+exponent) tuples by get_bound(). The table-wide floor is 10^{-409} (chi_2);
+most zeros have bounds in the range 10^{-420} to 10^{-660}. Completeness is
+guaranteed by a global argument-principle winding number on the rectangle
+[-0.5, 1.5] x [0.5, T_seal].
 
 ## License
 

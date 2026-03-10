@@ -55,10 +55,13 @@ Riemann zeta zeros:
 Precision note
 --------------
 All zero ordinates are stored at 70 decimal places (digits after the
-decimal point).  get_zeros() returns arb balls at that precision by
-default; pass dp=N to clip to N digits, or as_strings=True for string
-output.  The certified bound for each zero satisfies |L(1/2+i*gamma)| <
-10^{-420} at the table-wide floor (some zeros exceed 10^{-500}).
+decimal point).  get_zeros() returns a list of decimal.Decimal objects
+at that precision by default; pass dp=N to clip to N digits, or
+as_strings=True for string output.  The certified bound for each zero
+is returned as a tuple (mantissa, exponent) by get_bound(), meaning
+|L(1/2 + i*gamma)| < mantissa * 10^exponent.  The table-wide floor
+across all sealed characters is 10^{-409} (chi_2); most zeros have
+bounds in the range 10^{-420} to 10^{-660}.
 """
 
 from .dirichlet_zeros import (
