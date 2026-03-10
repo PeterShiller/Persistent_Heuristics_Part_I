@@ -11,9 +11,6 @@ license = { text = "CC BY 4.0" }
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []
-
-[project.optional-dependencies]
-compute = ["python-flint >= 0.8.0"]
 keywords = ["number theory", "L-functions", "Dirichlet", "zeros", "ARB", "interval arithmetic"]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -21,13 +18,16 @@ classifiers = [
     "Intended Audience :: Science/Research",
 ]
 
+[project.optional-dependencies]
+compute = ["python-flint >= 0.8.0"]
+
 [project.urls]
 "arXiv" = "https://arxiv.org/abs/2603.00301"
 "Zenodo" = "https://doi.org/10.5281/zenodo.18783098"
 "GitHub" = "https://github.com/PeterShiller/Persistent_Heuristics_Part_I"
 
 [project.scripts]
-ph1-compute-zeros = "persistent_heuristics_I.compute:main"
+ph1-compute-zeros = "persistent_heuristics_I.compute_dirichlet_zeros:main"
 
 [tool.setuptools.packages.find]
 where = ["."]

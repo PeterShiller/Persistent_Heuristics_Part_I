@@ -1,18 +1,20 @@
 """
-persistent_heuristics_I.compute
----------------------------------
-Exposes the zero computation pipeline as an importable module and
-as the CLI entry point `ph1-compute-zeros`.
+persistent_heuristics_I.compute_dirichlet_zeros
+-------------------------------------------------
+Exposes the ARB-certified zero computation pipeline for quadratic Dirichlet
+L-functions as an importable module and as the CLI entry point
+`ph1-compute-zeros`.
 
 This module uses runtime path resolution to locate compute_Lfunc_zeros.py
 in the repository tree.  It requires an editable install (pip install -e)
 from a cloned copy of the repository; a standalone wheel is not supported.
+python-flint must also be installed (pip install 'persistent-heuristics-I[compute]').
 
-Usage (CLI after pip install -e):
+Usage (CLI after pip install -e '[compute]'):
     ph1-compute-zeros --d 5 --nzeros 1000 --high-precision
 
 Usage (Python):
-    from persistent_heuristics_I.compute import compute_zeros
+    from persistent_heuristics_I.compute_dirichlet_zeros import compute_zeros
     compute_zeros(d=5, nzeros=20, high_precision=True)
 """
 

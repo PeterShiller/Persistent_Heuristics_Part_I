@@ -21,6 +21,7 @@ python-flint must be installed:
 
 python-flint is not installed automatically because it is a compiled
 extension and is not needed to access the precomputed zero tables.
+The compute module is in compute_dirichlet_zeros.py:
 
 This package requires an editable install from a cloned copy of the
 repository.  The zero data files are not bundled; they are loaded at
@@ -54,7 +55,7 @@ output.  The certified bound for each zero satisfies |L(1/2+i*gamma)| <
 10^{-420} at the table-wide floor (some zeros exceed 10^{-500}).
 """
 
-from .dirichlet import (
+from .dirichlet_zeros import (
     available_characters,
     info,
     get_zero,

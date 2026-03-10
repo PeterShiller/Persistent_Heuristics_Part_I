@@ -1,7 +1,8 @@
 """
-persistent_heuristics_I.dirichlet
-----------------------------------
-Re-exports the public API of L_function_zeros.py.
+persistent_heuristics_I.dirichlet_zeros
+-----------------------------------------
+Re-exports the public data API of L_function_zeros.py: precomputed
+ARB-certified zeros of quadratic Dirichlet L-functions at 70 decimal places.
 
 This module uses runtime path resolution to locate L_function_zeros.py
 in the repository tree.  It requires an editable install (pip install -e)
