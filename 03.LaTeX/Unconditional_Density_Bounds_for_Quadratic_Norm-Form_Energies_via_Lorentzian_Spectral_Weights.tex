@@ -441,7 +441,7 @@ E_\chi(0) := S_\zeta - q \cdot S_{L(\chi)} < 0.
 \end{theorem}
 
 \begin{proof}
-The proof follows the same structure as Theorem~\ref{thm:low-lying}. For $q \geq 4$, Theorem~\ref{thm:BMOR} guarantees a $\gamma'_{\mathrm{unk}}$ zero below height $T = 10.5$, giving $q \cdot w^-(\gamma'_{1,\mathrm{unk}}) \geq 4 \cdot 2/111.25 = 32/445 = 0.0719 > S_\zeta^*$. For $q = 3$, the BMOR bound at $T = 15.7$ guarantees at least three $\gamma'_{\mathrm{unk}}$ zeros below height $15.7$, so $q \cdot S_{L(\chi)} \geq q \cdot 3 \cdot w^-(15.7) = 3 \cdot 3 \cdot 2/(1 + 15.7^2) = 18/247.49 = 0.0727 > S_\zeta^*$.
+The proof follows the same structure as Theorem~\ref{thm:low-lying}. For $q \geq 4$, Theorem~\ref{thm:BMOR} guarantees a $\gamma'_{\mathrm{unk}}$ zero below height $T = 10.5$, giving $q \cdot w^-(\gamma'_{1,\mathrm{unk}}) \geq 4 \cdot 2/111.25 = 32/445 = 0.0719 > S_\zeta^*$. For $q = 3$, the BMOR bound at $T = 17$ guarantees at least three $\gamma'_{\mathrm{unk}}$ zeros below height $17$ (BMOR gives $N \geq 3.34$ at $T = 17$), so $q \cdot S_{L(\chi)} \geq q \cdot 3 \cdot w^-(17) = 3 \cdot 3 \cdot 2/(1 + 17^2) = 18/290 = 0.0621 > S_\zeta^*$.
 \end{proof}
 
 \begin{corollary}[Linear deepening]\label{cor:linear-deepening}
@@ -1298,7 +1298,7 @@ The product $\prod_{k=1}^M |J_0(b_k t)|$ is bounded by $1$ on this interval, so 
 \[
   \frac{1}{\pi}\int_0^{T^*} \left|\prod_{k=1}^M J_0(b_k t)\right| \cdot |J_0(b_{M+1} t) - 1|\, dt \leq \frac{b_{M+1}^2}{4\pi}\int_0^{T^*} t^2\, dt = \frac{(T^*)^3\, b_{M+1}^2}{12\pi} = \frac{1}{12\pi\, b_{M+1}}.
 \]
-Since $\prod|J_0|$ is integrable on $[0, T^*]$ (it is bounded), the true contribution is $O(b_{M+1}^2)$ with an effective constant given by $\frac{1}{4\pi}\int_0^{T^*} t^2 \prod|J_0(b_k t)|\, dt$, which is finite and bounded uniformly in $M$ (the product can only decrease as $M$ grows).
+Since $\prod|J_0|$ is integrable on $[0, \infty)$ for $M \geq 7$ (the product decays as $t^{-M/2}$, which is integrable when $M \geq 3$; the constant $\frac{1}{4\pi}\int_0^\infty t^2 \prod_{k=1}^M |J_0(b_k t)|\, dt$ is finite for $M \geq 7$ and decreasing in $M$), the true contribution is $O(b_{M+1}^2)$ with an effective constant given by $\frac{1}{4\pi}\int_0^\infty t^2 \prod_{k=1}^M |J_0(b_k t)|\, dt$.
 
 \textbf{High region $[T^*, \infty)$.}  For $t \geq T^*$, we use $|J_0(b_{M+1} t) - 1| \leq 2$ and the Bessel asymptotic $|J_0(b_{M+1} t)| \leq \sqrt{2/(\pi b_{M+1} t)}$.  The factor $[J_0(b_{M+1} t) - 1]$ introduces no worse than the existing $J_0(b_{M+1} t)$ factor.  Since $\prod_{k=1}^{M+1} |J_0(b_k t)|$ decays as $t^{-(M+1)/2}$ and $M \geq 3$, the high-region integral converges and contributes $O(b_{M+1}^{1/2})$ at most.
 
@@ -1623,13 +1623,13 @@ Suppose that for a given truncation level $M$:
 \end{enumerate}
 Then
 \[
-  \dens\{N_d > 0\} = \frac{C}{\sqrt{d}} + o(1/\sqrt{d}),
+  \dens\{N_d > 0\} = \frac{C(d)}{\sqrt{d}} + o(1/\sqrt{d}),
 \]
-where $C$ is computable from the exact marginal densities:
+where $C(d)$ depends on $d$ (through $f_{S_L}(0)$, which depends on the spectral weights $b_k = 2/({\tfrac{1}{4}} + \gamma_k'^2)$) and is computable from the exact marginal densities:
 \begin{equation}\label{eq:C_integral}
-  C = \lim_{d\to\infty}\sqrt{d}\cdot 2\int_0^{W_1(L)} f_{S_L}(y)\, \overline{F}_{|S_\zeta|}(\sqrt{d}\, y)\, dy,
+  C(d) = \lim_{d\to\infty}\sqrt{d}\cdot 2\int_0^{W_1(L)} f_{S_L}(y)\, \overline{F}_{|S_\zeta|}(\sqrt{d}\, y)\, dy,
 \end{equation}
-where $\overline{F}_{|S_\zeta|}(u) = P(|S_\zeta| > u)$ denotes the survival function of $|S_\zeta|$.
+where $\overline{F}_{|S_\zeta|}(u) = P(|S_\zeta| > u)$ denotes the survival function of $|S_\zeta|$.  For $d = 5$, $C(5) = 0.1191$ (Section~\ref{sec:null-crossing}).
 
 The Gaussian approximation
 \[
@@ -1655,17 +1655,17 @@ Since $\overline{F}_{|S_\zeta|}(u) = 0$ for $u > W_1(\zeta)$ and $f_{S_L}(u/\sqr
 \[
   \dens\{N_d > 0\} = \frac{1}{\sqrt{d}} \cdot 2\int_0^{W_1(\zeta)} f_{S_L}(0)\, \overline{F}_{|S_\zeta|}(u)\, du \;+\; o(1/\sqrt{d}),
 \]
-which identifies $C = 2f_{S_L}(0)\int_0^{W_1(\zeta)} \overline{F}_{|S_\zeta|}(u)\, du$.
+which identifies $C(d) = 2f_{S_L}(0)\int_0^{W_1(\zeta)} \overline{F}_{|S_\zeta|}(u)\, du$.
 
 The factored form $C(d) = 2f_{S_L}(0)\cdot\E[|S_\zeta|]$ (Corollary~\ref{cor:C-factored}), with both factors computed by rigorous ARB quadrature, gives $C(5) = 0.1191$ certified to four significant figures.
 \end{proof}
 
 The integral in the identification of $C$ admits a closed evaluation.
 
-\begin{corollary}[Factored form of the leading constant]\label{cor:C-factored}
+\begin{corollary}[Factored form of the leading constant]\\label{cor:C-factored}
 Under the hypotheses of Theorem~\ref{thm:arctan},
 \begin{equation}\label{eq:C-factored}
-  C = 2\,f_{S_L}(0)\cdot \E[|S_\zeta|],
+  C(d) = 2\,f_{S_L}(0)\cdot \E[|S_\zeta|],
 \end{equation}
 where the two factors are independently computable from the Bessel product characteristic functions:
 \begin{align}
@@ -1676,7 +1676,7 @@ Numerically, $f_{S_L}(0) = 8.3129$ and $\E[|S_\zeta|] = 0.00716$, giving $C(5) =
 \end{corollary}
 
 \begin{proof}
-The proof of Theorem~\ref{thm:arctan} identifies $C = 2f_{S_L}(0)\int_0^{W_1(\zeta)} \overline{F}_{|S_\zeta|}(u)\, du$.  Since $\overline{F}_{|S_\zeta|}(u) = 0$ for $u > W_1(\zeta)$, the upper limit may be replaced by $+\infty$.  For any non-negative Ces\`aro-distributed quantity $X$ with finite mean, $\E[X] = \int_0^\infty \overline{F}_X(u)\, du$.  Applying this to $X = |S_\zeta|$ gives~\eqref{eq:C-factored}.
+The proof of Theorem~\ref{thm:arctan} identifies $C(d) = 2f_{S_L}(0)\int_0^{W_1(\zeta)} \overline{F}_{|S_\zeta|}(u)\, du$.  Since $\overline{F}_{|S_\zeta|}(u) = 0$ for $u > W_1(\zeta)$, the upper limit may be replaced by $+\infty$.  For any non-negative Ces\`aro-distributed quantity $X$ with finite mean, $\E[X] = \int_0^\infty \overline{F}_X(u)\, du$.  Applying this to $X = |S_\zeta|$ gives~\eqref{eq:C-factored}.
 
 For~\eqref{eq:f0-bessel}: this is equation~\eqref{eq:density_formula} evaluated at $x = 0$.
 
