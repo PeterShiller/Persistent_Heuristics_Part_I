@@ -118,10 +118,8 @@ M_VALUES = [3, 10, 20, 30]
 # ── ARB constants ─────────────────────────────────────────────────────────────
 _ZERO = arb(0)
 _TWO  = arb(2)
-_PI   = arb.pi()   # 53-bit at module load; used only for integrand prefactor and
-                   # strip bounds where 0.5% tolerance makes this more than sufficient.
-                   # _mcmahon_seed calls arb.pi() fresh to avoid propagating this
-                   # low-precision ball into the bisection convergence test.
+# No module-level pi constant: arb.pi() is called fresh inside each function
+# so it inherits the current ctx.prec rather than the 53-bit value at import.
 
 # ── Bessel function evaluations ───────────────────────────────────────────────
 
@@ -339,7 +337,7 @@ def strip_error_bound(M_int, strips):
 
     With DELTA = 1e-20 this is O(1e-20) and negligible.
     """
-    factor = (LANDAU_C ** 3) / _PI
+    factor = (LANDAU_C ** 3) / arb.pi()
     total  = _ZERO
     for (t_lo, t_hi) in strips:
         total = total + factor * (t_hi - t_lo)
@@ -361,7 +359,7 @@ def integrate_gap(t_lo_arb, t_hi_arb, b_acb, M_int):
         r = J1_acb(t * b_acb[0]) * J1_acb(t * b_acb[1]) * J1_acb(t * b_acb[2])
         for k in range(3, M_int):
             r = r * J0_acb(t * b_acb[k])
-        return r / acb(_PI)
+        return r / acb(arb.pi())
 
     I = acb.integral(integrand, acb(t_lo_arb), acb(t_hi_arb),
                      rel_tol=REL_TOL_INT, eval_limit=10**7)
