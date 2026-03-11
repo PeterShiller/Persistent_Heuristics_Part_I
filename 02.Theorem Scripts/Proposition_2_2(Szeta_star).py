@@ -1,5 +1,5 @@
 """
-Proposition_2_2(Szeta_star).py  —  Certified verification of Proposition [Explicit value of S_zeta]
+Proposition_2_2(Szeta_star).py  —  Certified verification of Proposition 2.2 [Explicit value of S_zeta]
 ===================================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
@@ -10,7 +10,7 @@ This module certifies the bound
 
     S_zeta := sum_{zeta(rho)=0} 2 / (1/4 + gamma^2)  <=  0.04871  =: S_zeta*
 
-established in Proposition [Explicit value of S_zeta] of the above reference.
+established in Proposition 2.2 [Explicit value of S_zeta] of the above reference.
 The bound is required as an external certified constant by Theorem 3.3, the
 Spacelike Corollary, and the Low-lying Zero Dominance Theorem.
 
@@ -273,7 +273,7 @@ def compute_analytic_remainder():
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    print("Proposition [Explicit value of S_zeta]: Certification of S_zeta* <= 0.04871")
+    print("Proposition 2.2 [Explicit value of S_zeta]: Certification of S_zeta* <= 0.04871")
     print(f"ARB working precision : {BASE_PREC} bits (~{int(BASE_PREC * 0.30103)} decimal digits)")
     print(f"Zero data             : {K} LMFDB zeta zeros at 31 decimal places")
     print(f"gamma_1               : {_META['gamma_1']}")
