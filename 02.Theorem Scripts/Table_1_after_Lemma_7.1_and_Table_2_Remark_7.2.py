@@ -46,11 +46,11 @@ floating-point library is used in any load-bearing computation.
 Algorithm
 ---------
 UNSIGNED integrals: strip decomposition at every J_0 zero, identical
-architecture to Remark_6_12(J0_Role).py.  acb_calc_integrate is applied
+architecture to Remark_6_12(J0_Role).py.  acb.integral is applied
 only on gap intervals where the product is analytic and sign-definite.
 
 SIGNED integrals: the integrand prod J_0(b_k t) / pi is analytic on
-(0, T] (no absolute values).  acb_calc_integrate is applied directly
+(0, T] (no absolute values).  acb.integral is applied directly
 over the full interval [T_EPS, T].
 
 J_0 computed via J_0(z) = (2/z)J_1(z) - J_2(z) (DLMF 10.6.1).
@@ -265,7 +265,7 @@ def collect_all_strips(b_arb, M_int, T_max_arb):
             elif not (per_factor[best][ptrs[best]][0] < per_factor[k][ptrs[k]][0]):
                 # Neither is certified smaller: the two strip starts overlap in ARB.
                 # This cannot happen for distinct Bessel zeros of different factors
-                # (the zeros of J_0(b_i t) and J_0(b_j t) are generically distinct
+                # (the zeros of J_0(b_i t) and J_0(b_j t) are certified distinct in this computation
                 # and DELTA = 1e-20 is far smaller than any inter-zero gap), but we
                 # guard explicitly.
                 raise RuntimeError(
@@ -303,7 +303,7 @@ def build_gaps(strips, T_max_arb):
 def integrate_unsigned(b_arb, M_int):
     """
     (1/pi) int_0^T prod_{k=1}^M |J_0(b_k t)| dt  via strip decomposition.
-    acb_calc_integrate applied on gap intervals only (analytic, sign-definite).
+    acb.integral applied on gap intervals only (analytic, sign-definite).
     Returns ARB ball.
     """
     ctx.prec = ARB_PREC
@@ -331,7 +331,7 @@ def integrate_unsigned(b_arb, M_int):
 def integrate_signed(b_arb, M_int):
     """
     (1/pi) int_0^T prod_{k=1}^M J_0(b_k t) dt  -- no absolute values.
-    Integrand is analytic; acb_calc_integrate applied over full [T_EPS, T].
+    Integrand is analytic; acb.integral applied over full [T_EPS, T].
     """
     ctx.prec = ARB_PREC
     b_acb    = [acb(bk) for bk in b_arb[:M_int]]
@@ -486,7 +486,7 @@ if __name__ == "__main__":
         print("RESULT: ALL PASS  [ARB-rigorous]")
         print("  - certified trichotomy bisection at all J_0 zeros")
         print("  - strip decomposition at every cusp (unsigned integrals)")
-        print("  - signed integrals via direct acb_calc_integrate (analytic)")
+        print("  - signed integrals via direct acb.integral (analytic)")
         print("  - PASS/FAIL via decisive ARB predicate, no float threshold")
     else:
         raise RuntimeError("Certification failed")
