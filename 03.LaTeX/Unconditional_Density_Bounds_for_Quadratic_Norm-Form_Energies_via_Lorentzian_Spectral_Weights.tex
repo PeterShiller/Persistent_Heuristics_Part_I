@@ -693,7 +693,7 @@ $13$ & $13$ & $1.81 \times 10^{-2}$ & $1.78 \times 10^{-2}$ & $1.83 \times 10^{-
 The worst case is $d = 5$ with certified margin $2.4\times$.  Every entry is rigorously certified by ARB interval arithmetic at 512-bit precision; the ``Certified $\min h$'' column accounts for both the ball radius at each grid point (below $10^{-150}$) and the Lipschitz discretization error $L\Delta$.
 
 \medskip
-Combining Cases~1 and~2: for the eight small discriminants, the Ces\`aro variance exceeds the threshold for all $T > 0$.  For $d \geq 14$, the diagonal contribution exceeds the threshold for all $T > 0$, and the full Ces\`aro variance inherits this bound for all sufficiently large $T$.
+Combining Cases~1 and~2: for the eight small discriminants, the Ces\`aro variance exceeds the threshold for all $T > 0$ (Case~2, grid scan).  For $d \geq 14$, the three-region argument of Case~1 (Regions~1--3 above) certifies the inequality for all $T > 0$ at the worst-case five-zero configuration; since every actual configuration with $d \geq 14$ has at least as many zeros and a no smaller $W_1(L)$, the margin can only improve.
 \end{proof}
 
 \medskip\noindent\textbf{Reproducibility.}  The bilinear form $h(T) = \sum_{j,k} b_j b_k\, F(\gamma_j', \gamma_k', T)$ was evaluated using \texttt{python-flint} (ARB interval arithmetic) at 512-bit working precision.  For each $d$, the function $h(T)$ was decomposed into a constant plus $N(N+1)/2$ sinc terms via the identity $h(T) = C + \sum_m A_m \operatorname{sinc}(\omega_m T)$, where the frequencies $\omega_m$ are all pairwise sums and differences $\gamma_j' \pm \gamma_k'$ and the coefficients $A_m$ are the corresponding weight products.  The grid scan used spacing $5 \times 10^{-4}$ over $T \in [0.01, 50]$; the Lipschitz bound $|h'(T)| \leq \frac{1}{2}\sum_{j,k} b_j b_k \max(\gamma_j', \gamma_k')$ uses the elementary estimate $|(\operatorname{sinc})'(x)| \leq \frac{1}{2}$ for all $x \geq 0$.  Every grid evaluation produces a certified interval with radius below $10^{-150}$; the certified minimum is the smallest lower endpoint minus the Lipschitz discretization error $L\Delta$.  The large-$T$ tail is handled by the analytic bound from Case~1, with all constants ($c_0$, $W_2$, $\mathcal{I}$, $T_{\mathrm{crit}}$) computed in ARB.  The worst-case five-zero configuration for $d \geq 14$ used equally spaced $\gamma'_{\mathrm{unk}}$ frequencies $\gamma_k' \in \{6.0, 7.25, 8.5, 9.75, 11.0\}$ with $b_k = w^-(\gamma_k') = 2/(1 + {\gamma_k'}^2)$, minimized over the same grid.
@@ -1112,7 +1112,7 @@ The cases $M = 1$ and $M = 2$ require separate treatment: the integral $\int_0^\
 \end{remark}
 
 \begin{remark}[Role of the inactive $J_0$ factors]\label{rem:J0role}
-The exponential decay $\eta < 1$ comes entirely from the inactive $J_0$ factors.  Without them, the resonance integral decays only polynomially, which cannot overcome even polynomial lattice counting.  The following table illustrates the suppression for a three-active resonance (indices $1,2,3$, each with $|n_k| = 1$) as $M$ increases:
+The polynomial decay in $t$ needed for integrability comes from the inactive $J_0$ factors: without them the resonance integral decays only as $t^{-|A|/2}$, which cannot overcome even polynomial lattice counting for small $|A|$.  The exponential suppression in resonance order $|n_*|$ comes instead from the subcritical bound on the active Bessel factor $J_{n_*}(b_* t)$: the power-series and Stirling estimates give $|J_{n_*}(b_* t)| \lesssim (e/4)^{|n_*|}$ in the subcritical region $b_* t < |n_*|/2$ (Lemma~\ref{lem:Jdecay}).  The following table illustrates how the inactive $J_0$ factors collectively reduce the magnitude of the resonance integral as $M$ increases:
 \begin{center}
 \renewcommand{\arraystretch}{1.1}
 \begin{tabular}{ccc}
@@ -1607,7 +1607,7 @@ The first term is bounded by $(L_f + L_g)\varepsilon$.  The second term vanishes
 
 \subsection{The exact density formula}
 
-With asymptotic independence verified at $M = 20$, the marginal densities $f_{S_\zeta}$ and $f_{S_L}$ are both computable via inverse Fourier transform:
+Under the hypothesis that the conditions of Proposition~\ref{prop:verified_indep} hold for all $M_1, M_2 \geq 1$ (which Proposition~\ref{prop:indep_limit} requires for passing to infinite sums, and which has been verified computationally at truncation level $M = 20$), the marginal densities $f_{S_\zeta}$ and $f_{S_L}$ are both computable via inverse Fourier transform:
 \begin{equation}\label{eq:density_formula}
   f_{S_L}(x) = \frac{1}{\pi}\int_0^\infty \cos(tx)\prod_{k=1}^M J_0(b_k t)\, dt.
 \end{equation}
