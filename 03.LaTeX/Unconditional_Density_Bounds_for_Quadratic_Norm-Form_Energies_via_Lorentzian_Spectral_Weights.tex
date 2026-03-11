@@ -375,21 +375,30 @@ where $\ell = \log(q \cdot 13/(2\pi))$.  For $q = 12$, this evaluates to $N(11, 
 
 \medskip\noindent\textbf{Step 2: $d = 5$ (conductor $q = 5$).}
 The BMOR bound gives only $N(11, \chi_5) \geq 1.40$, which does not guarantee three zeros.  We therefore verify the inequality directly.  Computing the Hardy $Z$-function $Z_{\chi_5}(t) = e^{i\theta(t)} L(\half + it, \chi_5)$ and scanning for sign changes on $(0, 12)$ yields two zeros below height $11$: $\gamma'_{1,\mathrm{knw}} = 6.6485$ and $\gamma'_{2,\mathrm{knw}} = 9.8314$, both verified to satisfy $|L(\tfrac{1}{2} + i\gamma', \chi_5)| < 10^{-450}$ (see Appendix~\ref{app:chi5-highprec}).  (Any additional zeros below height $11$, if they exist, would only increase $S_L$.)  Therefore
-\[
-  S_L \geq w(\gamma'_{1,\mathrm{knw}}) + w(\gamma'_{2,\mathrm{knw}}) = \frac{2}{0.25 + 44.20} + \frac{2}{0.25 + 96.66} = 0.04499 + 0.02064 = 0.06563 > S_\zeta^*.
-\]
+\begin{align*}
+  S_L &\geq w(\gamma'_{1,\mathrm{knw}}) + w(\gamma'_{2,\mathrm{knw}}) \\
+  &= \frac{2}{0.25 + 44.20} + \frac{2}{0.25 + 96.66} = 0.04499 + 0.02064 = 0.06563 > S_\zeta^*.
+\end{align*}
 
 \medskip\noindent\textbf{Step 3: $d = 2$ (conductor $q = 8$).}
-The Hurwitz decomposition $L(s,\chi_2) = 8^{-s}\sum_{a=1}^8 \chi_2(a)\,\zeta(s,a/8)$, evaluated via the Hardy $Z$-function method (\S\ref{subsec:Lfunc-method}) at 1500-bit ARB precision, yields three zeros below height $11$:
+The Hurwitz decomposition
+\[
+L(s,\chi_2) = 8^{-s}\sum_{a=1}^8 \chi_2(a)\,\zeta(s,a/8),
+\]
+evaluated via the Hardy $Z$-function method (\S\ref{subsec:Lfunc-method}) at 1500-bit ARB precision, yields three zeros below height $11$:
 \[
 \gamma'_{1,\mathrm{knw}} = 4.8999739970070365010, \quad
-\gamma'_{2,\mathrm{knw}} = 7.6284288417693978341, \quad
+\gamma'_{2,\mathrm{knw}} = 7.6284288417693978341,
+\]
+\[
 \gamma'_{3,\mathrm{knw}} = 10.806588163861712014,
 \]
 each satisfying $|L(\tfrac{1}{2} + i\gamma', \chi_2)| < 10^{-450}$ (see Appendix~\ref{app:chi8-zeros}).  Any additional zeros below height $11$ would only increase $S_L$.  Therefore
-\[
-  S_L \geq w(\gamma'_{1,\mathrm{knw}}) + w(\gamma'_{2,\mathrm{knw}}) + w(\gamma'_{3,\mathrm{knw}}) = \frac{2}{0.25 + 24.010} + \frac{2}{0.25 + 58.193} + \frac{2}{0.25 + 116.782} = 0.08246 + 0.03421 + 0.01710 = 0.13377 > S_\zeta^*.
-\]
+\begin{align*}
+  S_L &\geq w(\gamma'_{1,\mathrm{knw}}) + w(\gamma'_{2,\mathrm{knw}}) + w(\gamma'_{3,\mathrm{knw}}) \\
+  &= \frac{2}{0.25 + 24.010} + \frac{2}{0.25 + 58.193} + \frac{2}{0.25 + 116.782} \\
+  &= 0.08246 + 0.03421 + 0.01710 = 0.13377 > S_\zeta^*.
+\end{align*}
 
 Since every squarefree $d > 1$ has conductor $q \in \{5, 8\}$ or $q \geq 12$, the three cases exhaust all possibilities.
 \end{proof}
