@@ -105,8 +105,8 @@ LANDAU_C        = arb("0.7857")  # |J_N(x)| <= LANDAU_C * N^{-1/3}  (DLMF 10.14.
 # Paper table values updated to ARB-certified strip-decomposition results.
 # The original values (3.676, 1.794, 1.720, 1.706) were computed via direct
 # integration of abs(J_1(z)) with z complex, which overestimates the real-line
-# integral near Bessel zeros by ~0.4% (M=3) and ~0.2% (M=10-30).  The certified
-# values below are confirmed independently by mpmath adaptive quadrature.
+# integral near Bessel zeros by ~0.4% (M=3) and ~0.2% (M=10-30): acb.integral
+# evaluates at off-axis points where |J_1(x+ih)| > |J_1(x)| near zeros.
 PAPER_I     = {3: "3.660", 10: "1.791", 20: "1.717", 30: "1.703"}
 PAPER_RATIO = {3: "1.000", 10: "0.489", 20: "0.469", 30: "0.465"}
 
