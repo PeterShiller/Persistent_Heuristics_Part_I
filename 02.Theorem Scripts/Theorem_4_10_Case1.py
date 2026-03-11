@@ -12,7 +12,7 @@ every squarefree d >= 14 and every T > 0,
     h(T) := <S_L^2>_T  >  (S_zeta*)^2 / d,
 
 where h(T) is the Cesaro average of the squared spectral sum evaluated at the
-worst-case five-zero configuration gamma' in {6.0, 7.25, 8.5, 9.75, 11.0}
+representative five-zero configuration gamma' in {6.0, 7.25, 8.5, 9.75, 11.0}
 with weights b_k = 2 / (1 + gamma_k'^2).
 
 Algorithm
@@ -52,7 +52,7 @@ Algorithm
   upper bound from Proposition [Explicit value of S_zeta] of the paper,
   established via 6000 LMFDB Riemann zeta zeros and a Trudgian tail bound.
   It is used here as a certified constant; this script does not re-derive it.
-  The five-zero configuration is the worst-case hypothetical extremal; every
+  The five-zero configuration is a representative hypothetical configuration; every
   actual squarefree d >= 14 has more zeros and a strictly better margin.
 
 Rigorousness checklist
@@ -94,7 +94,7 @@ ctx.prec = BASE_PREC
 # Configuration
 # ---------------------------------------------------------------------------
 
-# Worst-case five-zero configuration for d >= 14 (hypothetical extremal).
+# Representative five-zero configuration for d >= 14 (hypothetical).
 GAMMAS_FLOAT = [6.0, 7.25, 8.5, 9.75, 11.0]
 
 # S_zeta* certified bound (Proposition [S_zeta value], established via 6000
@@ -286,7 +286,7 @@ def certify_region3(C):
 if __name__ == "__main__":
     print("Theorem 4.10 Case 1: Unconditional Cesaro Variance Bound (d >= 14)")
     print(f"ARB working precision : {BASE_PREC} bits (~{int(BASE_PREC * 0.30103)} decimal digits)")
-    print(f"Worst-case configuration: gamma' = {GAMMAS_FLOAT}")
+    print(f"Representative configuration: gamma' = {GAMMAS_FLOAT}")
     print(f"S_zeta* (certified input, Prop. S_zeta value): {float(S_ZETA_STAR)}")
     print()
 
