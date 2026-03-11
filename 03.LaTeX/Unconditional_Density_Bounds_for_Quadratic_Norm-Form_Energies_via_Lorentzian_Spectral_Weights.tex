@@ -1010,7 +1010,11 @@ Bounding all other factors by $1$ and integrating over $[0, T^*/2]$ yields a con
 
 \textbf{Transition region $[T^*/2, 2T^*]$.}  Each active factor ($n_k \neq 0$) satisfies the Landau bound $|J_{n_k}(b_k t)| \leq 0.675\,|n_k|^{-1/3}$.  Each inactive factor ($n_k = 0$) satisfies the asymptotic bound $|J_0(b_k t)| \leq \sqrt{2/(\pi b_k t)}$, which holds for all $t > 0$.  Collecting the $M - |A|$ inactive factors gives decay of order $t^{-(M-|A|)/2}$ up to constants depending on $\{b_k\}$.  Integration over an interval of width $3T^*/2$ yields the second term.
 
-\textbf{Supercritical region $[2T^*, \infty)$.}  For $t \geq 2T^*$, each inactive factor satisfies $|J_0(b_k t)| \leq \sqrt{2/(\pi b_k t)}$.  Each active factor satisfies the uniform asymptotic $|J_{n_k}(b_k t)| \leq \sqrt{2/(\pi\sqrt{(b_k t)^2 - n_k^2})}$, which for $b_k t \geq 2|n_k|$ is bounded by $\sqrt{2/(\pi b_k t)} \cdot (1 - (n_k/(b_k t))^2)^{-1/4} \leq 2\sqrt{2/(\pi b_k t)}$.  The total decay is therefore $O(t^{-M/2})$, which is integrable for $M \geq 3$.
+\textbf{Supercritical region $[2T^*, \infty)$.}  For $t \geq 2T^*$, each inactive factor satisfies $|J_0(b_k t)| \leq \sqrt{2/(\pi b_k t)}$.  Each active factor satisfies the uniform asymptotic
+\[
+  |J_{n_k}(b_k t)| \leq \sqrt{\frac{2}{\pi\sqrt{(b_k t)^2 - n_k^2}}},
+\]
+which for $b_k t \geq 2|n_k|$ is bounded by $\sqrt{2/(\pi b_k t)} \cdot (1 - (n_k/(b_k t))^2)^{-1/4} \leq 2\sqrt{2/(\pi b_k t)}$.  The total decay is therefore $O(t^{-M/2})$, which is integrable for $M \geq 3$.
 
 Since $T^* = |n_*|/b_*$ and $b_* \leq b_1$, we have $T^* \geq |n_*|/b_1$.  For $M = 20$ and a two-active resonance ($|A| = 2$), the transition term gives decay of order $T^{*\,1-9} = T^{*\,-8}$ in the transition variable; combined with two Landau factors $0.675\,|n_k|^{-1/3}$ each, the net scaling in $|n_*|$ is $|n_*|^{-26/3} \approx |n_*|^{-8.67}$.  For $|A| = 3$ the corresponding exponent is $|n_*|^{-17/2} = |n_*|^{-8.5}$.
 
