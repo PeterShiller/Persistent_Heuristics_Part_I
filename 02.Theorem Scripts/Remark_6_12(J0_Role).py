@@ -6,12 +6,8 @@ Ancillary data module for:
     Norm-Form Energies via Lorentzian Spectral Weights.
     arXiv:2603.00301.  Zenodo: https://doi.org/10.5281/zenodo.18783098
 
-This script certifies the revised numerical table in Remark 6.12
-[Role of the inactive J_0 factors] as it appears in the current version
-of the paper.  The original (superseded) values 3.676, 1.794, 1.720,
-1.706 were produced by direct complex integration of |J_1(z)| with z
-complex, which overestimates the real-line integral near Bessel zeros
-(see PAPER_I comment below).  The certified values are:
+This script certifies the numerical table in Remark 6.12
+[Role of the inactive J_0 factors].  The certified values are:
 
     M     I_n (with J_0's)    Ratio to M=3
     ----------------------------------------
@@ -107,10 +103,7 @@ LANDAU_C        = arb("0.7857")  # |J_N(x)| <= LANDAU_C * N^{-1/3}  (DLMF 10.14.
 
 # ── Paper table values ────────────────────────────────────────────────────────
 # ARB-certified strip-decomposition results; these are the values used in the
-# paper.  The superseded values (3.676, 1.794, 1.720, 1.706) were produced by
-# direct integration of abs(J_1(z)) with z complex: acb.integral evaluates at
-# off-axis points where |J_1(x+ih)| > |J_1(x)| near zeros, overestimating by
-# ~0.4% (M=3) and ~0.2% (M=10-30).
+# paper.
 PAPER_I     = {3: "3.660", 10: "1.791", 20: "1.717", 30: "1.703"}
 PAPER_RATIO = {3: "1.000", 10: "0.489", 20: "0.469", 30: "0.465"}
 
