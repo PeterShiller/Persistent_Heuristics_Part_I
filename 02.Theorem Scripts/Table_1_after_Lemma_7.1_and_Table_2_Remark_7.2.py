@@ -233,17 +233,56 @@ def collect_strips_J0(b_k_arb, T_max_arb):
 
 
 def collect_all_strips(b_arb, M_int, T_max_arb):
-    """Collect and sort strips from all M J_0 factors."""
-    strips = []
-    for k in range(M_int):
-        strips += collect_strips_J0(b_arb[k], T_max_arb)
-    strips.sort(key=lambda s: float(s[0].mid()))
-    for i in range(len(strips) - 1):
-        if not (strips[i][0] < strips[i + 1][0]):
+    """
+    Collect strips from all M J_0 factors and merge into a single
+    certified-ascending list using a K-way merge on ARB comparisons.
+
+    Each per-factor list is already in certified ascending order
+    (m increments, j_{0,m} is strictly increasing).  The K-way merge
+    uses only ARB < comparisons to select the next strip at each step;
+    no float arithmetic is used for ordering.  This avoids the hazard
+    of float(s[0].mid()) missorting two close strip starts before any
+    ARB verification can catch it.
+    """
+    # Collect one sorted list per factor; each is ARB-ascending by construction.
+    per_factor = [collect_strips_J0(b_arb[k], T_max_arb) for k in range(M_int)]
+    ptrs       = [0] * M_int   # current index into each per-factor list
+
+    merged = []
+    while True:
+        # Find all factors that still have strips remaining.
+        active = [k for k in range(M_int) if ptrs[k] < len(per_factor[k])]
+        if not active:
+            break
+
+        # Select the factor whose current strip starts earliest.
+        # Start with the first active factor as candidate.
+        best = active[0]
+        for k in active[1:]:
+            # ARB certified comparison: is k's strip start < best's strip start?
+            if per_factor[k][ptrs[k]][0] < per_factor[best][ptrs[best]][0]:
+                best = k
+            elif not (per_factor[best][ptrs[best]][0] < per_factor[k][ptrs[k]][0]):
+                # Neither is certified smaller: the two strip starts overlap in ARB.
+                # This cannot happen for distinct Bessel zeros of different factors
+                # (the zeros of J_0(b_i t) and J_0(b_j t) are generically distinct
+                # and DELTA = 1e-20 is far smaller than any inter-zero gap), but we
+                # guard explicitly.
+                raise RuntimeError(
+                    f"ARB ordering undecidable between factor {best} strip {ptrs[best]} "
+                    f"and factor {k} strip {ptrs[k]}: strip starts overlap at 256-bit "
+                    f"precision.  Increase ARB_PREC or decrease DELTA."
+                )
+        merged.append(per_factor[best][ptrs[best]])
+        ptrs[best] += 1
+
+    # Paranoia check: verify the merged list is certified ascending.
+    for i in range(len(merged) - 1):
+        if not (merged[i][0] < merged[i + 1][0]):
             raise RuntimeError(
-                f"Certified ordering FAILED at strip pair {i} and {i+1}"
+                f"Post-merge certified ordering FAILED at positions {i} and {i+1}"
             )
-    return strips
+    return merged
 
 
 def build_gaps(strips, T_max_arb):
