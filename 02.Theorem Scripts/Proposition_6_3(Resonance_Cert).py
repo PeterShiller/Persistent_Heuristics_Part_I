@@ -1,12 +1,12 @@
 """
-Proposition_6_2(Resonance_Cert).py  --  Certified verification of Proposition 6.2
+Proposition_6_3(Resonance_Cert).py  --  Certified verification of Proposition 6.3
 ====================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
     Norm-Form Energies via Lorentzian Spectral Weights.
     arXiv:2603.00301.  Zenodo: https://doi.org/10.5281/zenodo.18783098
 
-This module certifies both parts of Proposition 6.2 [Resonance absence at M = 20]:
+This module certifies both parts of Proposition 6.3 [Resonance absence at M = 20]:
 
     (i)  No integer relation sum_{k=1}^{20} n_k * gamma_k' = 0 exists with
          max|n_k| <= 1000 (full 20-dimensional search).  No pairwise relation
@@ -137,7 +137,7 @@ Requirements
 
 Usage
 -----
-  python "Proposition_6_2(Resonance_Cert).py"
+  python "Proposition_6_3(Resonance_Cert).py"
 
   Part (i) Class B (190 pairwise searches at maxcoeff=10000) is the most
   time-consuming step.  Expected total runtime: 10--30 minutes depending on
@@ -429,7 +429,7 @@ def bessel_tail_bound(gammas_str):
 if __name__ == "__main__":
 
     print("=" * 70)
-    print("Proposition 6.2  --  Resonance absence at M = 20")
+    print("Proposition 6.3  --  Resonance absence at M = 20")
     print("=" * 70)
     print(f"PSLQ working precision : {PSLQ_PREC} decimal digits")
     print(f"ARB working precision  : {ARB_PREC} bits  "
@@ -483,7 +483,7 @@ if __name__ == "__main__":
     print("=" * 70)
     print(f"Part (i)  -- PSLQ searches certified      : {part_i_ok}")
     print(f"Part (ii) -- Bessel tail < 10^-849.5 (ARB): {part_ii_ok}")
-    print(f"Proposition 6.2 fully certified            : {all_ok}")
+    print(f"Proposition 6.3 fully certified            : {all_ok}")
     print(f"Qualification: certified modulo trusted zero input and the")
     print(f"  documented mpmath PSLQ norm-bound interface.")
     print(f"Total elapsed time: {elapsed:.1f}s")
