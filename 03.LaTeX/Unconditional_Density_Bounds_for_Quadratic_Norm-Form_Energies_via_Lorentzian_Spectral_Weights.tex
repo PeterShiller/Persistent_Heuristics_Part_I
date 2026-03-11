@@ -1849,7 +1849,7 @@ where $\psi$ denotes the digamma function; each value $\psi(a/q)$ is evaluated a
 The null crossings $s_*(d)$ were found by bisecting $G(s) = \zeta(s)/L(s,\chi_d)$
 against the target $\sqrt{d}$, with $L(s,\chi_d)$ evaluated via the Hurwitz decomposition
 $L(s,\chi_d) = q^{-s}\sum_{a=1}^{q}\chi_d(a)\,\zeta(s,a/q)$
-using ARB interval arithmetic at 512-bit precision ($220$ bisection steps from brackets of width $0.5$--$1.5$ surrounding each known approximate location, residual $|G(s_*) - \sqrt{d}| < 10^{-60}$).  The full certification, including bracket verification, decisive trichotomy bisection, denominator safety via interval union, and the direct integer-crossing check for $d = 3$, is provided in \texttt{Theorem\_9\_1.py} (see \S\ref{subsec:software}).
+using ARB interval arithmetic at 512-bit precision ($220$ bisection steps from brackets of width $0.5$--$1.5$ surrounding each known approximate location, residual $|G(s_*) - \sqrt{d}| < 10^{-60}$).  The full certification, including bracket verification, decisive trichotomy bisection, denominator safety via interval union, and the direct integer-crossing check for $d = 3$, is provided in \texttt{Theorem\_12\_2.py} (see \S\ref{subsec:software}).
 
 \subsection{Integer crossing obstruction}
 
@@ -1913,7 +1913,7 @@ Each factor $(1+p^{-s})/(1-p^{-s})$ is decreasing in $s$ (since $p^{-s}$ decreas
 For all $s \geq 4$: $\;G(s) \leq 7/6$.  Since $(7/6)^2 = 49/36 < 2 \leq d$, the inequality $G(s) < \sqrt{d}$ holds for every squarefree $d \geq 2$ and every integer $s \geq 4$.
 
 \medskip\noindent\textbf{Case 4: $s = 3$, $d \geq 3$.}
-The all-inert bound gives $G(3) \leq \zeta(3)^2/\zeta(6) = \prod_p (p^3+1)/(p^3-1)$.  The partial product through $p = 5$ equals $(9 \cdot 28 \cdot 126)/(7 \cdot 26 \cdot 124) = 567/403$.  Each remaining factor satisfies $(p^3+1)/(p^3-1) < 1 + 3p^{-3}$ (since $2/(p^3-1) < 3/p^3$ for $p \geq 2$), so $\prod_{p > 5}(p^3+1)/(p^3-1) < \exp(3\sum_{p>5} p^{-3}) < \exp(3/50)$, using $\sum_{p>5} p^{-3} < \int_5^\infty x^{-3}\,dx = 1/50$.  Since $\exp(y) < 1 + y + y^2$ for $0 < y < 1$, the tail is bounded by $\exp(3/50) < 2659/2500$, giving $G(3) \leq (567/403)(2659/2500) = 1507653/1007500$.  Then $1507653^2 = 2{,}273{,}017{,}568{,}409 < 3{,}045{,}168{,}750{,}000 = 3 \cdot 1007500^2$, so $G(3) < \sqrt{3} \leq \sqrt{d}$.  An independent ARB certificate for this case, using the direct bound $(\zeta(3)^2/\zeta(6))^2 < 3$ without the partial-product decomposition, is provided in \texttt{Theorem\_9\_2.py} (see \S\ref{subsec:software}).
+The all-inert bound gives $G(3) \leq \zeta(3)^2/\zeta(6) = \prod_p (p^3+1)/(p^3-1)$.  The partial product through $p = 5$ equals $(9 \cdot 28 \cdot 126)/(7 \cdot 26 \cdot 124) = 567/403$.  Each remaining factor satisfies $(p^3+1)/(p^3-1) < 1 + 3p^{-3}$ (since $2/(p^3-1) < 3/p^3$ for $p \geq 2$), so $\prod_{p > 5}(p^3+1)/(p^3-1) < \exp(3\sum_{p>5} p^{-3}) < \exp(3/50)$, using $\sum_{p>5} p^{-3} < \int_5^\infty x^{-3}\,dx = 1/50$.  Since $\exp(y) < 1 + y + y^2$ for $0 < y < 1$, the tail is bounded by $\exp(3/50) < 2659/2500$, giving $G(3) \leq (567/403)(2659/2500) = 1507653/1007500$.  Then $1507653^2 = 2{,}273{,}017{,}568{,}409 < 3{,}045{,}168{,}750{,}000 = 3 \cdot 1007500^2$, so $G(3) < \sqrt{3} \leq \sqrt{d}$.  An independent ARB certificate for this case, using the direct bound $(\zeta(3)^2/\zeta(6))^2 < 3$ without the partial-product decomposition, is provided in \texttt{Theorem\_12\_3.py} (see \S\ref{subsec:software}).
 
 \medskip\noindent\textbf{Case 5: $s = 3$, $d = 2$.}
 In $\Q(\sqrt{2})$ (discriminant $\Delta_K = 8$), the Kronecker symbol $(8/p)$ determines splitting: $p = 2$ is ramified, primes $p \equiv \pm 1 \pmod{8}$ split, and primes $p \equiv \pm 3 \pmod{8}$ are inert.  The exact local factors at $p \leq 7$ are
@@ -1933,7 +1933,7 @@ using $\sum_{p>7} p^{-3} < \int_7^\infty x^{-3}\,dx = 1/98$ and $\exp(y) < 1 + y
 \[
   G(3)^2 \leq \frac{178326^2}{138229^2} = \frac{31{,}800{,}162{,}276}{19{,}107{,}256{,}441} < 2,
 \]
-since $31{,}800{,}162{,}276 < 2 \times 19{,}107{,}256{,}441 = 38{,}214{,}512{,}882$.  An independent ARB certificate, computing $G(3,2) = \zeta(3)/L(3,\chi_8)$ directly via Hurwitz decomposition and certifying $G(3,2)^2 < 2$, is provided in \texttt{Theorem\_9\_2.py} (see \S\ref{subsec:software}).
+since $31{,}800{,}162{,}276 < 2 \times 19{,}107{,}256{,}441 = 38{,}214{,}512{,}882$.  An independent ARB certificate, computing $G(3,2) = \zeta(3)/L(3,\chi_8)$ directly via Hurwitz decomposition and certifying $G(3,2)^2 < 2$, is provided in \texttt{Theorem\_12\_3.py} (see \S\ref{subsec:software}).
 \end{proof}
 
 \begin{remark}[Spectral phase transition]
