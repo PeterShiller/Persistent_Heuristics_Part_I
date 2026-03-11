@@ -989,7 +989,7 @@ The resonance sum in Proposition~\ref{prop:resonance} includes only \emph{exact}
 
 \subsection{Bessel decay estimates}\label{subsec:bessel-decay}
 
-The convergence of the resonance sum relies on the \emph{inactive} $J_0$ factors.  For a resonance vector $\mathbf{n}$ with active set $A = \{k : n_k \neq 0\}$, the $M - |A|$ indices not in $A$ contribute $J_0(b_k t)$ factors to the product.  These factors collectively provide exponential suppression.
+The convergence of the resonance sum relies on the \emph{inactive} $J_0$ factors.  For a resonance vector $\mathbf{n}$ with active set $A = \{k : n_k \neq 0\}$, the $M - |A|$ indices not in $A$ contribute $J_0(b_k t)$ factors to the product.  These factors contribute polynomial decay in $t$, providing the integrability needed for the resonance sum; the exponential decay in $|n_*|$ comes separately from the subcritical bound on the active high-order Bessel factor $J_{n_*}(b_* t)$.
 
 \begin{lemma}[Transition zone bound]\label{lem:Jdecay}
 Let $\mathbf{n} \in \Z^M$ with active set $A = \{k : n_k \neq 0\}$ and $|A| \geq 2$.  Write $|n_*| = \max_{k\in A}|n_k|$, let $b_*$ be the corresponding weight, and set $T^* = |n_*|/b_*$.  Then the resonance integral satisfies
@@ -1019,16 +1019,7 @@ which for $b_k t \geq 2|n_k|$ is bounded by $\sqrt{2/(\pi b_k t)} \cdot (1 - (n_
 
 Since $T^* = |n_*|/b_*$ and $b_* \leq b_1$, we have $T^* \geq |n_*|/b_1$.  For $M = 20$ and a two-active resonance ($|A| = 2$), the transition term gives decay of order $T^{*\,1-9} = T^{*\,-8}$ in the transition variable; combined with two Landau factors $0.675\,|n_k|^{-1/3}$ each, the net scaling in $|n_*|$ is $|n_*|^{-26/3} \approx |n_*|^{-8.67}$.  For $|A| = 3$ the corresponding exponent is $|n_*|^{-17/2} = |n_*|^{-8.5}$.
 
-Explicit calculation gives
-\[
-  C_1 = \frac{T^*}{2}, \qquad
-  C_2 = \frac{3T^*}{2} \cdot \prod_{k\colon n_k \neq 0} \bigl(0.675\,|n_k|^{-1/3}\bigr), \qquad
-  C_3 = \int_{2T^*}^{\infty} t^{-M/2}\,dt = \frac{(2T^*)^{1-M/2}}{M/2 - 1},
-\]
-where $C_3$ is finite for $M \geq 3$.  Each of $C_1$, $C_2$, $C_3$ depends on $M$ only through
-the minimal weight $b_M = 2/(\tfrac{1}{4} + {\gamma_M'}^2)$, which decreases monotonically
-in $M$.  Since $b_M$ is bounded below by a positive constant for all finite $M$, the
-three constants are uniformly bounded for $M \geq 3$.
+Here $C_1$, $C_2$, $C_3$ are positive constants depending on $\{b_k\}$, $M$, and $|A|$, each finite for $M \geq 3$.  Specifically, $C_1$ is of order $T^*/2$ after integrating the power-series bound; $C_2$ absorbs the interval width $3T^*/2$, the Landau factors $0.675\,|n_k|^{-1/3}$ for each active index, and the constants $\prod_{k\colon n_k=0}(2/(\pi b_k))^{1/2}$ from the inactive $\sqrt{2/(\pi b_k t)}$ bounds evaluated at the onset $t \sim T^*$; and $C_3 = (2T^*)^{1-M/2}/(M/2-1)$ after integrating the full $t^{-M/2}$ decay.  Since $b_M$ is bounded below by a positive constant for all finite $M$, all three constants are uniformly bounded for $M \geq 3$.
 \end{proof}
 
 The resonance integral $I_{\mathbf{n}}$ is bounded by the minimum of the subcritical and transition estimates.  A resonance vector must satisfy $\sum n_k \gamma_k' = 0$ with $\gamma_k' > 0$, so a single nonzero component would give $n_*\gamma_*' = 0$, which is impossible; hence $|A| \geq 2$.  The following table evaluates the worst-case two-active configuration $n_1 = n_2 = N$ on the two largest weights $b_1, b_2$, with $M - 2 = 18$ inactive $J_0$ factors:
