@@ -47,7 +47,7 @@ Algorithm
         (i)   G(1.99, 3) > sqrt(3)   [certified ARB predicate]
         (ii)  G(2.01, 3) < sqrt(3)   [certified ARB predicate]
         (iii) |G(2, 3) - sqrt(3)| < 1e-60  [certified ARB predicate]
-      Together with the strict monotonicity of G (Lemma 9.1 of the paper),
+      Together with the strict monotonicity of G (Lemma 12.1 of the paper),
       (i)-(ii) certify existence and uniqueness of s_*(3) in (1.99, 2.01),
       and (iii) certifies the evaluation at the integer point.
 
@@ -329,7 +329,7 @@ def find_null_crossing_bisection(d, n_steps=220, max_prec_escalations=5):
 #   (i)   G(1.99, 3) > sqrt(3)
 #   (ii)  G(2.01, 3) < sqrt(3)
 #   (iii) |G(2, 3) - sqrt(3)| < 1e-60
-# With G strictly decreasing (Lemma 9.1), (i)+(ii) certify that s_*(3)
+# With G strictly decreasing (Lemma 12.1), (i)+(ii) certify that s_*(3)
 # lies in (1.99, 2.01), and (iii) certifies the evaluation at the point.
 # ---------------------------------------------------------------------------
 
