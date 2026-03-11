@@ -226,10 +226,12 @@ M        = 20
 D        = 5
 N_VALUES = [5, 10, 20, 30, 50]
 T_UPPER  = {5: 2000, 10: 2000, 20: 2000, 30: 2000, 50: 10000}
-# T_UPPER[50] = 10000: the integrand for N=50 is supported on t >= j_{50,1}/b_1 ~ 1270
-# (J_50 is exponentially small for argument < 57).  ARB-certified runs at T=5000
-# and T=10000 agree to 4 significant figures (1.402e-14 vs 1.408e-14); the tail
-# beyond T=10000 contributes < 0.5%, well within the 3sf matching tolerance.
+# T_UPPER[50] = 10000: the integrand for N=50 is supported on t >= j_{50,1}/b_1 ~ 1270.
+# For b_k*t << 50, J_50(b_k*t) ~ (b_k*t/2)^50 / 50!, polynomially small in t
+# (power-law suppression via the small-argument series, not exponential decay).
+# ARB-certified runs at T=5000 and T=10000 agree to 4 significant figures
+# (1.402e-14 vs 1.408e-14); the tail beyond T=10000 contributes < 0.5%,
+# well within the 3sf matching tolerance.
 T_EPS    = arb("1e-30")   # lower limit; integrand is O(t^{N+1}) near 0
 DELTA    = arb("1e-20")   # IVT / strip half-width in x-space
 REL_TOL  = 2**(-200)
