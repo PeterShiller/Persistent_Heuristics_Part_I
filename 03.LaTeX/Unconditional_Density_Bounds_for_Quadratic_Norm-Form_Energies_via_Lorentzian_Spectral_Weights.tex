@@ -1123,14 +1123,14 @@ The polynomial decay in $t$ needed for integrability comes from the inactive $J_
 \toprule
 $M$ & $I_{\mathbf{n}}$ (with $J_0$'s) & Ratio to $M=3$ \\
 \midrule
-$3$ & $3.676$ & $1.000$ \\
-$10$ & $1.794$ & $0.488$ \\
-$20$ & $1.720$ & $0.468$ \\
-$30$ & $1.706$ & $0.464$ \\
+$3$ & $3.660$ & $1.000$ \\
+$10$ & $1.791$ & $0.489$ \\
+$20$ & $1.717$ & $0.469$ \\
+$30$ & $1.703$ & $0.465$ \\
 \bottomrule
 \end{tabular}
 \end{center}
-Each additional inactive $J_0$ factor reduces the resonance integral, converging to a limit as $M \to \infty$.  The values of $I_{\mathbf{n}}$ were computed by ARB quadrature (\texttt{acb\_calc\_integrate}, 256-bit precision, $T = 2000$), with three active indices $(n_1, n_2, n_3) = (1, 1, -1)$ and the remaining $M - 3$ indices set to zero (inactive).
+Each additional inactive $J_0$ factor reduces the resonance integral, converging to a limit as $M \to \infty$.  The values of $I_{\mathbf{n}}$ were computed by ARB-rigorous strip decomposition (\texttt{acb\_calc\_integrate}, 256-bit precision, $T = 2000$): the domain is partitioned at the certified zeros of each $J_1$ and $J_0$ factor so that \texttt{acb\_calc\_integrate} is applied only on gap intervals where the integrand is analytic.  Active indices $(n_1, n_2, n_3) = (1, 1, -1)$; the remaining $M - 3$ indices are inactive.
 \end{remark}
 
 \begin{remark}[Dependence on lattice rank]\label{rem:rank}
