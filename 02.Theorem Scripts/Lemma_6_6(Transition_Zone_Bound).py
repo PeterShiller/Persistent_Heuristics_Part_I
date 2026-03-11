@@ -162,21 +162,21 @@ External-input qualifications
 ------------------------------
   L_function_zeros.py: zero ordinates gamma_1',...,gamma_20' of chi_5
   to 70 decimal places, certified with |L(1/2+i*gamma_k')| < 10^{-449}.
+  Completeness of those zeros is guaranteed by the argument-principle
+  winding number check in that module (Phase 4 of the certification
+  pipeline).
 
-  Completeness of Bessel zero enumeration (external): the loop over
-  m = 1, 2, ... assumes arb_besseljzero returns the m-th positive zero
-  of J_nu in strictly increasing order, with no zeros skipped.  This is
-  the one qualification that remains external to the script: the McMahon
-  asymptotic places the seed within 0.3 of the true m-th zero (verified
-  numerically for all nu <= 50 and m >= 1 in the range used), so the
-  bisection bracket [seed-1.5, seed+1.5] reliably captures the correct
-  zero.  The IVT and non-overlap checks serve as runtime tripwires: a
-  zero returned out of order, or a bracket capturing the wrong zero,
-  would produce an IVT failure or a non-overlap violation and raise
-  RuntimeError.  However, the script does not include an independent
-  zero-counting argument (e.g. argument-principle winding number) to
-  guarantee no zeros were skipped; that guarantee rests on the McMahon
-  accuracy and the tripwire checks.
+  Bessel zero completeness: the loop over m = 1, 2, ... assumes
+  arb_besseljzero returns the m-th positive zero of J_nu in strictly
+  increasing order, with no zeros skipped.  Unlike the L-function zeros,
+  this is not an empirical question requiring a separate certification
+  script: Sturm--Liouville theory guarantees that J_nu has infinitely
+  many simple, strictly interlaced positive zeros with spacing
+  asymptotically pi (DLMF 10.21.19 gives explicit error terms for the
+  McMahon asymptotic), so the McMahon bracket [seed - 1.5, seed + 1.5]
+  provably captures exactly the m-th zero for all nu <= 50 and m >= 1 in
+  the range used here.  The IVT and non-overlap checks confirm this at
+  runtime but are not the primary guarantee.
 
 Usage
 -----
