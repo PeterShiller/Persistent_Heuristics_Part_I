@@ -416,9 +416,10 @@ def certified_tail_bound(b_arb, M_int, T_arb):
     WARNING: This bound is rigorous but typically conservative by 10-100x
     for small M because Watson's bound ignores oscillatory cancellation.
     For M = 3 (only J_1 factors, no inactive J_0 factors), the bound at
-    T = 2000 is approximately 2.0 while the actual tail is approximately 0.44
-    (computed numerically).  For M >= 10, the bound is tight to within a
-    small constant factor and the tail is negligible.
+    T = 2000 is approximately 2.0 while the actual tail is approximately 0.67
+    (computed numerically via strip quadrature on [2000, 200000] plus analytic
+    bound on [200000, inf)).  For M >= 10, the bound is tight and the tail is
+    negligible at 3 significant figures.
 
     INTERPRETATION: all paper values are integrals over [0, T_UPPER = 2000].
     PASS/FAIL is self-consistent (script and paper both use T = 2000).
@@ -533,7 +534,7 @@ def print_results(results):
     # All paper values are integrals over [0, T_UPPER = 2000].  The bound
     # below certifies (rigorously, via Watson) how large int_{2000}^inf can be.
     # Watson's bound ignores oscillatory cancellation, so for M = 3 the bound
-    # (~2.0) is ~5x larger than the numerical estimate (~0.44): the M = 3
+    # (~2.0) is ~3x larger than the numerical estimate (~0.67): the M = 3
     # integrand has only J_1 factors and decays as t^{-3/2}, so T = 2000
     # captures roughly 89% of int_0^inf.  For M >= 10, the decay is fast
     # enough that T = 2000 is essentially exact at 3 significant figures.
@@ -545,7 +546,7 @@ def print_results(results):
         T_arb = arb(str(T_UPPER))
         print("  Tail documentation (certified upper bound on int_{T}^inf)")
         print("  " + "-" * 60)
-        print("  Note: Watson bound for M=3 is ~5x the numerical estimate (~0.44)")
+        print("  Note: Watson bound for M=3 is ~3x the numerical estimate (~0.67)")
         for r in results:
             M  = r['M']
             tb = certified_tail_bound(_TAIL_B, M, T_arb)
