@@ -1,12 +1,12 @@
 """
-Theorem_3_3_Case1.py  —  Certified verification of Theorem 3.3, Case 1 (d >= 14)
+Theorem_4_10_Case1.py  —  Certified verification of Theorem 4.10, Case 1 (d >= 14)
 ================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
     Norm-Form Energies via Lorentzian Spectral Weights.
     arXiv:2603.00301.  Zenodo: https://doi.org/10.5281/zenodo.18783098
 
-This module certifies Case 1 of Theorem 3.3 of the above reference.  For
+This module certifies Case 1 of Theorem 4.10 of the above reference.  For
 every squarefree d >= 14 and every T > 0,
 
     h(T) := <S_L^2>_T  >  (S_zeta*)^2 / d,
@@ -81,7 +81,7 @@ Requirements
 
 Usage
 -----
-  python Theorem_3_3_Case1.py
+  python Theorem_4_10_Case1.py
 """
 
 from flint import arb, ctx
@@ -284,7 +284,7 @@ def certify_region3(C):
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    print("Theorem 3.3 Case 1: Unconditional Cesaro Variance Bound (d >= 14)")
+    print("Theorem 4.10 Case 1: Unconditional Cesaro Variance Bound (d >= 14)")
     print(f"ARB working precision : {BASE_PREC} bits (~{int(BASE_PREC * 0.30103)} decimal digits)")
     print(f"Worst-case configuration: gamma' = {GAMMAS_FLOAT}")
     print(f"S_zeta* (certified input, Prop. S_zeta value): {float(S_ZETA_STAR)}")
