@@ -90,7 +90,7 @@ Let $d > 1$ be squarefree and let $\chi_d$ denote the Kronecker symbol of the fu
 \begin{equation}\label{eq:zeta-K-factor}
 \zeta_K(s) = \zeta(s) \cdot L(s, \chi_d),
 \end{equation}
-coupling the zeros of the Riemann zeta function to those of the quadratic Dirichlet $L$-function.  We ask whether this coupling can be detected spectrally, by weighting zeros so that low-lying ones dominate.  The answer is yes: the resulting quadratic form on weighted zero sums is always negative (the $L$-function zeros win), and the set where it becomes positive has density $O(1/\sqrt{d})$.  Both statements hold unconditionally in the Euler-product formulation; on the zero side, they hold at any verified truncation level and extend to the full series under the hypothesis that the infinite resonance lattice has finite rank (computationally consistent with rank~$0$ for the first $20$ zeros).
+coupling the zeros of the Riemann zeta function to those of the quadratic Dirichlet $L$-function.  We ask whether this coupling can be detected spectrally, by weighting zeros so that low-lying ones dominate.  The answer is yes: the resulting quadratic form on weighted zero sums is always negative (the $L$-function zeros win), and the set where it becomes positive has density $O(1/\sqrt{d})$.  The density statement holds unconditionally in the Euler-product formulation (Theorem~\ref{thm:density}); on the zero side, both statements hold at any verified truncation level and extend to the full series under the hypothesis that the infinite resonance lattice has finite rank (computationally consistent with rank~$0$ for the first $20$ zeros).
 
 For a zero $\rho = \half + i\gamma$ on the critical line, define the Lorentzian weight
 \begin{equation}\label{eq:lorentzian-weight}
@@ -648,7 +648,7 @@ where $\mathcal{O}(T)$ denotes the off-diagonal (coherent) contribution.  Since 
 \]
 is the interference constant.  For any $T > \mathcal{I}/(c_0 W_2 - (S_\zeta^*)^2/d)$, the full Ces\`aro variance exceeds the threshold.
 
-For all $T > 0$, a three-region argument analogous to Case~2 applies to the worst-case five-zero configuration $\gamma_k' \in \{6.0, 7.25, 8.5, 9.75, 11.0\}$ with $w_k = w^-(\gamma_k') = 2/(1+{\gamma_k'}^2)$.
+For all $T > 0$, a three-region argument analogous to Case~2 applies to a representative five-zero configuration $\gamma_k' \in \{6.0, 7.25, 8.5, 9.75, 11.0\}$ with $w_k = w^-(\gamma_k') = 2/(1+{\gamma_k'}^2)$.
 
 \smallskip\noindent\emph{Region~1: $T \in (0, 0.01]$.}  As $T \to 0^+$, $h(T) \to W_1(L)^2 = 0.02431$, which exceeds the threshold $(S_\zeta^*)^2/d \leq 1.70 \times 10^{-4}$ by a factor of $143\times$.  The Lipschitz constant for this configuration is $L = \frac{1}{2}\sum_{j,k} w_j w_k \max(\gamma_j',\gamma_k') = 0.10568$, so the Lipschitz bound certifies $h(T) \geq 0.02431 - 0.10568 \times 0.01 = 0.02325 \gg \text{threshold}$ throughout this interval.
 
