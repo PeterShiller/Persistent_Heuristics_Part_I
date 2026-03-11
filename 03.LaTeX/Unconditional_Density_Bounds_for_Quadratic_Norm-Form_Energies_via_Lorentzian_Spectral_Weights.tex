@@ -1107,6 +1107,10 @@ For the main term: the product $\prod_{k=1}^M |J_0(b_k t)|$ decays as $t^{-M/2}$
 For the resonance sum: by Lemma~\ref{lem:Jdecay}, every resonance term with $\|\mathbf{n}\|_1 = N$ satisfies $I_{\mathbf{n}} \leq C_0\, \eta^N$ with $\eta = e/4 < 1$, using the subcritical bound.  By Lemma~\ref{lem:lattice}, the number of such terms is at most $C_{d_M} N^{d_M - 1}$.  Since $\eta < 1$ and $d_M$ is finite, the ratio test gives convergence: $N^{d_M-1}\eta^N / (N-1)^{d_M-1}\eta^{N-1} \to \eta < 1$ as $N \to \infty$.
 \end{proof}
 
+\begin{remark}[Subcritical term versus full bound]\label{rem:subcrit-dominance}
+Lemma~\ref{lem:Jdecay} bounds $I_{\mathbf{n}}$ by three terms: a subcritical term $C_1(e/4)^{|n_*|}$ (exponential in $|n_*|$) and transition and supercritical terms $C_2(T^*)^{1-(M-|A|)/2}$ and $C_3(T^*)^{1-M/2}$, both of which are polynomial in $|n_*|$ since $T^* = |n_*|/b_*$.  The proof above uses only the subcritical term.  This is justified because for any fixed $M$ and $d_M$, the exponential $(e/4)^N$ eventually dominates any polynomial in $N$: there exists $N_0 = N_0(M, \{b_k\})$ such that $C_2 N^{1-(M-|A|)/2} \leq (e/4)^N$ for all $N > N_0$.  The finite head $N \leq N_0$ contributes a bounded sum regardless of $d_M$.  Thus $\eta = e/4$ is the eventual geometric rate governing the tail of the resonance sum; it does not claim to be a uniform pointwise bound $I_{\mathbf{n}} \leq C_0(e/4)^N$ for all $N \geq 1$.
+\end{remark}
+
 \begin{remark}[Small $M$ cases]\label{rem:smallM}
 The cases $M = 1$ and $M = 2$ require separate treatment: the integral $\int_0^\infty |J_0(bt)|^M\, dt$ diverges as $t^{1/2}$ for $M = 1$ and logarithmically for $M = 2$.  Since the telescoping argument begins at $M = 3$ and all subsequent results use $M \to \infty$, this restriction does not affect the main theorems.
 \end{remark}
