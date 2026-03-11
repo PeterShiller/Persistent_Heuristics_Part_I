@@ -90,7 +90,7 @@ Let $d > 1$ be squarefree and let $\chi_d$ denote the Kronecker symbol of the fu
 \begin{equation}\label{eq:zeta-K-factor}
 \zeta_K(s) = \zeta(s) \cdot L(s, \chi_d),
 \end{equation}
-coupling the zeros of the Riemann zeta function to those of the quadratic Dirichlet $L$-function.  We ask whether this coupling can be detected spectrally, by weighting zeros so that low-lying ones dominate.  The answer is yes: the resulting quadratic form on weighted zero sums is always negative (the $L$-function zeros win), and the set where it becomes positive has density $O(1/\sqrt{d})$.  Both statements hold unconditionally in the Euler-product formulation; on the zero side, they hold at any verified truncation level and extend to the full series under a computationally verified finite-rank condition (rank $= 0$ for the first 20 zeros).
+coupling the zeros of the Riemann zeta function to those of the quadratic Dirichlet $L$-function.  We ask whether this coupling can be detected spectrally, by weighting zeros so that low-lying ones dominate.  The answer is yes: the resulting quadratic form on weighted zero sums is always negative (the $L$-function zeros win), and the set where it becomes positive has density $O(1/\sqrt{d})$.  Both statements hold unconditionally in the Euler-product formulation; on the zero side, they hold at any verified truncation level and extend to the full series under the hypothesis that the infinite resonance lattice has finite rank (computationally consistent with rank~$0$ for the first $20$ zeros).
 
 For a zero $\rho = \half + i\gamma$ on the critical line, define the Lorentzian weight
 \begin{equation}\label{eq:lorentzian-weight}
@@ -115,7 +115,7 @@ We prove unconditionally that:
 
 \item \textbf{Effective density bound} (Theorem~\ref{thm:density}): $\dens\{N > 0\} \leq 2\|f_{S_L^{(M)}}\|_\infty \cdot (W_1(\zeta)/\sqrt{d} + \epsilon_M)$ unconditionally at any verified truncation level $M$.
 
-\item \textbf{Density rate and exact asymptotic} (Corollary~\ref{cor:density-rate}, Theorem~\ref{thm:arctan}): $\dens\{N > 0\} = O(1/\sqrt{d})$, sharpened to $\dens\{N > 0\} = C(d)/\sqrt{d} + o(1/\sqrt{d})$, under the hypothesis that the infinite resonance lattice $\Lambda_\infty$ has finite rank $d_\infty < \infty$ (verified $d_\infty = 0$ for $M \leq 20$).  For $d = 5$, $C(5) = 0.1191$; the constant $C(d) = O(1/\log d)$ as $d \to \infty$.
+\item \textbf{Density rate and exact asymptotic} (Corollary~\ref{cor:density-rate}, Theorem~\ref{thm:arctan}): $\dens\{N > 0\} = O(1/\sqrt{d})$, sharpened to $\dens\{N > 0\} = C(d)/\sqrt{d} + o(1/\sqrt{d})$, under the hypothesis that the infinite resonance lattice $\Lambda_\infty$ has finite rank $d_\infty < \infty$ (a hypothesis; computationally consistent with $d_M = 0$ for $M \leq 20$, but not a consequence of that finite truncation fact).  For $d = 5$, $C(5) = 0.1191$; the constant $C(d) = O(1/\log d)$ as $d \to \infty$.
 \end{enumerate}
 
 These results do not assume the Riemann Hypothesis for either function. The spacelike property is robust to the choice of weight function (see Section~\ref{subsec:weight-robustness}).  As a byproduct of the low-lying zero dominance proof, we obtain a universal first-zero bound $\gamma_1'(d) < 14.13$ for all fundamental discriminants (Proposition~\ref{prop:first-zero-bound}).
@@ -149,7 +149,7 @@ Thm~\ref{thm:arctan}: Exact formula & Verified ($M = 20$) & $C/\sqrt{d}$ & Margi
 }% end resizebox
 \end{table}
 
-The key insight is that the Jessen--Wintner approach requires $\Q$-linear independence to identify the Ces\`aro distribution with a product of independent random variables. On the Euler product side, this independence follows from unique factorization. On the zero side, it is precisely the Grand Simplicity Hypothesis. The unconditional effective bound bypasses this barrier at a fixed truncation level via the stability lemma; the $O(1/\sqrt{d})$ rate requires the truncation level to grow with $d$, which in turn requires a uniform bound on the density $\|f_{S_L^{(M)}}\|_\infty$.  Under verified resonance absence ($d_\infty = 0$), this uniform bound holds because the unsigned Bessel integral is monotone decreasing in $M$; more generally, it suffices that the infinite resonance lattice $\Lambda_\infty$ has finite rank $d_\infty < \infty$.
+The key insight is that the Jessen--Wintner approach requires $\Q$-linear independence to identify the Ces\`aro distribution with a product of independent random variables. On the Euler product side, this independence follows from unique factorization. On the zero side, it is precisely the Grand Simplicity Hypothesis. The unconditional effective bound bypasses this barrier at a fixed truncation level via the stability lemma; the $O(1/\sqrt{d})$ rate requires the truncation level to grow with $d$, which in turn requires a uniform bound on the density $\|f_{S_L^{(M)}}\|_\infty$.  Under the hypothesis $d_\infty = 0$ (which extends the finite truncation fact $d_M = 0$, verified for $M \leq 20$, to the full infinite series), this uniform bound holds because the unsigned Bessel integral is monotone decreasing in $M$; more generally, it suffices that the infinite resonance lattice $\Lambda_\infty$ has finite rank $d_\infty < \infty$.
 
 \subsection{Series context}
 
@@ -157,7 +157,7 @@ This paper is the first in the series \emph{Persistent Heuristics}.  The Lorentz
 
 \subsection{Organization}
 
-Section~\ref{sec:lorentzian} defines the Lorentzian weight and establishes its properties. Section~\ref{sec:negativity} proves the low-lying zero dominance and spacelike theorems. Section~\ref{sec:cesaro} extends the negativity to Ces\`aro averages and establishes conditional density bounds under GSH, revealing the $\Q$-independence barrier. Sections~\ref{sec:finite} and~\ref{sec:infinite} establish per-function density bounds via Jacobi--Anger analysis and finite truncation. Section~\ref{sec:compare} combines these with a stability argument to prove the effective density bound, and Section~\ref{sec:exact} derives the exact formula under verified resonance absence. Section~\ref{sec:null-crossing} analyzes the unique null crossing on the real axis. Section~\ref{sec:connections} discusses connections and open problems. Appendix~\ref{sec:numerical} provides numerical verification.
+Section~\ref{sec:lorentzian} defines the Lorentzian weight and establishes its properties. Section~\ref{sec:negativity} proves the low-lying zero dominance and spacelike theorems. Section~\ref{sec:cesaro} extends the negativity to Ces\`aro averages and establishes conditional density bounds under GSH, revealing the $\Q$-independence barrier. Section~\ref{sec:besicovitch} introduces the Besicovitch norm framework and the spectral variance decomposition that bridge the Ces\`aro analysis to the Jacobi--Anger approach of the subsequent sections. Sections~\ref{sec:finite} and~\ref{sec:infinite} establish per-function density bounds via Jacobi--Anger analysis and finite truncation. Section~\ref{sec:compare} combines these with a stability argument to prove the effective density bound, and Section~\ref{sec:exact} derives the exact formula under the finite-rank resonance hypothesis. Section~\ref{sec:null-crossing} analyzes the unique null crossing on the real axis. Section~\ref{sec:connections} discusses connections and open problems. Appendix~\ref{sec:numerical} provides numerical verification.
 
 \begin{remark}[Purpose of Appendix F]\label{rem:supplementary-data}
 The proofs in this paper require only the zero data in
@@ -1367,7 +1367,7 @@ $25$ & $0.0270$ & $0.716$ \\
 We can now state the unconditional result for the full infinite series.
 
 \begin{theorem}[Finiteness of the limiting density]\label{thm:telescoping}
-Under the hypothesis that the infinite resonance lattice $\Lambda_\infty$ has finite rank $d_\infty < \infty$ (in fact $d_\infty = 0$, verified for $M \leq 20$), the Ces\`aro distribution of $S_L(\delta) = \sum_{k=1}^\infty b_k\cos(\gamma_k'\delta)$ has a density at the origin satisfying $f_{S_L}(0) < \infty$.  The same holds for $f_{S_\zeta}(0)$.
+Under the hypothesis that the infinite resonance lattice $\Lambda_\infty$ has finite rank $d_\infty < \infty$ (computationally consistent with $d_M = 0$ for $M \leq 20$; the hypothesis asserts this extends to the full infinite lattice), the Ces\`aro distribution of $S_L(\delta) = \sum_{k=1}^\infty b_k\cos(\gamma_k'\delta)$ has a density at the origin satisfying $f_{S_L}(0) < \infty$.  The same holds for $f_{S_\zeta}(0)$.
 \end{theorem}
 
 \begin{proof}
@@ -1503,7 +1503,7 @@ The weights $b_k = w(\gamma_k')$, the tail $\epsilon_M = \sum_{k > M} b_k$, and 
 \end{remark}
 
 \begin{corollary}[Density rate under resonance absence]\label{cor:density-rate}
-Under the hypothesis that the infinite resonance lattice $\Lambda_\infty$ has finite rank $d_\infty < \infty$ (in fact $d_\infty = 0$, verified for $M \leq 20$), then
+Under the hypothesis that the infinite resonance lattice $\Lambda_\infty$ has finite rank $d_\infty < \infty$ (computationally consistent with $d_M = 0$ for $M \leq 20$; the hypothesis asserts this extends to the full infinite lattice), then
 \[
   \dens\{N_d > 0\} = O(1/\sqrt{d}).
 \]
@@ -1787,9 +1787,9 @@ The ARB-certified density $f_{S_L}(0) = 8.3129$ lies below the unsigned main-ter
 
 The argument proceeds in three logically independent stages.
 
-\textbf{Stage 1: Finite bounds.}  At each truncation level $M$, the Jacobi--Anger decomposition combined with Bessel decay estimates and lattice counting proves $f_{S_L^{(M)}}(0) < \infty$ unconditionally (Theorem~\ref{thm:finite}).  The inactive $J_0$ factors provide exponential suppression at rate $\eta = e/4 \approx 0.68$.
+\textbf{Stage 1: Finite bounds.}  At each truncation level $M$, the Jacobi--Anger decomposition combined with Bessel decay estimates and lattice counting proves $f_{S_L^{(M)}}(0) < \infty$ unconditionally (Theorem~\ref{thm:finite}).  The inactive $J_0$ factors provide the polynomial $t$-decay needed for integrability, while the subcritical bound on active Bessel factors yields exponential suppression in resonance order at rate $\eta = e/4 \approx 0.68$.
 
-\textbf{Stage 2: Finite truncation and stability.}  At any fixed verified truncation level $M$, the effective density bound (Theorem~\ref{thm:density}) gives $\dens\{N_d > 0\} \leq A_M/\sqrt{d} + B_M$, which is nontrivial for sufficiently large $d$.  The $O(1/\sqrt{d})$ rate (Corollary~\ref{cor:density-rate}) follows under the hypothesis that $\Lambda_\infty$ has finite rank $d_\infty < \infty$ (verified $d_\infty = 0$ for $M \leq 20$), which provides a uniform bound on the density and allows the truncation level to grow with $d$.
+\textbf{Stage 2: Finite truncation and stability.}  At any fixed verified truncation level $M$, the effective density bound (Theorem~\ref{thm:density}) gives $\dens\{N_d > 0\} \leq A_M/\sqrt{d} + B_M$, which is nontrivial for sufficiently large $d$.  The $O(1/\sqrt{d})$ rate (Corollary~\ref{cor:density-rate}) follows under the hypothesis that $\Lambda_\infty$ has finite rank $d_\infty < \infty$ (a hypothesis extending the finite truncation fact $d_M = 0$, verified for $M \leq 20$), which provides a uniform bound on the density and allows the truncation level to grow with $d$.
 
 \textbf{Stage 3: Verified refinements.}  Under computationally verified resonance absence at $M = 20$, the telescoping argument (Theorem~\ref{thm:telescoping}) establishes $f_{S_L}(0) < \infty$ for the full infinite series, and the exact formula $\dens\{N_d > 0\} = C(d)/\sqrt{d} + o(1/\sqrt{d})$ follows from the computable marginal densities (Theorem~\ref{thm:arctan}), with $C(5) = 0.1191$.  No result in this paper assumes GRH or the Grand Simplicity Hypothesis.
 
