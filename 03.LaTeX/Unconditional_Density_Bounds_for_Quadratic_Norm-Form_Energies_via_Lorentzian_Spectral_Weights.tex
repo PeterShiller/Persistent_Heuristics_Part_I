@@ -1044,7 +1044,7 @@ The computed values lie below the subcritical scaling $(e/4)^N$ for all tabulate
 \[
   \frac{1}{\pi}\,|J_N(b_1 t)|\,|J_N(b_2 t)|\prod_{k=3}^{20}|J_0(b_k t)|,
 \]
-where $b_k = 2/(\tfrac{1}{4} + {\gamma_k'}^2)$ with zeros from Appendix~\ref{app:chi5-highprec}.  For $N \leq 30$ the integration domain $[0,\, 2000]$ suffices (the integrand decays as $t^{-M/2}$ for $t \gg N/b_1$).  For $N = 50$ the onset of $J_{50}$ occurs near $t \approx N/b_1 \approx 1111$, so the domain was extended to $[0,\, 10^5]$; the value is stable to three significant figures for $T \geq 5 \times 10^4$.  The scalings $(e/4)^N$ and $N^{-8.67}$ were evaluated directly.
+where $b_k = 2/(\tfrac{1}{4} + {\gamma_k'}^2)$ with zeros from Appendix~\ref{app:chi5-highprec}.  For $N \leq 30$ the integration domain $[0,\, 2000]$ suffices (the integrand decays as $t^{-M/2}$ for $t \gg N/b_1$).  For $N = 50$ the onset of $J_{50}$ occurs near $t \approx j_{50,1}/b_1 \approx 1270$ (the first zero of $J_{50}$ is $j_{50,1} \approx 57.1$), so the domain was extended to $[0,\, 10^4]$; the value is stable to three significant figures for $T \geq 5000$, as confirmed by ARB-certified runs at $T = 5000$ ($I = 1.4025 \times 10^{-14}$) and $T = 10^4$ ($I = 1.4076 \times 10^{-14}$).
 
 \begin{remark}[Uniform Bessel asymptotic]
 The bound $|J_n(x)| \leq \sqrt{2/(\pi x)}$ requires $x \gg n$.  The correct uniform asymptotic for $x > n$ is $|J_n(x)| \leq \sqrt{2/(\pi\sqrt{x^2 - n^2})}$, which interpolates between the Landau bound near $x = n$ and the simple asymptotic for $x \gg n$.  The constants in Lemma~\ref{lem:Jdecay} account for this correction.
