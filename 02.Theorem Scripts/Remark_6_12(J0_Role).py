@@ -102,11 +102,11 @@ DELTA           = arb("1e-20")
 LANDAU_C        = arb("0.7857")  # |J_N(x)| <= LANDAU_C * N^{-1/3}  (DLMF 10.14.3)
 
 # ── Paper table values ────────────────────────────────────────────────────────
-# Paper table values updated to ARB-certified strip-decomposition results.
-# The original values (3.676, 1.794, 1.720, 1.706) were computed via direct
-# integration of abs(J_1(z)) with z complex, which overestimates the real-line
-# integral near Bessel zeros by ~0.4% (M=3) and ~0.2% (M=10-30): acb.integral
-# evaluates at off-axis points where |J_1(x+ih)| > |J_1(x)| near zeros.
+# ARB-certified strip-decomposition results; these are the values used in the
+# paper.  The superseded values (3.676, 1.794, 1.720, 1.706) were produced by
+# direct integration of abs(J_1(z)) with z complex: acb.integral evaluates at
+# off-axis points where |J_1(x+ih)| > |J_1(x)| near zeros, overestimating by
+# ~0.4% (M=3) and ~0.2% (M=10-30).
 PAPER_I     = {3: "3.660", 10: "1.791", 20: "1.717", 30: "1.703"}
 PAPER_RATIO = {3: "1.000", 10: "0.489", 20: "0.469", 30: "0.465"}
 
@@ -453,7 +453,7 @@ def print_results(results):
     print(f"  Domain    : [1e-30, {T_UPPER}]")
     print("  Method    : Strip decomposition (J_1 and J_0 zeros) + ARB quadrature on gaps")
     print(f"  Precision : {ARB_PREC}-bit ARB  (acb_calc_integrate on each gap)")
-    print(f"  PASS/FAIL : certified ARB predicate  rel_err < {float(REL_TOL_3SF.mid())}")
+    print(f"  PASS/FAIL : certified ARB predicate  rel_err < {float(REL_TOL_3SF.mid())}  (display threshold; certification uses ARB <)")
     print()
     print(f"  {'M':>4}  {'I_n':>12}  {'Paper':>7}  {'Ratio':>7}  "
           f"{'Paper':>7}  {'strip_err':>10}  {'I':>6}  {'R':>6}  {'Time':>6}")
