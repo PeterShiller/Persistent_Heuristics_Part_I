@@ -2060,6 +2060,18 @@ Equality is excluded because $N_L(T) > N_\zeta(T)$ on the interval $[0, \gamma_1
 Since $d > 1$, we have $S_\zeta^{(w)} < S_L^{(w)} < \sqrt{d} \cdot S_L^{(w)}$, so $N_w = (S_\zeta^{(w)})^2 - d \cdot (S_L^{(w)})^2 < 0$.
 \end{proof}
 
+\begin{remark}[Scope of the robustness result]\label{rem:robustness-scope}
+Proposition~\ref{prop:weight-robustness} establishes only the \emph{instantaneous} spacelike property $N_w < 0$.  Three further statements in this paper are \emph{not} claimed to hold for general admissible weights, and do require the specific Lorentzian structure:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item \emph{Ces\`aro spacelike} ($\langle N_w \rangle_T < 0$ for all $T > 0$, Theorem~\ref{thm:cesaro}).  This requires a three-region lower bound on the bilinear form $h(T) = \langle S_L^2 \rangle_T$, which uses the exact values $b_k = 2/({\tfrac{1}{4}} + \gamma_k'^2)$ and the specific interference structure of those weights.  For a general admissible weight, analogous bounds would require detailed knowledge of the weight's interaction with the zero-spacing statistics.
+
+\item \emph{Effective density bound} ($\dens\{N_d > 0\} \leq A_M/\sqrt{d} + B_M$, Theorem~\ref{thm:density}).  This uses the finiteness of $\|f_{S_L^{(M)}}\|_\infty$, which is established via Bessel product analysis with the specific weights $b_k$.  A general admissible weight produces a Ces\`aro distribution whose density at the origin may be infinite.
+
+\item \emph{Density rate and exact asymptotic} ($O(1/\sqrt{d})$, Corollary~\ref{cor:density-rate}; $C(d)/\sqrt{d}$, Theorem~\ref{thm:arctan}).  These depend on the Jessen--Wintner structure of the Lorentzian Ces\`aro distribution and the specific computable constant $C(d) = 2f_{S_L}(0)\cdot\E[|S_\zeta|]$.
+\end{enumerate}
+The introduction states that ``the spacelike property is robust to the choice of weight function''; this refers to conclusion~(i) of the present proof, not to conclusions (ii) or (iii).
+\end{remark}
+
 \begin{remark}[Alternative weights]
 Several weights arise naturally from mathematical structure:
 \begin{enumerate}[label=\textup{(\alph*)}]
