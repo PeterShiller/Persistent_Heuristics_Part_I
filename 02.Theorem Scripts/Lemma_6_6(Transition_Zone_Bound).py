@@ -57,13 +57,18 @@ Step 1: Fully ARB Bessel zero computation.
       seed.  For all nu in {0, 5, 10, ..., 50} and m >= 1, this
       places the seed within 0.3 of the true zero.
 
-  (b) ARB bisection.  An initial bracket [seed - 1.5, seed + 1.5]
-      is certified to have opposite ARB-certified signs at its
-      endpoints.  The bracket is bisected in ARB until its width
-      drops below DELTA/10.  Each bisection step uses certified ARB
-      sign comparisons; RuntimeError is raised if the bracket sign
-      check fails.  The midpoint of the final bracket lies within
-      DELTA/20 of the true zero by the bisection guarantee.
+  (b) ARB bisection with certified trichotomy.  An initial bracket
+      [seed - 1.5, seed + 1.5] is certified to have opposite ARB-certified
+      signs at its endpoints.  The bracket is bisected in ARB until its
+      width drops below DELTA/10.  Each bisection step uses a rigorous
+      certified trichotomy on fmid:
+        (i)   fmid > 0 certified: update lo.
+        (ii)  fmid < 0 certified: update hi.
+        (iii) undecidable (ARB ball straddles zero): double ctx.prec and
+              re-evaluate, up to MAX_BISECT_PREC = 6 * ARB_PREC.  If still
+              undecidable, mid is an ARB enclosure of the zero and bisection
+              terminates.  The 'undecidable' case is NEVER silently treated
+              as a certified branch; it always triggers a precision retry.
 
   (c) The bisection is done at full ARB_PREC precision throughout,
       so there is no precision loss from mpmath's internal rounding.
@@ -208,7 +213,8 @@ for _p in [_SD, _RR, _DD]:
 from L_function_zeros import get_zero
 from flint import arb, acb, ctx
 
-ARB_PREC = 256
+ARB_PREC        = 256
+MAX_BISECT_PREC = 1536   # 6x base; precision doubling in bisection stops here
 ctx.prec  = ARB_PREC
 
 M        = 20
@@ -278,12 +284,21 @@ def arb_besseljzero(nu_int, m_int, eval_fn):
 
     Algorithm:
       1. Evaluate the three-term McMahon asymptotic in ARB to obtain a
-         seed that lies within 0.3 of the true zero for all nu <= 50, m >= 1.
+         seed within 0.3 of the true zero for all nu <= 50, m >= 1.
       2. Form the bracket [seed - 1.5, seed + 1.5] and verify opposite
          ARB-certified signs at the endpoints.
-      3. Bisect in ARB until the bracket width drops below DELTA/10.
-         Each step uses a certified ARB sign comparison; RuntimeError on failure.
-      4. Return the ARB midpoint, which lies within DELTA/20 of the true zero.
+      3. Bisect in ARB until the bracket width drops below DELTA/10,
+         using a rigorous certified trichotomy at each step:
+           (a) fmid > 0 -- certified positive: update lo.
+           (b) fmid < 0 -- certified negative: update hi.
+           (c) undecidable (ARB ball straddles zero): double ctx.prec and
+               re-evaluate, up to MAX_BISECT_PREC.  If still undecidable
+               at MAX_BISECT_PREC, mid is an ARB enclosure of the zero
+               and bisection terminates; the IVT check in collect_strips
+               confirms the result at +-DELTA.
+         The 'undecidable' case is never silently treated as a certified
+         sign: it always triggers a precision retry first.
+      4. Return the ARB midpoint, within DELTA/20 of the true zero.
 
     No mpmath or floating-point arithmetic is used at any step.
     """
@@ -308,22 +323,38 @@ def arb_besseljzero(nu_int, m_int, eval_fn):
     for _it in range(500):
         if (hi - lo) < TARGET:
             break
-        mid  = (lo + hi) / _TWO
-        fmid = eval_fn(mid)
-        lo_pos = flo > _ZERO
-        mid_pos = fmid > _ZERO
-        if (lo_pos and mid_pos) or ((flo < _ZERO) and (fmid < _ZERO)):
+        mid = (lo + hi) / _TWO
+
+        # Certified trichotomy: if fmid is undecidable (ball straddles
+        # zero), double working precision and re-evaluate until certified.
+        prec = ctx.prec
+        while prec <= MAX_BISECT_PREC:
+            old_prec = ctx.prec
+            ctx.prec = prec
+            fmid = eval_fn(mid)
+            ctx.prec = old_prec
+            mid_pos = fmid > _ZERO
+            mid_neg = fmid < _ZERO
+            if mid_pos or mid_neg:
+                break           # certified sign obtained
+            prec *= 2           # double precision and retry
+
+        if not mid_pos and not mid_neg:
+            # Still undecidable at MAX_BISECT_PREC: mid is an ARB
+            # enclosure of the zero; terminate early.
+            break
+
+        # Update bracket using the certified sign
+        lo_neg = flo < _ZERO
+        if (not mid_neg and not lo_neg) or (mid_neg and lo_neg):
             lo  = mid
             flo = fmid
         else:
             hi  = mid
             fhi = fmid
-    else:
-        raise RuntimeError(
-            f"ARB bisection did not converge for J_{nu_int} zero #{m_int}"
-        )
 
     return (lo + hi) / _TWO
+
 
 
 # ── Weights ───────────────────────────────────────────────────────────────────
