@@ -126,7 +126,8 @@ The progression of results reveals the fundamental role of $\Q$-linear independe
 \begin{table}[ht]
 \centering
 \renewcommand{\arraystretch}{1.4}
-{\small
+\resizebox{\linewidth}{!}{%
+\small
 \begin{tabular}{lccc}
 \toprule
 \textbf{Result} & \textbf{Assumes} & \textbf{Bound} & \textbf{Method} \\
@@ -144,7 +145,7 @@ Thm~\ref{thm:telescoping}: Limiting density & Verified ($M = 20$) & $f_{S_L}(0) 
 Thm~\ref{thm:arctan}: Exact formula & Verified ($M = 20$) & $C/\sqrt{d}$ & Marginal densities \\
 \bottomrule
 \end{tabular}
-}
+}% end resizebox
 \end{table}
 
 The key insight is that the Jessen--Wintner approach requires $\Q$-linear independence to identify the Ces\`aro distribution with a product of independent random variables. On the Euler product side, this independence follows from unique factorization. On the zero side, it is precisely the Grand Simplicity Hypothesis. The unconditional effective bound bypasses this barrier at a fixed truncation level via the stability lemma; the $O(1/\sqrt{d})$ rate requires the truncation level to grow with $d$, which in turn requires a uniform bound on the density $\|f_{S_L^{(M)}}\|_\infty$.  Under verified resonance absence ($d_\infty = 0$), this uniform bound holds because the unsigned Bessel integral is monotone decreasing in $M$; more generally, it suffices that the infinite resonance lattice $\Lambda_\infty$ has finite rank $d_\infty < \infty$.
