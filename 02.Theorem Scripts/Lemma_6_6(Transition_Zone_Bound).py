@@ -45,7 +45,7 @@ The analytic integrand is integrated with acb.integral and the absolute
 value of the real part is summed.
 
 On each strip the integrand is bounded by the Landau constant:
-  B_N = LANDAU_C^2 * N^{-2/3},  LANDAU_C = 0.7857  (DLMF 10.14.3).
+  B_N = LANDAU_C^2 * N^{-2/3},  LANDAU_C = 0.675  (Landau 2000, Thm 1).
 
 Step 1: Fully ARB Bessel zero computation.
 
@@ -236,7 +236,7 @@ T_EPS    = arb("1e-30")   # lower limit; integrand is O(t^{N+1}) near 0
 DELTA    = arb("1e-20")   # IVT / strip half-width in x-space
 REL_TOL  = 2**(-200)
 ABS_TOL  = 2**(-250)
-LANDAU_C = arb("0.7857")  # |J_N(x)| <= LANDAU_C * N^{-1/3}  (DLMF 10.14.3)
+LANDAU_C = arb("0.675")   # |J_N(x)| < LANDAU_C * N^{-1/3}  (Landau 2000, Thm 1; best constant b = 0.674885...)
 
 PAPER_I       = {5:"3.82e-2", 10:"1.42e-4", 20:"7.87e-9",
                  30:"1.15e-11", 50:"1.41e-14"}
