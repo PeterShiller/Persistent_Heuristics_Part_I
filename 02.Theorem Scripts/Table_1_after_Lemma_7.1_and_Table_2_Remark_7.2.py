@@ -245,10 +245,7 @@ def collect_all_strips(b_arb, M_int, T_max_arb):
 
     Each per-factor list is already in certified ascending order
     (m increments, j_{0,m} is strictly increasing).  The K-way merge
-    uses only ARB < comparisons to select the next strip at each step;
-    no float arithmetic is used for ordering.  This avoids the hazard
-    of float(s[0].mid()) missorting two close strip starts before any
-    ARB verification can catch it.
+    uses only ARB < comparisons to select the next strip at each step.
     """
     # Collect one sorted list per factor; each is ARB-ascending by construction.
     per_factor = [collect_strips_J0(b_arb[k], T_max_arb) for k in range(M_int)]
