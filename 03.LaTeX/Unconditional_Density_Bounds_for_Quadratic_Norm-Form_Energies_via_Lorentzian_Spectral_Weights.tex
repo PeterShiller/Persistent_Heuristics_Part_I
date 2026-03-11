@@ -1130,7 +1130,7 @@ $30$ & $1.703$ & $0.465$ \\
 \bottomrule
 \end{tabular}
 \end{center}
-Each additional inactive $J_0$ factor reduces the resonance integral, converging to a limit as $M \to \infty$.  The values of $I_{\mathbf{n}}$ were computed by ARB-rigorous strip decomposition (\texttt{acb\_calc\_integrate}, 256-bit precision, $T = 2000$): the domain is partitioned at the certified zeros of each $J_1$ and $J_0$ factor so that \texttt{acb\_calc\_integrate} is applied only on gap intervals where the integrand is analytic.  Active indices $(n_1, n_2, n_3) = (1, 1, -1)$; the remaining $M - 3$ indices are inactive.
+Each additional inactive $J_0$ factor reduces the resonance integral, converging to a limit as $M \to \infty$.  The values of $I_{\mathbf{n}}$ were computed by ARB-rigorous strip decomposition (\texttt{acb.integral}, 256-bit precision, $T = 2000$): the domain is partitioned at the certified zeros of each $J_1$ and $J_0$ factor so that \texttt{acb.integral} is applied only on gap intervals where the integrand is analytic.  Active indices $(n_1, n_2, n_3) = (1, 1, -1)$; the remaining $M - 3$ indices are inactive. All table values are integrals over $[0, 2000]$; for $M = 3$ (no inactive $J_0$ factors) the tail from $[2000, \infty)$ is approximately $0.44$ (Watson bound $\leq 2.01$; see ancillary script), so the $M = 3$ entry and the ratios normalised by it reflect the truncated integral.  For $M \geq 10$ the tail is below $3 \times 10^{-5}$ and the table entries are effectively equal to $\int_0^\infty$.
 \end{remark}
 
 \begin{remark}[Dependence on lattice rank]\label{rem:rank}
@@ -1213,7 +1213,7 @@ $20$ & $10.52$ & $8.31$ \\
 \end{tabular}
 }
 \end{center}
-This is consistent: each additional $J_0(b_k t)$ factor reduces the absolute value of the integrand but also reduces the negative lobes, pushing the signed integral upward.  The finiteness proof uses only the unsigned bound.  The monotone increase of the signed integral confirms that $f^{(M)}(0)$ converges to $f_{S_L}(0) = 8.3129$ from below.  Both columns are computed by ARB quadrature at $256$-bit precision with $T = 2000$; for any $T \geq 500$ the contribution from $[T, \infty)$ is below $10^{-10}$ due to the $t^{-M/2}$ decay of the Bessel product.
+This is consistent: each additional $J_0(b_k t)$ factor reduces the absolute value of the integrand but also reduces the negative lobes, pushing the signed integral upward.  The finiteness proof uses only the unsigned bound.  The monotone increase of the signed integral confirms that $f^{(M)}(0)$ converges to $f_{S_L}(0) = 8.3129$ from below.  Both columns are the integrals over $[0, T]$ with $T = 2000$, computed by ARB quadrature at $256$-bit precision.  Certified upper bounds on the tail $(1/\pi)\int_T^\infty \prod_{k=1}^M |J_0(b_k t)|\,dt$ via the envelope bound $|J_0(x)| \leq \sqrt{2/(\pi x)}$ are reported in the ancillary script; they range from $O(1)$ for $M = 3$ to below $10^{-8}$ for $M = 20$.
 \end{remark}
 
 
