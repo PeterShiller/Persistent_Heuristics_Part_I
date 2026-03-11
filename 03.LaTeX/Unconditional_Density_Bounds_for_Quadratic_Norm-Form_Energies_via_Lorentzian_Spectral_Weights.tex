@@ -72,7 +72,7 @@ through the zeros of $L(s,\chi_d)$, and $C(d) = O(1/\log d)$ as $d \to \infty$.
 
 \medskip
 
-Appendix F tabulates the first 1000 zeros at 70 decimal places for $L(s,\chi_2)$, $L(s,\chi_3)$, $L(s,\chi_5)$, $L(s,\chi_6)$, $L(s,\chi_7)$, $L(s,\chi_{10})$, $L(s,\chi_{11})$, and $L(s,\chi_{13})$, all rigorously certified by ARB interval arithmetic.
+Appendix F tabulates between 1004 and 1044 zeros at 70 decimal places for $L(s,\chi_2)$, $L(s,\chi_3)$, $L(s,\chi_5)$, $L(s,\chi_6)$, $L(s,\chi_7)$, $L(s,\chi_{10})$, $L(s,\chi_{11})$, and $L(s,\chi_{13})$, all rigorously certified by ARB interval arithmetic.
 \end{abstract}
 
 \subjclass[2020]{Primary 11M06; Secondary 11M26, 11R42, 42A75}
@@ -165,9 +165,9 @@ Appendices~\ref{app:chi5-highprec}--\ref{app:certification}: the first
 $200$ zeros of $L(s,\chi_5)$ at $70$-digit precision, the first $20$
 zeros of $L(s,\chi_d)$ at $20$-digit precision for
 $d \in \{2,3,6,7,10,11,13\}$, and the first $60$ zeros of $\zeta(s)$.
-In the course of this work, however, we computed and certified the first
-$1{,}000$ zeros of $L(s,\chi_d)$ at $70$ decimal places for all eight
-discriminants (8000 zeros in total); these extended tables are collected
+In the course of this work, however, we computed and certified between 1004 and 1044
+zeros of $L(s,\chi_d)$ at $70$ decimal places for all eight
+discriminants (8244 zeros in total); these extended tables are collected
 in the companion document Appendix~\ref{app:full-zero-tables} and are
 freely available as ancillary data files.  To the best of our knowledge,
 no publicly available repository provides bulk high-precision zero
@@ -387,7 +387,7 @@ The Hurwitz decomposition
 \[
 L(s,\chi_2) = 8^{-s}\sum_{a=1}^8 \chi_2(a)\,\zeta(s,a/8),
 \]
-evaluated via the Hardy $Z$-function method (\S\ref{subsec:Lfunc-method}) at 1500-bit ARB precision, yields three zeros below height $11$:
+evaluated via the Hardy $Z$-function method (\S\ref{subsec:Lfunc-method}) at a minimum of 1500-bit ARB precision, yields three zeros below height $11$:
 \[
 \gamma'_{1,\mathrm{knw}} = 4.8999739970070365010, \quad
 \gamma'_{2,\mathrm{knw}} = 7.6284288417693978341,
@@ -2147,7 +2147,7 @@ The author thanks the LMFDB collaboration~\cite{LMFDB} for access to verified ze
 
 Computations in this paper fall into two categories.  \emph{Rigorous} computations use interval arithmetic via ARB~\cite{Johansson2017}, accessed through \texttt{python-flint}~$\geq 0.8.0$ (Python~3.12); ARB represents numbers as balls $[m \pm r]$ with midpoint $m$ and radius $r$, and arithmetic operations propagate error bounds rigorously, so the true value is guaranteed to lie within the output ball as a mathematical theorem.  This includes all zero certification, spectral sum bounds, Besicovitch constants, and Bessel product integrals (via \texttt{acb\_calc\_integrate}).  The PSLQ integer relation search uses \texttt{mpmath}~$\geq 1.3$; the Ferguson--Bailey--Arno bounds~\cite{FBA1999} ensure that \texttt{None} results rigorously certify the absence of integer relations with bounded coefficients (see \S\ref{subsec:pslq}).
 
-Working precisions: 512-bit ($\approx 154$ decimal digits) for $S_\zeta^*$ certification, spacelike verification (Table~\ref{tab:weights}), and null crossing computation (ARB); 1500-bit ($\approx 451$ decimal digits) for all zero refinement and certification (ARB), including both the $\chi_5$ zeros of Appendix~\ref{app:chi5-highprec} and the auxiliary character zeros of Appendix~\ref{app:zero-data}; 128-bit for the sign-change scan and bracket filtering phases described in \S\ref{subsec:Lfunc-method}, used in the extended 1000-zero computations of Appendix~\ref{app:full-zero-tables}; 256-bit for all Bessel product integrals including density, resonance, and decay estimates (ARB); and 80-digit decimal precision for PSLQ searches (\texttt{mpmath}).
+Working precisions: 512-bit ($\approx 154$ decimal digits) for $S_\zeta^*$ certification, spacelike verification (Table~\ref{tab:weights}), and null crossing computation (ARB); at least 1500-bit ($\approx 451$ decimal digits) for all zero refinement and certification (ARB), including both the $\chi_5$ zeros of Appendix~\ref{app:chi5-highprec} and the auxiliary character zeros of Appendix~\ref{app:zero-data}; 128-bit for the sign-change scan and bracket filtering phases described in \S\ref{subsec:Lfunc-method}, used in the extended 1000-zero computations of Appendix~\ref{app:full-zero-tables}; 256-bit for all Bessel product integrals including density, resonance, and decay estimates (ARB); and 80-digit decimal precision for PSLQ searches (\texttt{mpmath}).
 
 \subsection{$L$-function evaluation and zero-finding}\label{subsec:Lfunc-method}
 
@@ -2939,7 +2939,7 @@ $20$ & $77.14484006887480537268$ & $40$ & $122.94682929355258820081$ & $60$ & $1
 \section{ARB Certification of Zero Data}\label{app:certification}
 %% ================================================================
 
-All 340 zeros tabulated in Appendices~\ref{app:zero-data} and~\ref{app:chi5-highprec} were rigorously certified using the methodology of \S\ref{subsec:software}--\ref{subsec:Lfunc-method}.  Working precision was 1500~bits for all characters.  The following table summarizes the certified upper bounds:
+All 340 zeros tabulated in Appendices~\ref{app:zero-data} and~\ref{app:chi5-highprec} were rigorously certified using the methodology of \S\ref{subsec:software}--\ref{subsec:Lfunc-method}.  Working precision was at least 1500~bits for all characters.  The following table summarizes the certified upper bounds:
 
 \renewcommand{\arraystretch}{1.15}
 \small
@@ -2982,7 +2982,7 @@ Due to its length (approximately 181 pages), this appendix is archived separatel
 \noindent Available at \url{https://doi.org/10.5281/zenodo.18783098}.
 
 \medskip
-\noindent The companion document tabulates the first 1000 zeros of $L(s,\chi_d)$ to 70 decimal places for each of the eight quadratic characters $\chi_2$, $\chi_3$, $\chi_5$, $\chi_6$, $\chi_7$, $\chi_{10}$, $\chi_{11}$, and $\chi_{13}$ (8000 zeros in total).  All zeros were computed using the methodology of \S\ref{subsec:Lfunc-method} at 1500-bit working precision and rigorously certified using ARB interval arithmetic (\S\ref{subsec:software}).  Certified upper bounds on $|L(\tfrac{1}{2}+i\gamma_k',\chi_d)|$ are provided for every zero, with all bounds below $10^{-448}$.  This dataset extends and supersedes the tables in Appendices~\ref{app:chi5-highprec} and~\ref{app:zero-data} of the present paper.
+\noindent The companion document tabulates between 1004 and 1044 zeros of $L(s,\chi_d)$ to 70 decimal places for each of the eight quadratic characters $\chi_2$, $\chi_3$, $\chi_5$, $\chi_6$, $\chi_7$, $\chi_{10}$, $\chi_{11}$, and $\chi_{13}$ (8244 zeros in total).  All zeros were computed using the methodology of \S\ref{subsec:Lfunc-method} at a minimum of 1500-bit working precision and rigorously certified using ARB interval arithmetic (\S\ref{subsec:software}).  Certified upper bounds on $|L(\tfrac{1}{2}+i\gamma_k',\chi_d)|$ are provided for every zero, with all bounds below $10^{-409}$.  This dataset extends and supersedes the tables in Appendices~\ref{app:chi5-highprec} and~\ref{app:zero-data} of the present paper.
 
 \begin{thebibliography}{99}
 
