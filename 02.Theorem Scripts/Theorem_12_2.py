@@ -1,360 +1,471 @@
 """
-Theorem_12_2.py  —  Certified verification of Theorem 12.2 (Integer crossing obstruction)
-=======================================================================================
+Theorem_12_2.py  —  Certified verification of Theorem 12.2 (Unique null crossing)
+===============================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
     Norm-Form Energies via Lorentzian Spectral Weights.
     arXiv:2603.00301.  Zenodo: https://doi.org/10.5281/zenodo.18783098
 
-Proof structure and certification strategy per case
------------------------------------------------------
-  Case 1  s = 2, d = 3
-    The identity zeta(2)^2 = 3 * L(2, chi_3)^2 is certified by evaluating both
-    sides via ARB Hurwitz decomposition at s = 2 and certifying the absolute
-    difference is < 1e-100.
+This module certifies the null crossing table in Theorem 12.2 of the above
+reference.  For each squarefree d in {2, 3, 5, 7, 13}, it computes:
 
-  Case 2a  s = 2, d >= 22 (threshold argument)
-    The bound c_d >= (2 - pi^2/6) * sqrt(d) / pi^2 implies c_d > 1/6 for all
-    squarefree d >= 22.  The threshold (2 - pi^2/6) * sqrt(22) / pi^2 > 1/6 is
-    certified as an ARB inequality (pure pi arithmetic, no L-function evaluation).
+    s_*(d) : the unique s > 1 satisfying G(s) := zeta(s) / L(s, chi_d) = sqrt(d),
 
-  Case 2b  s = 2, d in {2, 5, 6, 7, 10, 11, 13, 14, 15, 17, 19, 21}
-    For each d, compute c_d = sqrt(d) * L(2, chi_d) / pi^2 via ARB Hurwitz
-    decomposition and certify directly that the resulting ARB ball is disjoint
-    from 1/6, i.e., certify either c_d > 1/6 or c_d < 1/6 as an ARB predicate.
-    No exact rational identification of c_d is claimed or required; the theorem
-    needs only c_d != 1/6, which is exactly what ARB disjointness delivers.
-    The table in the paper lists the numerically computed rational approximations
-    for the reader's convenience; their exactness follows independently from the
-    Klingen-Siegel Bernoulli formula but is not part of the certified proof.
+together with L(1, chi_d) and a certified residual |G(s_*(d)) - sqrt(d)|,
+all kept in ARB ball arithmetic throughout.
 
-  Case 3  s >= 4, all d
-    At s = 4, the all-inert bound gives G(4) <= zeta(4)^2 / zeta(8).  The ARB
-    evaluation certifies this ratio equals exactly 7/6 (|ratio - 7/6| < 1e-100).
-    The final step 49 < 72 (i.e., (7/6)^2 < 2 <= d) is a Python integer
-    comparison, requiring no floating-point arithmetic.
+Algorithm
+---------
+  G(s) = zeta(s) / L(s, chi_d), where L(s, chi_d) is evaluated via the
+  Hurwitz zeta decomposition
 
-  Cases 4+5  s = 3, d >= 3 and d = 2
-    Both cases are closed by explicit partial-product bounds (computed in the
-    paper by hand).  The final inequalities 1507653^2 < 3 * 1007500^2 (d >= 3)
-    and 178326^2 < 2 * 138229^2 (d = 2) are Python integer comparisons.
+      L(s, chi_d) = q^{-s} * sum_{a=1}^{q} chi_d(a) * zeta(s, a/q),
+
+  with q = |Delta_K| the conductor of Q(sqrt(d)).  Each Hurwitz value
+  zeta(s, a/q) is computed by ARB's built-in acb.zeta.
+
+  Two certification strategies are used, chosen by the nature of s_*(d):
+
+  (A) Generic bisection (d in {2, 5, 7, 13}): s_*(d) is irrational.
+      At each step the algorithm evaluates G(s_mid) as an ARB ball and
+      performs a decisive trichotomy:
+        - G(s_mid) certainly > sqrt(d)  =>  advance lower endpoint
+        - G(s_mid) certainly < sqrt(d)  =>  advance upper endpoint
+        - intervals overlap              =>  raise ctx.prec by PREC_STEP
+                                             and retry (up to 5 times)
+      The bracket invariant G(s_lo) > target > G(s_hi) is maintained by
+      certified comparisons.  The initial bracket is itself certified
+      before bisection begins.  After bisection, L_hurwitz is confirmed
+      > 0 on the final bracket (denominator safety), and the residual
+      is certified < 1e-60 as an ARB predicate.
+
+  (B) Integer crossing (d = 3): s_*(3) = 2 exactly (Theorem 12.3).
+      The ARB bisection approach is inapplicable here because G(2) =
+      sqrt(3) holds as an identity; eventually the midpoint coincides
+      with the answer and no decisive comparison is possible.  Instead,
+      the module certifies the crossing directly:
+        (i)   G(1.99, 3) > sqrt(3)   [certified ARB predicate]
+        (ii)  G(2.01, 3) < sqrt(3)   [certified ARB predicate]
+        (iii) |G(2, 3) - sqrt(3)| < 1e-60  [certified ARB predicate]
+      Together with the strict monotonicity of G (Lemma 12.1 of the paper),
+      (i)-(ii) certify existence and uniqueness of s_*(3) in (1.99, 2.01),
+      and (iii) certifies the evaluation at the integer point.
+
+  L(1, chi_d) is computed via the digamma formula
+      L(1, chi) = -(1/q) * sum_{a=1}^{q} chi(a) * psi(a/q).
+  The Kronecker symbol chi_Delta(a) for even a is computed by factoring
+  out powers of 2, since sympy.jacobi_symbol requires an odd denominator.
 
 Rigorousness checklist
------------------------
-  (a) All L-function evaluations use ARB ball arithmetic via acb.zeta (Hurwitz
-      decomposition) at 512-bit working precision.  No mpmath or float arithmetic
-      is used inside any certified computation.
-  (b) Case 2b certifies c_d != 1/6 directly: the ARB ball for c_d is certified
-      disjoint from 1/6 via a single ARB predicate (c_d > 1/6 or c_d < 1/6).
-      No exact rational identification is claimed.
-  (c) Case 3 uses ARB to confirm the Bernoulli-number identity and pure integer
-      comparison for the final bound.
-  (d) Cases 4 and 5 both use ARB interval arithmetic.  Case 4 certifies the
-      universal all-inert bound at s = 3 via acb.zeta(3) and acb.zeta(6).
-      Case 5 certifies G(3, 2)^2 < 2 directly via acb.zeta(3) and L_hurwitz.
-      No partial-product bounds from the paper are used in either case.
-  (e) All pass/fail predicates are evaluated as ARB comparisons or exact integer
-      comparisons.  float() conversion is used only after all certification is
-      complete, for display.
+----------------------
+  (a) Every function evaluation uses ARB ball arithmetic (acb.zeta,
+      acb.digamma, arb.sqrt, arb.log, acb.lgamma); no mpmath or float
+      arithmetic is used inside any certified computation.
+  (b) Bisection uses a decisive trichotomy; the undecidable case raises
+      precision rather than silently branching.
+  (c) Initial brackets are numerically certified before bisection begins.
+  (d) L_hurwitz > 0 on the entire final bracket is certified by evaluating
+      L_hurwitz on a single ARB ball s_lo.union(s_hi) that encloses the whole
+      interval.  Positivity of this enclosure certifies L > 0 for all s in
+      [s_lo, s_hi], not merely at the two endpoints.
+  (e) All pass/fail predicates (residual < 1e-60, bracket endpoints,
+      L > 0) are evaluated as ARB comparisons.  float() conversion is
+      used only after all certification is complete, for display.
+  (f) d = 3 is handled by a direct integer-crossing strategy that avoids
+      the structurally undecidable bisection comparison at the exact root.
 
 No zero ordinate data from any appendix is used in this computation.
+
+Requirements
+------------
+  python-flint >= 0.8.0   (provides ARB ball arithmetic)
+  sympy >= 1.12
+  Python >= 3.10
+
+Usage
+-----
+  python Theorem_12_2.py
 """
 
 from flint import arb, acb, ctx
 import sympy
 
-BASE_PREC = 512
-ctx.prec = BASE_PREC
 
 # ---------------------------------------------------------------------------
-# Shared utilities
+# Precision schedule
 # ---------------------------------------------------------------------------
 
-def fundamental_discriminant(d):
-    """Return the fundamental discriminant of Q(sqrt(d))."""
-    return d if d % 4 == 1 else 4 * d
+BASE_PREC = 512    # ~154 decimal digits; matches the paper
+PREC_STEP = 128    # precision increment on undecidable bisection comparison
 
 
-def chi_kronecker(D, n):
+# ---------------------------------------------------------------------------
+# Kronecker symbol chi_Delta(a) for all integer a >= 1.
+# sympy.jacobi_symbol requires an odd denominator; even a is handled by
+# factoring out powers of 2 and applying Kronecker(Delta, 2) separately.
+# ---------------------------------------------------------------------------
+
+def _kronecker_at_2(Delta):
+    """Kronecker symbol (Delta/2): +1 if Delta=+/-1 mod 8, -1 if +/-3 mod 8, 0 if even."""
+    r = Delta % 8
+    if r in (1, 7):   return  1
+    elif r in (3, 5): return -1
+    else:             return  0
+
+
+def kronecker_symbol(Delta, a):
     """
-    Kronecker symbol (D/n) for the primitive character of conductor D.
-
-    For odd n, delegates to sympy.jacobi_symbol (which is exact for odd
-    second argument).  For even n, factors out the power of 2 and applies
-    the supplementary law for (D/2) before multiplying by the Jacobi symbol
-    on the odd part.
+    Return chi_Delta(a) = Kronecker symbol (Delta/a) as an integer in {-1, 0, 1}.
+    Valid for all integers a >= 1.
     """
-    n = int(n) % D
-    if n == 0:
-        return 0
-    if n % 2 == 0:
-        v, m = 0, n
+    if a == 1:
+        return 1
+    if a % 2 == 0:
+        # (Delta / 2^v*m) = (Delta/2)^v * (Delta/m),  m odd
+        v, m = 0, a
         while m % 2 == 0:
             v += 1
             m //= 2
-        r = D % 8
-        k2 = 1 if r in (1, 7) else (-1 if r in (3, 5) else 0)
+        k2 = _kronecker_at_2(Delta)
         if k2 == 0:
             return 0
-        km = int(sympy.jacobi_symbol(D, m)) if m > 1 else 1
+        km = int(sympy.jacobi_symbol(Delta, m)) if m > 1 else 1
         return (k2 ** v) * km
-    return int(sympy.jacobi_symbol(D, n))
+    else:
+        return int(sympy.jacobi_symbol(Delta, a))
 
+
+# ---------------------------------------------------------------------------
+# Fundamental discriminant |Delta_K| = conductor q for Q(sqrt(d))
+# ---------------------------------------------------------------------------
+
+def fundamental_discriminant(d):
+    """Return conductor q = d if d = 1 mod 4, else 4d."""
+    return d if d % 4 == 1 else 4 * d
+
+
+# ---------------------------------------------------------------------------
+# L(s, chi_d) via the Hurwitz zeta decomposition (ARB ball arithmetic)
+# ---------------------------------------------------------------------------
 
 def L_hurwitz(s_arb, d):
     """
-    L(s, chi_d) via Hurwitz decomposition (ARB interval arithmetic).
-
-      L(s, chi_d) = q^{-s} * sum_{a=1}^{q} chi_d(a) * zeta(s, a/q)
-
-    where q = fundamental_discriminant(d).  All arithmetic is performed
-    inside ARB; the return value is a certified real ARB ball.
+    Compute L(s, chi_d) = q^{-s} * sum_{a=1}^{q} chi_d(a) * zeta(s, a/q).
+    Returns a certified arb ball.  Terms with chi_d(a) = 0 are skipped.
     """
-    D = fundamental_discriminant(d)
-    q_arb = arb(D)
-    s_c = acb(s_arb)
+    Delta = fundamental_discriminant(d)
+    q     = Delta
+    q_arb = arb(q)
+    s_c   = acb(s_arb)
+
     total = arb(0)
-    for a in range(1, D + 1):
-        chi = chi_kronecker(D, a)
+    for a in range(1, q + 1):
+        chi = kronecker_symbol(Delta, a)
         if chi == 0:
             continue
-        hz = acb.zeta(s_c, acb(arb(a)) / acb(q_arb)).real
-        total += arb(chi) * hz
+        shift = acb(arb(a)) / acb(q_arb)
+        hz    = acb.zeta(s_c, shift).real   # real-valued for real s > 1
+        total = total + arb(chi) * hz
+
     return total / q_arb ** s_arb
 
 
-def zeta_arb(s_int):
-    """ARB enclosure of zeta(s) at a positive integer s."""
-    return acb.zeta(acb(arb(s_int))).real
-
-
 # ---------------------------------------------------------------------------
-# Case 1: s = 2, d = 3
+# L(1, chi_d) via the digamma formula (ARB ball arithmetic)
+# L(1, chi) = -(1/q) * sum_{a=1}^{q} chi(a) * psi(a/q)
 # ---------------------------------------------------------------------------
 
-def certify_case1():
+def L1_digamma(d):
     """
-    Certify the identity  zeta(2)^2 = 3 * L(2, chi_3)^2.
-
-    Returns (diff_ball, certified) where diff_ball is the ARB enclosure of
-    |zeta(2)^2 - 3 * L(2, chi_3)^2| and certified is True iff diff_ball < 1e-100.
+    Compute L(1, chi_d) via the digamma formula.  Returns a certified arb ball.
     """
-    z2 = zeta_arb(2)
-    L2_3 = L_hurwitz(arb(2), 3)
-    diff = abs(z2 ** 2 - arb(3) * L2_3 ** 2)
-    return diff, bool(diff < arb("1e-100"))
+    Delta = fundamental_discriminant(d)
+    q     = Delta
+    q_arb = arb(q)
+
+    total = arb(0)
+    for a in range(1, q + 1):
+        chi = kronecker_symbol(Delta, a)
+        if chi == 0:
+            continue
+        shift   = acb(arb(a)) / acb(q_arb)
+        psi_val = acb.digamma(shift).real
+        total   = total - arb(chi) * psi_val
+
+    return total / q_arb
 
 
 # ---------------------------------------------------------------------------
-# Case 2a: threshold for d >= 22
+# G(s) = zeta(s) / L(s, chi_d)
 # ---------------------------------------------------------------------------
 
-def certify_case2a():
+def zeta_arb(s_arb):
+    """Riemann zeta at real s > 1, as a certified arb ball."""
+    return acb.zeta(acb(s_arb)).real
+
+
+def G(s_arb, d):
+    """G(s) = zeta(s) / L(s, chi_d), as a certified arb ball."""
+    return zeta_arb(s_arb) / L_hurwitz(s_arb, d)
+
+
+# ---------------------------------------------------------------------------
+# Certified bracket check
+# ---------------------------------------------------------------------------
+
+def certify_bracket(s_lo, s_hi, target, d):
     """
-    Certify (2 - pi^2/6) * sqrt(22) / pi^2 > 1/6.
-
-    This implies c_d > 1/6 for all squarefree d >= 22, ruling out s_*(d) = 2
-    for those d.  The computation uses only pi; no L-function evaluation.
-
-    Returns (lhs, rhs, margin, certified).
+    Certify G(s_lo) > target and G(s_hi) < target as ARB predicates.
+    Raises ValueError if either comparison is undecidable.
     """
-    pi2 = arb.pi() ** 2
-    lhs = (arb(2) - pi2 / arb(6)) * arb(22).sqrt() / pi2
-    rhs = arb(1) / arb(6)
-    certified = bool(lhs > rhs)
-    return lhs, rhs, lhs - rhs, certified
+    g_lo = G(s_lo, d)
+    g_hi = G(s_hi, d)
+
+    if not (g_lo > target):
+        raise ValueError(
+            f"d={d}: lower bracket not certified: "
+            f"G(s_lo)={g_lo}, target={target}."
+        )
+    if not (g_hi < target):
+        raise ValueError(
+            f"d={d}: upper bracket not certified: "
+            f"G(s_hi)={g_hi}, target={target}."
+        )
 
 
 # ---------------------------------------------------------------------------
-# Case 2b: exact c_d values for squarefree d <= 21, d != 3
+# Strategy A: decisive trichotomy bisection for irrational s_*(d)
 # ---------------------------------------------------------------------------
 
-# Rational approximations to c_d, listed for display purposes only.
-# Their exactness follows from the Klingen-Siegel Bernoulli formula but is
-# not used in the certified proof; certification uses only ARB disjointness
-# from 1/6.
-C_D_DISPLAY = {
-    2:  (1,  8),
-    5:  (4,  25),
-    6:  (1,  4),
-    7:  (2,  7),
-    10: (7,  20),
-    11: (7,  22),
-    13: (4,  13),
-    14: (5,  14),
-    15: (2,  5),
-    17: (8,  17),
-    19: (1,  2),
-    21: (8,  21),
+# Brackets [s_lo, s_hi] of width ~1 surrounding s_*(d) for d != 3.
+_BRACKETS = {
+    2:  ("2.0", "3.5"),
+    5:  ("1.5", "2.5"),
+    7:  ("1.2", "1.7"),
+    13: ("1.2", "1.7"),
 }
 
 
-def certify_case2b():
+def find_null_crossing_bisection(d, n_steps=220, max_prec_escalations=5):
     """
-    For each d in C_D_DISPLAY, certify c_d != 1/6 by direct ARB disjointness.
+    Certify s_*(d) for d in {2, 5, 7, 13} by decisive ARB bisection.
 
-    The ARB ball for c_d = sqrt(d) * L(2, chi_d) / pi^2 is evaluated via
-    Hurwitz decomposition.  The predicate  c_d > 1/6  or  c_d < 1/6  is then
-    certified as an ARB comparison.  This is all the theorem requires; no exact
-    rational identification of c_d is claimed.
-
-    The display rationals p/q from C_D_DISPLAY are passed through for printing
-    only; they play no role in the certified inequality.
-
-    Returns a dict  d -> (p, q, c_d_ball, diff_ball, certified).
+    Returns (s_star, residual, n_escalations, prec_used).
+    Raises RuntimeError if any certification step fails.
     """
-    sixth = arb(1) / arb(6)
-    results = {}
-    for d, (p, q) in C_D_DISPLAY.items():
-        L2 = L_hurwitz(arb(2), d)
-        c_d = arb(d).sqrt() * L2 / arb.pi() ** 2
-        diff = c_d - sixth
-        certified = bool(diff > arb(0)) or bool(diff < arb(0))
-        results[d] = (p, q, c_d, diff, certified)
-    return results
+    ctx.prec  = BASE_PREC
+    target    = arb(d).sqrt()
+    s_lo      = arb(_BRACKETS[d][0])
+    s_hi      = arb(_BRACKETS[d][1])
+
+    # Step 1: certify initial bracket
+    certify_bracket(s_lo, s_hi, target, d)
+
+    # Step 2: decisive trichotomy bisection
+    n_escals = 0
+    step     = 0
+
+    while step < n_steps:
+        s_mid = (s_lo + s_hi) * arb("0.5")
+        g_mid = G(s_mid, d)
+
+        if g_mid > target:
+            s_lo  = s_mid
+            step += 1
+        elif g_mid < target:
+            s_hi  = s_mid
+            step += 1
+        else:
+            # Intervals overlap: undecidable at current precision.
+            if n_escals >= max_prec_escalations:
+                raise RuntimeError(
+                    f"d={d}: bisection comparison undecidable after "
+                    f"{max_prec_escalations} precision escalations "
+                    f"(final prec={ctx.prec} bits)."
+                )
+            ctx.prec += PREC_STEP
+            n_escals += 1
+            # Recompute target at the new precision.  s_lo and s_hi remain
+            # valid ARB enclosures at any precision: a ball certified at
+            # lower precision is a valid (wider) enclosure at higher
+            # precision, so no conversion or re-initialisation is needed.
+            target = arb(d).sqrt()
+
+    prec_used = ctx.prec
+
+    # Step 3: certify L > 0 on the entire final bracket (denominator safety).
+    # s_lo.union(s_hi) returns the smallest ARB ball enclosing both endpoints.
+    # Evaluating L_hurwitz on this ball gives a certified enclosure of
+    # L(s, chi_d) for ALL s in [s_lo, s_hi] — not merely at the two endpoints.
+    # Positivity of the resulting ball certifies L > 0 on the whole interval.
+    s_bracket   = s_lo.union(s_hi)
+    L_on_bracket = L_hurwitz(s_bracket, d)
+    if not (L_on_bracket > arb(0)):
+        raise RuntimeError(
+            f"d={d}: L_hurwitz not certified > 0 on final bracket. "
+            f"L(union bracket)={L_on_bracket}."
+        )
+
+    # Step 4: certify residual < 1e-60 as ARB predicate
+    s_star   = (s_lo + s_hi) * arb("0.5")
+    residual = abs(G(s_star, d) - target)
+
+    if not (residual < arb("1e-60")):
+        raise RuntimeError(
+            f"d={d}: residual not certified < 1e-60. residual={residual}."
+        )
+
+    ctx.prec = BASE_PREC
+    return s_star, residual, n_escals, prec_used
 
 
 # ---------------------------------------------------------------------------
-# Case 3: s >= 4, all d
+# Strategy B: direct integer crossing for d = 3
+#
+# s_*(3) = 2 exactly (Theorem 12.3).  The bisection approach is structurally
+# inapplicable: when the midpoint reaches 2, G(2) = sqrt(3) holds as an
+# identity, so neither G > sqrt(3) nor G < sqrt(3) can be certified.
+# Instead, three ARB predicates are checked directly:
+#   (i)   G(1.99, 3) > sqrt(3)
+#   (ii)  G(2.01, 3) < sqrt(3)
+#   (iii) |G(2, 3) - sqrt(3)| < 1e-60
+# With G strictly decreasing (Lemma 12.1), (i)+(ii) certify that s_*(3)
+# lies in (1.99, 2.01), and (iii) certifies the evaluation at the point.
 # ---------------------------------------------------------------------------
 
-def certify_case3():
+def certify_integer_crossing(d, s_int, epsilon="0.01"):
     """
-    Certify zeta(4)^2 / zeta(8) = 7/6  (ARB),  then  49 < 72  (integer).
+    Certify s_*(d) = s_int (an integer) by direct ARB evaluation.
 
-    The first step uses the Bernoulli values zeta(4) = pi^4/90,
-    zeta(8) = pi^8/9450, whose ratio squared gives 9450/8100 = 7/6.
-    ARB certifies |ratio - 7/6| < 1e-100.
-
-    The second step is the Python integer comparison 49 < 72, establishing
-    (7/6)^2 = 49/36 < 2 <= d for every squarefree d >= 2, so G(s)^2 < d for
-    all s >= 4.
-
-    Returns (ratio_ball, ratio_err, ratio_ok, int_ok).
+    Returns (s_star, residual, 0, ctx.prec).
+    Raises RuntimeError if any of the three predicates fails.
     """
-    z4 = zeta_arb(4)
-    z8 = zeta_arb(8)
-    ratio = z4 ** 2 / z8
-    ratio_err = abs(ratio - arb(7) / arb(6))
-    ratio_ok = bool(ratio_err < arb("1e-100"))
-    int_ok = (49 < 72)                 # (7/6)^2 = 49/36; 49/36 < 2 iff 49 < 72
-    return ratio, ratio_err, ratio_ok, int_ok
+    ctx.prec = BASE_PREC
+    target   = arb(d).sqrt()
+    eps      = arb(epsilon)
+    s_star   = arb(s_int)
 
+    # (i) G strictly above target just below s_int
+    if not (G(s_star - eps, d) > target):
+        raise RuntimeError(
+            f"d={d}: G(s_int - {epsilon}) not certified > target."
+        )
 
-# ---------------------------------------------------------------------------
-# Cases 4+5: s = 3
-# ---------------------------------------------------------------------------
+    # (ii) G strictly below target just above s_int
+    if not (G(s_star + eps, d) < target):
+        raise RuntimeError(
+            f"d={d}: G(s_int + {epsilon}) not certified < target."
+        )
 
-def certify_case4():
-    """
-    Case 4 (s = 3, d >= 3): certify G(3, d)^2 < d for all squarefree d >= 3.
+    # (iii) residual at the integer point
+    residual = abs(G(s_star, d) - target)
+    if not (residual < arb("1e-60")):
+        raise RuntimeError(
+            f"d={d}: residual at integer not certified < 1e-60. "
+            f"residual={residual}."
+        )
 
-    The all-inert Euler product bound gives G(s, d) <= zeta(s)^2 / zeta(2s) for
-    all squarefree d >= 2 and all s > 1.  At s = 3 this yields
-
-      G(3, d) <= zeta(3)^2 / zeta(6)  for all d.
-
-    We certify via ARB that (zeta(3)^2 / zeta(6))^2 < 3.  Since the bound is
-    universal in d and sqrt(3) <= sqrt(d) for all d >= 3, this closes the case.
-
-    The all-inert bound is NOT tight enough for d = 2: the ARB computation
-    confirms (zeta(3)^2/zeta(6))^2 > 2, which is why d = 2 requires Case 5.
-
-    Returns (all_inert_sq, all_inert_sq_lt_3, all_inert_sq_lt_2).
-    """
-    z3 = zeta_arb(3)
-    z6 = zeta_arb(6)
-    all_inert = z3 ** 2 / z6
-    sq = all_inert ** 2
-    return sq, bool(sq < arb(3)), bool(sq < arb(2))
-
-
-def certify_case5():
-    """
-    Case 5 (s = 3, d = 2): certify G(3, 2)^2 < 2 directly via ARB.
-
-    The all-inert bound is insufficient here (Case 4 shows its square exceeds 2).
-    Instead we compute G(3, 2) = zeta(3) / L(3, chi_8) directly: zeta(3) via
-    acb.zeta and L(3, chi_8) via Hurwitz decomposition, both in ARB at 512-bit
-    precision.  The predicate G(3, 2)^2 < 2 is then certified as an ARB
-    comparison.
-
-    Returns (G3_sq, certified).
-    """
-    z3 = zeta_arb(3)
-    L3_2 = L_hurwitz(arb(3), 2)
-    G3_2 = z3 / L3_2
-    G3_sq = G3_2 ** 2
-    return G3_sq, bool(G3_sq < arb(2))
+    return s_star, residual, 0, ctx.prec
 
 
 # ---------------------------------------------------------------------------
-# Main
+# Unified entry point: dispatch to strategy A or B
+# ---------------------------------------------------------------------------
+
+def find_null_crossing(d, n_steps=220):
+    """
+    Certify s_*(d) using Strategy A (bisection) for d in {2, 5, 7, 13},
+    or Strategy B (direct integer crossing) for d = 3.
+
+    Returns (s_star, residual, n_escalations, prec_used).
+    All returned values are ARB balls.  Raises on any certification failure.
+    """
+    if d == 3:
+        return certify_integer_crossing(d, s_int=2)
+    else:
+        return find_null_crossing_bisection(d, n_steps=n_steps)
+
+
+# ---------------------------------------------------------------------------
+# ARB-native display string (for output only; not used in any predicate)
+# ---------------------------------------------------------------------------
+
+def arb_str(x, digits=10):
+    old = ctx.prec
+    ctx.prec = max(old, int(digits * 3.35) + 64)
+    s = str(x)
+    ctx.prec = old
+    return s
+
+
+# ---------------------------------------------------------------------------
+# Main: reproduce Table 1 from Theorem 12.2, all predicates on ARB objects
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    print("Theorem 12.2: Integer Crossing Obstruction")
-    print(f"ARB working precision : {BASE_PREC} bits (~{int(BASE_PREC * 0.30103)} decimal digits)")
-    print()
 
+    # Paper table values, for display comparison only.
+    paper_s_star = {2: 2.5635, 3: 2.0000, 5: 2.0492, 7: 1.4445, 13: 1.4608}
+    paper_L1     = {2: 0.6232, 3: 0.7603, 5: 0.4304, 7: 1.0465, 13: 0.6627}
+
+    print("Theorem 12.2: Null Crossing Table")
+    print(f"ARB base precision : {BASE_PREC} bits (~{int(BASE_PREC*0.301)} decimal digits)")
+    print("Certification      : decisive trichotomy bisection (d != 3);")
+    print("                     direct integer-crossing check (d = 3)")
+    print("Residual target    : < arb('1e-60'), evaluated as ARB predicate")
+    print()
+    print(f"{'d':>4}  {'Delta_K':>7}  {'L(1,chi_d)':>22}  {'s_*(d)':>22}  "
+          f"{'residual':>14}  {'certified':>10}  {'strategy':>10}")
+    print("-" * 102)
+
+    ctx.prec    = BASE_PREC
     all_certified = True
 
-    # --- Case 1 ---
-    diff, c1_ok = certify_case1()
-    all_certified &= c1_ok
-    print("Case 1  (s=2, d=3)")
-    print(f"  |zeta(2)^2 - 3*L(2,chi_3)^2| = {diff}")
-    print(f"  Certified < 1e-100           : {c1_ok}")
+    for d in [2, 3, 5, 7, 13]:
+        Delta = fundamental_discriminant(d)
+
+        # L(1, chi_d): certified ARB ball
+        L1_ball = L1_digamma(d)
+
+        # s_*(d): certified by the appropriate strategy
+        s_star, residual, n_escals, prec_used = find_null_crossing(d)
+
+        # --- All predicates evaluated on ARB objects ---
+        res_ok = bool(residual < arb("1e-60"))
+        L1_ok  = bool(abs(L1_ball - arb(paper_L1[d]))  < arb("5e-4"))
+        s_ok   = bool(abs(s_star  - arb(paper_s_star[d])) < arb("5e-4"))
+        ok     = res_ok and L1_ok and s_ok
+
+        if not ok:
+            all_certified = False
+
+        strategy = "B (direct)" if d == 3 else "A (bisect)"
+        note = (f"  [{n_escals} escalation(s), {prec_used}-bit]"
+                if n_escals else "")
+
+        print(f"{d:>4}  {Delta:>7}  "
+              f"{float(L1_ball):>10.4f} (arb)  "
+              f"{float(s_star):>10.4f} (arb)  "
+              f"{float(residual):>14.2e}  "
+              f"{'YES' if ok else 'FAIL':>10}  "
+              f"{strategy:>10}"
+              f"{note}")
+
+    print()
+    print(f"All predicates certified (ARB): {all_certified}")
     print()
 
-    # --- Case 2a ---
-    lhs, rhs, margin, c2a_ok = certify_case2a()
-    all_certified &= c2a_ok
-    print("Case 2a  (s=2, d >= 22, threshold)")
-    print(f"  LHS = (2 - pi^2/6)*sqrt(22)/pi^2 = {lhs}")
-    print(f"  RHS = 1/6                         = {rhs}")
-    print(f"  Margin (LHS - RHS)                = {margin}")
-    print(f"  LHS > RHS certified               : {c2a_ok}")
-    print()
-
-    # --- Case 2b ---
-    c2b = certify_case2b()
-    c2b_ok = all(v[4] for v in c2b.values())
-    all_certified &= c2b_ok
-    print("Case 2b  (s=2, d in {2,5,6,7,10,11,13,14,15,17,19,21})")
-    print(f"  {'d':>3}  {'display c_d':>8}  {'c_d(ARB) ball':>45}  {'c_d - 1/6':>25}  certified")
-    print(f"  {'-'*100}")
-    for d in sorted(c2b):
-        p, q, c_d_ball, diff, ok = c2b[d]
-        print(f"  {d:>3}  {p}/{q:<6}  {str(c_d_ball):>45}  {str(diff):>25}  {ok}")
-    print(f"  All certified != 1/6 (ARB disjointness): {c2b_ok}")
-    print()
-
-    # --- Case 3 ---
-    ratio, ratio_err, ratio_ok, int_ok = certify_case3()
-    c3_ok = ratio_ok and int_ok
-    all_certified &= c3_ok
-    print("Case 3  (s >= 4, all d)")
-    print(f"  zeta(4)^2 / zeta(8)          = {ratio}")
-    print(f"  |ratio - 7/6| < 1e-100       : {ratio_ok}")
-    print(f"  49 < 72 (=> (7/6)^2 < 2 <= d): {int_ok}")
-    print()
-
-    # --- Case 4 ---
-    all_inert_sq, c4_ok, c4_lt2 = certify_case4()
-    all_certified &= c4_ok
-    print("Case 4  (s=3, d >= 3)")
-    print(f"  (zeta(3)^2/zeta(6))^2 = {all_inert_sq}")
-    print(f"  < 3 certified (closes all d >= 3) : {c4_ok}")
-    print(f"  < 2 certified (all-inert for d=2) : {c4_lt2}  [expected False]")
-    print()
-
-    # --- Case 5 ---
-    G3_sq, c5_ok = certify_case5()
-    all_certified &= c5_ok
-    print("Case 5  (s=3, d=2)")
-    print(f"  G(3,2)^2 = (zeta(3)/L(3,chi_8))^2 = {G3_sq}")
-    print(f"  < 2 certified                      : {c5_ok}")
-    print()
-
-    print(f"All cases certified: {all_certified}")
+    # -----------------------------------------------------------------------
+    # Special case: d=3 integer crossing, extended display
+    # -----------------------------------------------------------------------
+    print("Special case: d=3, s_*(3) = 2 (unique integer null crossing)")
+    ctx.prec = BASE_PREC
+    G2_3  = G(arb(2), 3)
+    sqrt3 = arb(3).sqrt()
+    diff  = abs(G2_3 - sqrt3)
+    print(f"  G(2, 3) (ARB ball)  = {arb_str(G2_3,  14)}")
+    print(f"  sqrt(3) (ARB ball)  = {arb_str(sqrt3, 14)}")
+    print(f"  |G(2,3)-sqrt(3)|    = {arb_str(diff,   6)}")
+    print(f"  Certified < 1e-60   : {bool(diff < arb('1e-60'))}")
+    print(f"  G(1.99,3) > sqrt(3) : {bool(G(arb('1.99'),3) > sqrt3)}")
+    print(f"  G(2.01,3) < sqrt(3) : {bool(G(arb('2.01'),3) < sqrt3)}")
