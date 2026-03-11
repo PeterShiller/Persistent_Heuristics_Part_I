@@ -1234,7 +1234,14 @@ For the factor involving the new zero: in the subcritical region $b_{M+1} t < |n
 \[
   |J_{n_{M+1}}(b_{M+1} t)| \leq \frac{(b_{M+1} t / 2)^{|n_{M+1}|}}{|n_{M+1}|!}.
 \]
-In the supercritical region, the uniform asymptotic gives $|J_{n_{M+1}}(b_{M+1} t)| \leq \sqrt{2/(\pi\sqrt{(b_{M+1} t)^2 - n_{M+1}^2})} \leq 2\sqrt{2/(\pi b_{M+1} t)}$ for $b_{M+1} t \geq 2|n_{M+1}|$.  For the remaining product, we use the uniform envelope bound $|J_n(x)| \leq \min(1, \sqrt{2/(\pi|x|)})$, which holds for all orders $n \geq 0$ and all $x > 0$.  This gives $\prod_{k=1}^M |J_{n_k}(b_k t)| \leq \prod_{k=1}^M \min(1, \sqrt{2/(\pi b_k t)}) =: g_M(t)$.
+In the supercritical region, the uniform asymptotic gives
+\[
+  |J_{n_{M+1}}(b_{M+1} t)| \leq \sqrt{\frac{2}{\pi\sqrt{(b_{M+1} t)^2 - n_{M+1}^2}}} \leq 2\sqrt{\frac{2}{\pi b_{M+1} t}}
+\]
+for $b_{M+1} t \geq 2|n_{M+1}|$.  For the remaining product, we use the uniform envelope bound $|J_n(x)| \leq \min(1, \sqrt{2/(\pi|x|)})$, which holds for all orders $n \geq 0$ and all $x > 0$.  This gives
+\[
+  \prod_{k=1}^M |J_{n_k}(b_k t)| \leq \prod_{k=1}^M \min\!\left(1, \sqrt{\frac{2}{\pi b_k t}}\right) =: g_M(t).
+\]
 
 The integral therefore satisfies $I_{\mathbf{n}} \leq b_{M+1}^{|n_{M+1}|} \cdot R_M$, where $R_M = (1/\pi)\int_0^\infty g_M(t)\, dt$ depends only on the first $M$ weights.  Since each factor $\min(1, \sqrt{2/(\pi b_k t)})$ transitions from $1$ to $O(t^{-1/2})$ at $t \sim 1/b_k$, the product $g_M(t)$ decays as $t^{-M/2}$ for large $t$, so $R_M < \infty$ for $M \geq 3$.  The sequence $\{R_M\}$ is decreasing (each additional factor is at most $1$), so $R_M \leq R_3$ for all $M \geq 3$.
 \end{proof}
@@ -1889,7 +1896,11 @@ The Klingen--Siegel theorem gives $L(2, \chi_d) = c_d \cdot \pi^2/\sqrt{d}$ for 
 
 For all squarefree $d \geq 22$, this is impossible.  Since $\chi_d(1) = 1$ and $|\chi_d(n)| \leq 1$ for all $n$, separating the $n = 1$ term gives $L(2, \chi_d) \geq 1 - \sum_{n=2}^\infty n^{-2} = 2 - \pi^2/6$ for every primitive real character.  Therefore $c_d \geq (2 - \pi^2/6)\sqrt{d}/\pi^2$, and $c_d = 1/6$ would require $\sqrt{d} \leq \pi^2/(12 - \pi^2)$.  That $(2 - \pi^2/6)\sqrt{22}/\pi^2 > 1/6$ is certified by ARB: the left side equals $0.16874\ldots$ against $1/6 = 0.16666\ldots$, with certified margin $0.00207$ and ball radius $4.54 \times 10^{-154}$.  Hence $c_d > 1/6$ for all squarefree $d \geq 22$.
 
-For the twelve remaining squarefree values $d \in \{2, 5, 6, 7, 10, 11, 13, 14, 15, 17, 19, 21\}$, the value $c_d = \sqrt{d}\,L(2,\chi_d)/\pi^2$ is computed via the Hurwitz decomposition $L(2,\chi_d) = q^{-2}\sum_{a=1}^{q}\chi_d(a)\,\zeta(2,a/q)$ using ARB interval arithmetic at 512-bit precision, and the ARB ball for $c_d$ is certified disjoint from $1/6$, i.e., either $c_d > 1/6$ or $c_d < 1/6$ is certified as an ARB predicate.  The Klingen--Siegel theorem implies that $c_d$ is in fact a rational number for each $d$; the values obtained numerically are listed in the table below for the reader's convenience, but the certified proof requires only disjointness from $1/6$:
+For the twelve remaining squarefree values $d \in \{2, 5, 6, 7, 10, 11, 13, 14, 15, 17, 19, 21\}$, the value $c_d = \sqrt{d}\,L(2,\chi_d)/\pi^2$ is computed via the Hurwitz decomposition
+\[
+  L(2,\chi_d) = q^{-2}\sum_{a=1}^{q}\chi_d(a)\,\zeta(2,a/q)
+\]
+using ARB interval arithmetic at 512-bit precision, and the ARB ball for $c_d$ is certified disjoint from $1/6$, i.e., either $c_d > 1/6$ or $c_d < 1/6$ is certified as an ARB predicate.  The Klingen--Siegel theorem implies that $c_d$ is in fact a rational number for each $d$; the values obtained numerically are listed in the table below for the reader's convenience, but the certified proof requires only disjointness from $1/6$:
 \begin{center}
 \renewcommand{\arraystretch}{1.15}
 \small
