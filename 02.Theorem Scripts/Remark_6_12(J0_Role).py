@@ -6,15 +6,19 @@ Ancillary data module for:
     Norm-Form Energies via Lorentzian Spectral Weights.
     arXiv:2603.00301.  Zenodo: https://doi.org/10.5281/zenodo.18783098
 
-This script certifies the numerical table appearing in Remark 6.12
-[Role of the inactive J_0 factors]:
+This script certifies the revised numerical table in Remark 6.12
+[Role of the inactive J_0 factors] as it appears in the current version
+of the paper.  The original (superseded) values 3.676, 1.794, 1.720,
+1.706 were produced by direct complex integration of |J_1(z)| with z
+complex, which overestimates the real-line integral near Bessel zeros
+(see PAPER_I comment below).  The certified values are:
 
     M     I_n (with J_0's)    Ratio to M=3
     ----------------------------------------
-    3     3.676               1.000
-    10    1.794               0.488
-    20    1.720               0.468
-    30    1.706               0.464
+    3     3.660               1.000
+    10    1.791               0.489
+    20    1.717               0.469
+    30    1.703               0.465
 
 The integrand is:
 
@@ -33,7 +37,7 @@ Algorithm
 The integrand contains absolute values of Bessel functions.  Because
 |J_nu(x)| has cusps at every Bessel zero -- the function is C^0 but
 not C^1 there -- the integrand is piecewise analytic, not analytic on
-(0, T].  acb_calc_integrate (Petras algorithm) assumes analyticity in
+(0, T].  acb.integral (Petras algorithm) assumes analyticity in
 a strip around the real axis; its error estimate is therefore not
 rigorous for the full interval directly, even if the zeros of different
 factors do not coincide.
@@ -51,7 +55,7 @@ is strip decomposition:
   (b) GAP intervals between consecutive strip endpoints.  On each gap
       no factor has a zero (certified: all zeros reside in their
       strips).  Each factor is therefore analytic and sign-definite on
-      the gap.  acb_calc_integrate is rigorous here.
+      the gap.  acb.integral is rigorous here.
 
 Bessel zeros:
   - J_1 zeros for factors k = 1, 2, 3 (active).  For nu = 1, McMahon
@@ -355,7 +359,7 @@ def integrate_gap(t_lo_arb, t_hi_arb, b_acb, M_int):
     On this gap no Bessel factor has a zero (certified by strip
     construction), so every factor is analytic and sign-definite.
     The absolute values are replaced by the analytic expression and
-    acb_calc_integrate is rigorous here.
+    acb.integral is rigorous here.
     """
     def integrand(t, _analytic):
         r = J1_acb(t * b_acb[0]) * J1_acb(t * b_acb[1]) * J1_acb(t * b_acb[2])
@@ -494,7 +498,7 @@ def print_results(results):
     print("  Active    : (n_1, n_2, n_3) = (1, 1, -1)")
     print(f"  Domain    : [1e-30, {T_UPPER}]")
     print("  Method    : Strip decomposition (J_1 and J_0 zeros) + ARB quadrature on gaps")
-    print(f"  Precision : {ARB_PREC}-bit ARB  (acb_calc_integrate on each gap)")
+    print(f"  Precision : {ARB_PREC}-bit ARB  (acb.integral on each gap)")
     print(f"  PASS/FAIL : certified ARB predicate  rel_err < {float(REL_TOL_3SF.mid())}  (display threshold; certification uses ARB <)")
     print()
     print(f"  {'M':>4}  {'I_n':>12}  {'Paper':>7}  {'Ratio':>7}  "
