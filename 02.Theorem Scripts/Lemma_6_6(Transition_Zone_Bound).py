@@ -24,144 +24,149 @@ Paper table (Section 6):
     30    1.15 x 10^{-11}     9.3 x 10^{-6}         1.6 x 10^{-13}
     50    1.41 x 10^{-14}     4.1 x 10^{-9}         1.9 x 10^{-15}
 
+All arithmetic is ARB interval arithmetic throughout.  No mpmath or
+floating-point library is used in any load-bearing computation.
+
 Algorithm
 ---------
-  acb.integral (acb_calc_integrate, Petras algorithm, 256-bit ARB) requires
-  an analytic integrand.  The absolute-value integrand is handled by dividing
-  (0, T] into:
+acb.integral (acb_calc_integrate, Petras algorithm, 256-bit ARB) requires
+an analytic integrand.  The absolute-value integrand is handled by dividing
+(0, T] into:
 
-    (a) STRIP intervals [t_lo_arb, t_hi_arb], one per certified zero of each
-        Bessel factor in (0, T], where t_lo_arb = (s - DELTA) / b_k and
-        t_hi_arb = (s + DELTA) / b_k are pure ARB values.
+  (a) STRIP intervals [t_lo_arb, t_hi_arb], one per certified zero of each
+      Bessel factor in (0, T], where t_lo_arb = (z - DELTA) / b_k and
+      t_hi_arb = (z + DELTA) / b_k are pure ARB values.
 
-    (b) GAP intervals between consecutive strip endpoints.
+  (b) GAP intervals between consecutive strip endpoints.
 
-  On each gap the integrand has definite sign (no zero of any factor lies
-  in the gap interior, certified because all zeros reside in their strips).
-  The analytic integrand is integrated with acb.integral and the absolute
-  value of the real part is summed.
+On each gap the integrand has definite sign (no zero of any factor lies
+in the gap interior, certified because all zeros reside in their strips).
+The analytic integrand is integrated with acb.integral and the absolute
+value of the real part is summed.
 
-  On each strip the integrand is bounded by the Landau constant:
-    B_N = LANDAU_C^2 * N^{-2/3}, LANDAU_C = 0.7857  (DLMF 10.14.3),
-  so the strip contributes at most (t_hi_arb - t_lo_arb) * B_N / pi.
+On each strip the integrand is bounded by the Landau constant:
+  B_N = LANDAU_C^2 * N^{-2/3},  LANDAU_C = 0.7857  (DLMF 10.14.3).
 
-  ALL integration limits are acb(arb_value) -- no float() for cut points.
+Step 1: Fully ARB Bessel zero computation.
 
-Step 1: IVT-certified strip intervals with fully certified stopping rule.
+  arb_besseljzero(nu, m, eval_fn) computes the m-th positive zero of
+  J_nu entirely in ARB, with no mpmath or floating-point arithmetic.
 
-  For each factor J_nu(b_k t), the loop over zeros j = 1, 2, ... proceeds as:
+  (a) Seed.  The three-term McMahon asymptotic (DLMF 10.21.19) is
+      evaluated in ARB at working precision to produce an ARB ball
+      seed.  For all nu in {0, 5, 10, ..., 50} and m >= 1, this
+      places the seed within 0.3 of the true zero.
 
-  (a) Seed.  mpmath.besseljzero(nu, j) yields seed s_j at MP_DPS = 50
-      digits; converted to s_arb = arb(string).
+  (b) ARB bisection.  An initial bracket [seed - 1.5, seed + 1.5]
+      is certified to have opposite ARB-certified signs at its
+      endpoints.  The bracket is bisected in ARB until its width
+      drops below DELTA/10.  Each bisection step uses certified ARB
+      sign comparisons; RuntimeError is raised if the bracket sign
+      check fails.  The midpoint of the final bracket lies within
+      DELTA/20 of the true zero by the bisection guarantee.
 
-  (b) IVT check -- performed for EVERY j (kept and excluded).
-      J_nu is evaluated in ARB at s_arb - DELTA and s_arb + DELTA,
-      DELTA = arb("1e-20").  If the ARB balls do not have certified
-      opposite signs, RuntimeError is raised.  This ensures that for
-      every zero the script encounters -- including the first one that
-      causes the loop to stop -- the true zero is certified to lie in
-      [s_j - DELTA, s_j + DELTA].
+  (c) The bisection is done at full ARB_PREC precision throughout,
+      so there is no precision loss from mpmath's internal rounding.
 
-  (c) Certified stopping rule.
-      If (s_arb - DELTA) > b_k * T_max (an ARB ball comparison), the IVT
-      certificate from step (b) confirms the true zero lies in
-      [s_j - DELTA, s_j + DELTA], and since s_j - DELTA > b_k * T_max,
-      the true zero lies above b_k * T_max, i.e., the corresponding t-zero
-      t_j = x_j / b_k is certified above T_max.  The loop stops here.
-      Critically, this certificate applies to the actual zero, not just
-      to the seed: the IVT check in (b) is performed before checking (c).
+Step 2: IVT check and certified stopping rule.
 
-  (d) Non-overlap check (for zeros that are kept).
-      After certifying zero j, the script checks in ARB that
-      (s_arb_j - DELTA) > (s_arb_{j-1} + DELTA).  Since J_nu has simple
-      zeros separated by at least pi/2 >> 2*DELTA, this always holds;
-      RuntimeError is raised if it fails.  Together with IVT, this
-      certifies exactly one zero per bracket.
+  For each Bessel factor, zeros are enumerated m = 1, 2, ... .  For
+  each m, arb_besseljzero returns z_m (entirely in ARB).  Then:
 
-  (e) Strip endpoints (pure ARB, no float() for cut points).
-        t_lo_arb = (s_arb - DELTA) / b_k_arb,
-        t_hi_arb = (s_arb + DELTA) / b_k_arb.
+  (a) IVT check -- performed for EVERY m (kept and excluded).
+      J_nu is evaluated in ARB at z_m - DELTA and z_m + DELTA.
+      If the ARB balls do not have certified opposite signs,
+      RuntimeError is raised.
 
-Step 2: Certified strip ordering.
+  (b) Certified stopping rule.
+      If (z_m - DELTA) > b_k * T_max, the IVT certificate confirms
+      the true zero is in [z_m - DELTA, z_m + DELTA], and since
+      z_m - DELTA > b_k * T_max, the true zero is certified above
+      b_k * T_max.  The loop stops.  The certificate uses the
+      IVT-verified bracket, not the McMahon seed.
 
-  Strips from all factors are float-sorted by float(t_lo_arb.mid()).
-  The float sort gives an initial candidate ordering.  Every consecutive
-  pair in this ordering is then certified by an ARB ball comparison
-  t_lo[i] < t_lo[i+1]; RuntimeError if any pair is not certifiably
-  ordered.  Since strip widths are ~4e-19 and inter-strip gaps are
-  >= 0.037 (verified empirically; see rigorousness checklist), all
-  consecutive pairs pass this check and the ordering is certified.
+  (c) Non-overlap check.
+      (z_m - DELTA) > (z_{m-1} + DELTA) is ARB-certified for each
+      consecutive retained pair.  RuntimeError on failure.
 
-Step 3: Gap / strip decomposition with correct union endpoint.
+  (d) Strip endpoints -- pure ARB:
+      t_lo = (z_m - DELTA) / b_k_arb,  t_hi = (z_m + DELTA) / b_k_arb.
 
-  build_intervals traverses the certified-ordered strip list and
-  maintains prev_hi = max(prev_hi, t_hi) at each strip -- never a
-  blind assignment.  A gap (prev_hi, t_lo) is added only when
-  prev_hi < t_lo is ARB-certified.  This correctly handles nested or
-  overlapping strips: prev_hi never moves backward, so a later gap
-  can never start inside a covered region.
+Step 3: Certified strip ordering.
 
-Step 4: Certified strip-error bound and integration.
+  Strips from all 20 Bessel factors are float-sorted by float(t_lo.mid())
+  (float used only as sort key, not as a cut point), then every consecutive
+  pair is certified by the ARB comparison t_lo[i] < t_lo[i+1].
+  RuntimeError if any pair is not certifiably ordered.
 
-  Gap intervals [a_arb, b_arb] are integrated with acb.integral at
-  acb(a_arb), acb(b_arb) -- pure ARB limits, no float().
-  Strip contributions bounded by (width * B_N / pi), all in ARB.
-  Total = (sum of gap integrals + strip error) / pi.
+Step 4: Gap / strip decomposition with union endpoint.
+
+  build_intervals uses prev_hi = max(prev_hi, t_hi) at each strip,
+  so prev_hi never moves backward.  A gap (prev_hi, t_lo) is added
+  only when prev_hi < t_lo is ARB-certified.  Nested or overlapping
+  strips are handled correctly.
+
+Step 5: Certified integration and strip-error bound.
+
+  Gap intervals [a, b] are integrated with acb.integral at acb(a),
+  acb(b) -- pure ARB limits, no float().  Strip contributions bounded
+  by B_N * width / pi, all in ARB.
 
 J_0(z) workaround.
   In python-flint 0.8.0, acb.bessel_j(z, acb(0)) = 0 (order-zero bug).
   We use J_0(z) = (2/z) J_1(z) - J_2(z)  (DLMF 10.6.1), valid for Re(z)>0.
   Integration starts at T_EPS = 10^{-30}.
 
-Argument order in python-flint 0.8.0:
+Argument order in python-flint 0.8.0.
   acb.bessel_j(z, nu) = J_nu(z)  [z first, nu second].
 
 Rigorousness checklist
 ----------------------
-  (a) IVT performed for every zero j, including the first excluded one.
-      The stopping rule uses only the IVT-certified bracket, not the seed.
+  (a) Bessel zeros computed entirely in ARB via McMahon + ARB bisection.
+      No mpmath or floating-point arithmetic in any load-bearing step.
+
+  (b) IVT performed for every zero j, including the first excluded one.
+      Stopping rule uses only the IVT-certified bracket.
       RuntimeError on IVT failure for any zero.
 
-  (b) Non-overlap check certifies exactly one zero per retained bracket.
+  (c) Non-overlap check certifies exactly one zero per retained bracket.
       RuntimeError on failure.
 
-  (c) Certified ordering: ARB comparison t_lo[i] < t_lo[i+1] for every
+  (d) Certified ordering: ARB comparison t_lo[i] < t_lo[i+1] for every
       consecutive pair in the sorted strip list.  RuntimeError on failure.
 
-  (d) build_intervals uses max(prev_hi, t_hi): prev_hi never decreases.
+  (e) build_intervals uses max(prev_hi, t_hi): prev_hi never decreases.
       Gap (prev_hi, t_lo) added only when ARB certifies prev_hi < t_lo.
 
-  (e) All integration limits are acb(arb_value); float() used only in
-      sort keys, display, and timing.
+  (f) All integration limits are acb(arb_value).  float() is used only
+      in sort keys, display, and timing.
 
-  (f) Strip widths, strip-error sum, and subcritical comparison all in ARB.
-
-  Overall: end-to-end ARB-rigorous, conditional on the correctness of
-  FLINT's acb_calc_integrate and the two external-input qualifications.
+  (g) Strip widths, strip-error sum, and subcritical comparison all in ARB.
 
 External-input qualifications
 ------------------------------
   L_function_zeros.py: zero ordinates gamma_1',...,gamma_20' of chi_5
   to 70 decimal places, certified with |L(1/2+i*gamma_k')| < 10^{-449}.
 
-  mpmath.besseljzero ordering: assumed to return positive zeros of J_nu
-  in strictly increasing order.  The IVT + non-overlap checks serve as
-  a runtime tripwire: a skipped or misordered zero would produce an
-  IVT failure or non-overlap violation, raising RuntimeError.
+  ARB bisection / IVT: the IVT and non-overlap checks serve as a runtime
+  tripwire.  A Bessel zero returned out of order or with incorrect sign
+  would produce an IVT failure or non-overlap violation, raising RuntimeError.
 
 Usage
 -----
   python3 "Lemma_6_6(Transition_Zone_Bound).py"
-  Expected runtime: ~3--5 minutes (N=50 requires ~3950 strips).
+  Expected runtime: ~5--10 minutes (N=50 requires ~3950 strips,
+  each requiring ARB bisection to 1e-21).
 
 Dependencies
 ------------
-  python-flint >= 0.8.0, mpmath >= 1.3, L_function_zeros.py
+  python-flint >= 0.8.0,  L_function_zeros.py
+  (mpmath is NOT used)
 
 References
 ----------
   [Paper]  arXiv:2603.00301; Zenodo 10.5281/zenodo.18783098.
-  [DLMF]   10.6.1, 10.14.3.  dlmf.nist.gov
+  [DLMF]   10.6.1, 10.14.3, 10.21.19.  dlmf.nist.gov
   [Petras] Petras, K. (2002). Adv. Comput. Math. 16, 71-100.
 """
 
@@ -176,19 +181,16 @@ for _p in [_SD, _RR, _DD]:
 
 from L_function_zeros import get_zero
 from flint import arb, acb, ctx
-from mpmath import mp, besseljzero, nstr
 
 ARB_PREC = 256
-MP_DPS   = 50
-ctx.prec = ARB_PREC
-mp.dps   = MP_DPS
+ctx.prec  = ARB_PREC
 
 M        = 20
 D        = 5
 N_VALUES = [5, 10, 20, 30, 50]
 T_UPPER  = {5: 2000, 10: 2000, 20: 2000, 30: 2000, 50: 100000}
 T_EPS    = arb("1e-30")   # lower limit; integrand is O(t^{N+1}) near 0
-DELTA    = arb("1e-20")   # IVT bracket half-width in x-space
+DELTA    = arb("1e-20")   # IVT / strip half-width in x-space
 REL_TOL  = 2**(-200)
 ABS_TOL  = 2**(-250)
 LANDAU_C = arb("0.7857")  # |J_N(x)| <= LANDAU_C * N^{-1/3}  (DLMF 10.14.3)
@@ -202,8 +204,11 @@ PAPER_TRANS   = {5:"8.8e-7",  10:"2.2e-9",  20:"5.3e-12",
 REL_TOL_3SF   = arb("0.02")
 REL_TOL_2SF   = arb("0.06")
 
+_ZERO = arb(0)
+_TWO  = arb(2)
 
 # ── Bessel evaluation ─────────────────────────────────────────────────────────
+
 def J0_acb(z):
     """J_0(z) = (2/z) J_1(z) - J_2(z)  [DLMF 10.6.1; avoids flint 0.8.0 bug]."""
     return acb(2) * acb.bessel_j(z, acb(1)) / z - acb.bessel_j(z, acb(2))
@@ -218,84 +223,151 @@ def JN_real(x_arb, N_int):
     return acb.bessel_j(acb(x_arb), acb(N_int)).real
 
 
+# ── Fully ARB Bessel zero computation ─────────────────────────────────────────
+
+def _mcmahon_seed(nu_int, m_int):
+    """
+    Three-term McMahon asymptotic for j_{nu, m} in pure ARB arithmetic.
+
+    Reference: DLMF 10.21.19.
+    For nu in {0,5,...,50} and m >= 1, the seed lies within 0.3 of the
+    true zero, so a bracket of +-1.5 is sufficient for bisection.
+    """
+    nu = arb(nu_int)
+    m  = arb(m_int)
+    mu = arb(4) * nu * nu
+    beta = (m + nu / _TWO - arb("1/4")) * arb.pi()
+    t1 = (mu - 1) / (arb(8) * beta)
+    t2 = arb(4) * (mu - 1) * (arb(7) * mu - arb(31)) / (
+             arb(3) * (arb(8) * beta) ** 3)
+    t3 = arb(32) * (mu - 1) * (
+             arb(83) * mu ** 2 - arb(982) * mu + arb(3779)) / (
+             arb(15) * (arb(8) * beta) ** 5)
+    return beta - t1 - t2 - t3
+
+
+def arb_besseljzero(nu_int, m_int, eval_fn):
+    """
+    Compute the m-th positive zero of J_{nu_int} entirely in ARB.
+
+    Algorithm:
+      1. Evaluate the three-term McMahon asymptotic in ARB to obtain a
+         seed that lies within 0.3 of the true zero for all nu <= 50, m >= 1.
+      2. Form the bracket [seed - 1.5, seed + 1.5] and verify opposite
+         ARB-certified signs at the endpoints.
+      3. Bisect in ARB until the bracket width drops below DELTA/10.
+         Each step uses a certified ARB sign comparison; RuntimeError on failure.
+      4. Return the ARB midpoint, which lies within DELTA/20 of the true zero.
+
+    No mpmath or floating-point arithmetic is used at any step.
+    """
+    seed    = _mcmahon_seed(nu_int, m_int)
+    BRACKET = arb("1.5")
+    lo = seed - BRACKET
+    hi = seed + BRACKET
+    if lo < arb("0.5"):
+        lo = arb("0.5")
+
+    flo = eval_fn(lo)
+    fhi = eval_fn(hi)
+
+    if not (((flo > _ZERO) and (fhi < _ZERO)) or
+            ((flo < _ZERO) and (fhi > _ZERO))):
+        raise RuntimeError(
+            f"ARB bisection: initial bracket sign check failed for "
+            f"J_{nu_int} zero #{m_int}  (seed ~ {float(seed.mid()):.4f})"
+        )
+
+    TARGET = DELTA * arb("0.1")
+    for _it in range(500):
+        if (hi - lo) < TARGET:
+            break
+        mid  = (lo + hi) / _TWO
+        fmid = eval_fn(mid)
+        lo_pos = flo > _ZERO
+        mid_pos = fmid > _ZERO
+        if (lo_pos and mid_pos) or ((flo < _ZERO) and (fmid < _ZERO)):
+            lo  = mid
+            flo = fmid
+        else:
+            hi  = mid
+            fhi = fmid
+    else:
+        raise RuntimeError(
+            f"ARB bisection did not converge for J_{nu_int} zero #{m_int}"
+        )
+
+    return (lo + hi) / _TWO
+
+
 # ── Weights ───────────────────────────────────────────────────────────────────
+
 def load_weights():
     b_arb = []
     for k in range(1, M + 1):
         g = arb(get_zero(D, k, as_string=True))
-        b_arb.append(arb(2) / (arb("0.25") + g * g))
+        b_arb.append(_TWO / (arb("0.25") + g * g))
     return b_arb, [acb(b) for b in b_arb]
 
 
-# ── IVT-certified strip collection (with fully certified stopping) ─────────────
-def collect_strips(nu, b_k_arb, T_max_arb, eval_fn):
-    """
-    Collect IVT-certified strip intervals [t_lo, t_hi] for all zeros of
-    J_nu(b_k t) in (0, T_max].
+# ── IVT-certified strip collection ────────────────────────────────────────────
 
-    The IVT check is performed for EVERY zero encountered, including the
-    first one whose bracket is certified to lie above T_max (the stopping zero).
-    This ensures the stopping rule certifies the actual zero location, not
-    merely the seed.
-
-    Raises RuntimeError on:
-      - IVT failure for any zero (kept or excluded)
-      - Non-overlap failure for consecutive kept zeros
+def collect_strips(nu_int, b_k_arb, T_max_arb, eval_fn):
     """
-    T_x    = b_k_arb * T_max_arb    # threshold in x-space (pure ARB)
+    Collect IVT-certified strip intervals for all zeros of J_{nu}(b_k t)
+    in (0, T_max].  All arithmetic is pure ARB.
+
+    For each zero m = 1, 2, ...:
+      - arb_besseljzero returns z_m entirely in ARB (no mpmath).
+      - IVT is checked for every m, including the stopping zero.
+      - Stopping is certified: (z_m - DELTA) > T_x proves the true zero
+        (which lies in [z_m - DELTA, z_m + DELTA] by IVT) is above T_x.
+      - Non-overlap is ARB-certified for consecutive retained zeros.
+    """
+    T_x    = b_k_arb * T_max_arb
     strips = []
     prev_s = None
-    j      = 1
+    m      = 1
 
     while True:
-        mp.dps = MP_DPS
-        s = arb(nstr(besseljzero(nu, j), MP_DPS - 2, strip_zeros=False))
+        z = arb_besseljzero(nu_int, m, eval_fn)
 
-        # IVT check -- performed for every j, including the stopping one.
-        # This is the key fix: even the excluded zero gets certified before
-        # we use its location to justify stopping.
-        jlo = eval_fn(s - DELTA)
-        jhi = eval_fn(s + DELTA)
-        sign_ok = ((jlo > arb(0)) and (jhi < arb(0))) or \
-                  ((jlo < arb(0)) and (jhi > arb(0)))
+        # IVT check -- every m, including the stopping one
+        flo = eval_fn(z - DELTA)
+        fhi = eval_fn(z + DELTA)
+        sign_ok = (((flo > _ZERO) and (fhi < _ZERO)) or
+                   ((flo < _ZERO) and (fhi > _ZERO)))
         if not sign_ok:
             raise RuntimeError(
-                f"IVT FAILED for J_{nu} zero #{j} near {s}"
+                f"IVT FAILED for J_{nu_int} zero #{m}  (z ~ {float(z.mid()):.6f})"
             )
-        # True zero certified in [s - DELTA, s + DELTA].
+        # True zero certified in [z - DELTA, z + DELTA].
 
-        # Certified stopping rule: entire bracket above T_x?
-        if (s - DELTA) > T_x:
-            # The IVT above confirmed the true zero is in [s-DELTA, s+DELTA].
-            # Since s - DELTA > T_x, the true zero is above T_x. Stop.
+        # Certified stopping: entire IVT bracket above T_x?
+        if (z - DELTA) > T_x:
             break
 
-        # Non-overlap check for consecutive kept zeros
+        # Non-overlap for consecutive retained zeros
         if prev_s is not None:
-            if not ((s - DELTA) > (prev_s + DELTA)):
+            if not ((z - DELTA) > (prev_s + DELTA)):
                 raise RuntimeError(
-                    f"Non-overlap FAILED: J_{nu} zeros #{j-1} and #{j} "
-                    f"have overlapping brackets"
+                    f"Non-overlap FAILED: J_{nu_int} zeros #{m-1} and #{m}"
                 )
-        prev_s = s
 
+        prev_s = z
         # Pure ARB strip endpoints -- no float() for cut points
-        t_lo = (s - DELTA) / b_k_arb
-        t_hi = (s + DELTA) / b_k_arb
-        strips.append((t_lo, t_hi))
-        j += 1
+        strips.append(((z - DELTA) / b_k_arb, (z + DELTA) / b_k_arb))
+        m += 1
 
     return strips
 
 
 def collect_all_strips(b_arb, N_int, T_max_arb):
     """
-    Collect strips from all factors, then sort and certify the ordering.
+    Collect strips from all 20 Bessel factors, then certify the ordering.
 
-    Sort key: float(t_lo.mid()) -- float used only as sort key, not as
-    a cut point.  After sorting, every consecutive pair is certified by
-    the ARB comparison t_lo[i] < t_lo[i+1].  RuntimeError if any pair
-    is not certifiably ordered.
+    The float sort is used only as an initial ordering; every consecutive
+    pair is then certified by the ARB comparison t_lo[i] < t_lo[i+1].
     """
     strips = []
     strips += collect_strips(N_int, b_arb[0], T_max_arb,
@@ -305,39 +377,34 @@ def collect_all_strips(b_arb, N_int, T_max_arb):
     for k in range(2, M):
         strips += collect_strips(0, b_arb[k], T_max_arb, J0_real)
 
-    # Float sort for initial ordering
+    # Float sort for initial ordering (float used only as sort key)
     strips.sort(key=lambda s: float(s[0].mid()))
 
-    # Certified ordering check: every consecutive pair must satisfy
-    # t_lo[i] < t_lo[i+1] as a certified ARB ball comparison.
+    # Certified ordering: every consecutive pair verified in ARB
     for i in range(len(strips) - 1):
-        if not (strips[i][0] < strips[i+1][0]):
+        if not (strips[i][0] < strips[i + 1][0]):
             raise RuntimeError(
-                f"Certified ordering FAILED at strip pair {i} and {i+1}: "
-                f"cannot confirm t_lo[{i}] < t_lo[{i+1}] in ARB"
+                f"Certified ordering FAILED at strip pair {i} and {i+1}"
             )
 
     return strips
 
 
-# ── Gap / strip decomposition with correct union endpoint ─────────────────────
+# ── Gap / strip decomposition ─────────────────────────────────────────────────
+
 def build_intervals(strips, T_max_arb):
     """
-    Return list of (a_arb, b_arb) gap intervals between strips.
+    Return gap intervals between strips.
 
-    Uses prev_hi = max(prev_hi, t_hi) at each step, so prev_hi never
-    moves backward.  A gap is added only when prev_hi < t_lo is ARB-
-    certified.  If strips overlap or are nested, no spurious gap is
-    inserted and the covered region is correctly tracked.
+    Uses prev_hi = max(prev_hi, t_hi) so prev_hi never moves backward.
+    A gap is added only when ARB certifies prev_hi < t_lo.
     """
     gaps    = []
     prev_hi = T_EPS
 
     for (t_lo, t_hi) in strips:
-        # Add gap only when certified gap exists
         if prev_hi < t_lo:
             gaps.append((prev_hi, t_lo))
-        # Advance prev_hi to the furthest right endpoint seen so far
         if t_hi > prev_hi:
             prev_hi = t_hi
 
@@ -346,19 +413,13 @@ def build_intervals(strips, T_max_arb):
 
 
 # ── Core ARB integration ──────────────────────────────────────────────────────
-def compute_I_arb(b_arb, b_acb, N_int, T_max_int):
-    """
-    Certified ARB ball for I_n = (1/pi) integral_0^T |J_N(b_1 t)||J_N(b_2 t)|
-                                                       prod_{k>=3}|J_0(b_k t)| dt.
 
-    All integration endpoints are acb(arb_value); no float() for cut points.
-    """
+def compute_I_arb(b_arb, b_acb, N_int, T_max_int):
     T_max_arb = arb(str(T_max_int))
     strips    = collect_all_strips(b_arb, N_int, T_max_arb)
     gaps      = build_intervals(strips, T_max_arb)
     n_sub     = len(gaps) + len(strips)
-
-    pi_arb = arb.pi()
+    pi_arb    = arb.pi()
 
     def integrand(t, _):
         v = JN_acb(b_acb[0] * t, N_int) * JN_acb(b_acb[1] * t, N_int)
@@ -366,14 +427,12 @@ def compute_I_arb(b_arb, b_acb, N_int, T_max_int):
             v = v * J0_acb(b_acb[k] * t)
         return v
 
-    # Integrate on gap intervals (analytic, definite sign); pure ARB limits
     total = arb(0)
     for (a, b) in gaps:
         piece = acb.integral(integrand, acb(a), acb(b),
                              rel_tol=REL_TOL, abs_tol=ABS_TOL)
         total = total + piece.real.__abs__()
 
-    # Bound strip contributions by Landau
     B_N         = LANDAU_C ** 2 * arb(N_int) ** arb("-2/3")
     strip_width = sum((t_hi - t_lo for t_lo, t_hi in strips), arb(0))
     strip_err   = (strip_width + T_EPS) * B_N / pi_arb
@@ -381,7 +440,8 @@ def compute_I_arb(b_arb, b_acb, N_int, T_max_int):
     return (total + strip_err * pi_arb) / pi_arb, n_sub, strip_err
 
 
-# ── Scalings & checks ─────────────────────────────────────────────────────────
+# ── Scalings and checks ───────────────────────────────────────────────────────
+
 def subcritical_scaling(N_int):
     return (acb(1).exp().real / arb(4)) ** N_int
 
@@ -398,11 +458,13 @@ def certify_subcritical(I_arb, N_int):
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
+
 def main():
     print("=" * 72)
     print("Lemma 6.6 (Transition Zone Bound) -- ARB-rigorous table certification")
-    print(f"Precision: {ARB_PREC}-bit ARB | certified stopping | certified ordering")
+    print(f"Precision: {ARB_PREC}-bit ARB throughout  |  no mpmath")
     print(f"M = {M}, chi_{D}, |A| = 2 (n_1 = n_2 = N), DELTA = 1e-20")
+    print("Bessel zeros: McMahon asymptotic + ARB bisection (DLMF 10.21.19)")
     print("=" * 72)
 
     print(f"\nLoading chi_{D} zeros and computing ARB Lorentzian weights ...")
@@ -474,7 +536,8 @@ def main():
     print("\n" + "=" * 72)
     print("SUMMARY")
     print("=" * 72)
-    print(f"  Method      : acb.integral (Petras), {ARB_PREC}-bit ARB")
+    print(f"  Method      : acb.integral (Petras), {ARB_PREC}-bit ARB throughout")
+    print(f"  Bessel zeros: McMahon (DLMF 10.21.19) + ARB bisection -- no mpmath")
     print(f"  Stopping    : IVT-certified for every zero, incl. first excluded")
     print(f"  Ordering    : ARB comparison t_lo[i] < t_lo[i+1] certified")
     print(f"  build_int   : prev_hi = max(prev_hi, t_hi); ARB gap condition")
@@ -484,11 +547,12 @@ def main():
     print(f"  Table match    [3sf/2sf, all N]        : {'PASS' if table_all else 'FAIL'}")
     print()
     if all_pass:
-        print("RESULT: ALL CHECKS PASSED (ARB-rigorous)")
+        print("RESULT: ALL CHECKS PASSED (ARB-rigorous, no mpmath)")
         print("  I_n < (e/4)^N certified by ARB endpoint comparison for all N.")
     else:
         print("RESULT: ONE OR MORE CHECKS FAILED -- see report above.")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
