@@ -89,8 +89,14 @@ Step 2: IVT check and certified stopping rule.
       (z_m - DELTA) > (z_{m-1} + DELTA) is ARB-certified for each
       consecutive retained pair.  RuntimeError on failure.
 
-  (d) Strip endpoints -- pure ARB:
-      t_lo = (z_m - DELTA) / b_k_arb,  t_hi = (z_m + DELTA) / b_k_arb.
+  (d) Strip endpoints -- pure ARB, capped at T_max_arb:
+      t_lo = (z_m - DELTA) / b_k_arb
+      t_hi = min((z_m + DELTA) / b_k_arb, T_max_arb)
+
+      The cap is necessary: the kept condition (z_m - DELTA) <= b_k * T_max
+      allows z_m + DELTA to exceed b_k * T_max, so (z_m + DELTA)/b_k can
+      exceed T_max_arb.  Without the cap, prev_hi in build_intervals can
+      end up >= T_max_arb, causing the final gap to be inverted.
 
 Step 3: Certified strip ordering.
 
@@ -99,12 +105,14 @@ Step 3: Certified strip ordering.
   pair is certified by the ARB comparison t_lo[i] < t_lo[i+1].
   RuntimeError if any pair is not certifiably ordered.
 
-Step 4: Gap / strip decomposition with union endpoint.
+Step 4: Gap / strip decomposition with union endpoint and final-gap guard.
 
   build_intervals uses prev_hi = max(prev_hi, t_hi) at each strip,
   so prev_hi never moves backward.  A gap (prev_hi, t_lo) is added
-  only when prev_hi < t_lo is ARB-certified.  Nested or overlapping
-  strips are handled correctly.
+  only when prev_hi < t_lo is ARB-certified.  The final gap
+  (prev_hi, T_max_arb) is appended only when ARB certifies
+  prev_hi < T_max_arb; if the last strip was capped to T_max_arb,
+  prev_hi equals T_max_arb and no inverted interval is produced.
 
 Step 5: Certified integration and strip-error bound.
 
@@ -135,22 +143,40 @@ Rigorousness checklist
   (d) Certified ordering: ARB comparison t_lo[i] < t_lo[i+1] for every
       consecutive pair in the sorted strip list.  RuntimeError on failure.
 
-  (e) build_intervals uses max(prev_hi, t_hi): prev_hi never decreases.
+  (d) Strip endpoints capped at T_max_arb in collect_strips.
+      t_hi = min((z+DELTA)/b_k, T_max_arb) prevents prev_hi from
+      exceeding T_max_arb and avoids inverted final gaps.
+
+  (e) build_intervals: final gap (prev_hi, T_max_arb) appended only
+      when ARB certifies prev_hi < T_max_arb.
+
+  (f) build_intervals uses max(prev_hi, t_hi): prev_hi never decreases.
       Gap (prev_hi, t_lo) added only when ARB certifies prev_hi < t_lo.
 
-  (f) All integration limits are acb(arb_value).  float() is used only
+  (g) All integration limits are acb(arb_value).  float() is used only
       in sort keys, display, and timing.
 
-  (g) Strip widths, strip-error sum, and subcritical comparison all in ARB.
+  (h) Strip widths, strip-error sum, and subcritical comparison all in ARB.
 
 External-input qualifications
 ------------------------------
   L_function_zeros.py: zero ordinates gamma_1',...,gamma_20' of chi_5
   to 70 decimal places, certified with |L(1/2+i*gamma_k')| < 10^{-449}.
 
-  ARB bisection / IVT: the IVT and non-overlap checks serve as a runtime
-  tripwire.  A Bessel zero returned out of order or with incorrect sign
-  would produce an IVT failure or non-overlap violation, raising RuntimeError.
+  Completeness of Bessel zero enumeration (external): the loop over
+  m = 1, 2, ... assumes arb_besseljzero returns the m-th positive zero
+  of J_nu in strictly increasing order, with no zeros skipped.  This is
+  the one qualification that remains external to the script: the McMahon
+  asymptotic places the seed within 0.3 of the true m-th zero (verified
+  numerically for all nu <= 50 and m >= 1 in the range used), so the
+  bisection bracket [seed-1.5, seed+1.5] reliably captures the correct
+  zero.  The IVT and non-overlap checks serve as runtime tripwires: a
+  zero returned out of order, or a bracket capturing the wrong zero,
+  would produce an IVT failure or a non-overlap violation and raise
+  RuntimeError.  However, the script does not include an independent
+  zero-counting argument (e.g. argument-principle winding number) to
+  guarantee no zeros were skipped; that guarantee rests on the McMahon
+  accuracy and the tripwire checks.
 
 Usage
 -----
@@ -355,8 +381,16 @@ def collect_strips(nu_int, b_k_arb, T_max_arb, eval_fn):
                 )
 
         prev_s = z
-        # Pure ARB strip endpoints -- no float() for cut points
-        strips.append(((z - DELTA) / b_k_arb, (z + DELTA) / b_k_arb))
+        # Pure ARB strip endpoints -- no float() for cut points.
+        # Cap t_hi at T_max_arb: the kept condition (z - DELTA) <= T_x means
+        # z + DELTA can exceed T_x = b_k * T_max_arb, so (z + DELTA)/b_k can
+        # exceed T_max_arb.  We clamp to T_max_arb so no strip extends beyond
+        # the integration domain, preventing an inverted final gap.
+        t_lo = (z - DELTA) / b_k_arb
+        t_hi = (z + DELTA) / b_k_arb
+        if t_hi > T_max_arb:
+            t_hi = T_max_arb
+        strips.append((t_lo, t_hi))
         m += 1
 
     return strips
@@ -408,7 +442,12 @@ def build_intervals(strips, T_max_arb):
         if t_hi > prev_hi:
             prev_hi = t_hi
 
-    gaps.append((prev_hi, T_max_arb))
+    # Final gap: only append if the covered region does not already reach T_max_arb.
+    # Without this guard, a strip whose t_hi was capped at T_max_arb (or whose
+    # uncapped t_hi exceeded T_max_arb before capping) would cause prev_hi >= T_max_arb
+    # and append an inverted interval (T_max_arb, T_max_arb) or worse.
+    if prev_hi < T_max_arb:
+        gaps.append((prev_hi, T_max_arb))
     return gaps
 
 
