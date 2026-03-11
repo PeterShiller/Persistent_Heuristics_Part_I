@@ -66,8 +66,9 @@ Step 1: Fully ARB Bessel zero computation.
         (ii)  fmid < 0 certified: update hi.
         (iii) undecidable (ARB ball straddles zero): double ctx.prec and
               re-evaluate, up to MAX_BISECT_PREC = 6 * ARB_PREC.  If still
-              undecidable, mid is an ARB enclosure of the zero and bisection
-              terminates.  The 'undecidable' case is NEVER silently treated
+              undecidable at MAX_BISECT_PREC, RuntimeError is raised.  This
+              branch cannot fire for simple Bessel zeros (see arb_besseljzero
+              docstring).  The 'undecidable' case is never silently treated
               as a certified branch; it always triggers a precision retry.
 
   (c) The bisection is done at full ARB_PREC precision throughout,
@@ -293,11 +294,12 @@ def arb_besseljzero(nu_int, m_int, eval_fn):
            (b) fmid < 0 -- certified negative: update hi.
            (c) undecidable (ARB ball straddles zero): double ctx.prec and
                re-evaluate, up to MAX_BISECT_PREC.  If still undecidable
-               at MAX_BISECT_PREC, mid is an ARB enclosure of the zero
-               and bisection terminates; the IVT check in collect_strips
-               confirms the result at +-DELTA.
+               at MAX_BISECT_PREC, RuntimeError is raised.  This branch
+               cannot fire for simple Bessel zeros: at a simple zero z_0,
+               |J_nu'(z_0)| > 0 ensures the function value is certifiable
+               at 1536 bits long before the bracket narrows to TARGET.
          The 'undecidable' case is never silently treated as a certified
-         sign: it always triggers a precision retry first.
+         sign: it always triggers a precision retry or RuntimeError.
       4. Return the ARB midpoint, within DELTA/20 of the true zero.
 
     No mpmath or floating-point arithmetic is used at any step.
@@ -340,9 +342,24 @@ def arb_besseljzero(nu_int, m_int, eval_fn):
             prec *= 2           # double precision and retry
 
         if not mid_pos and not mid_neg:
-            # Still undecidable at MAX_BISECT_PREC: mid is an ARB
-            # enclosure of the zero; terminate early.
-            break
+            # Sign still undecidable at MAX_BISECT_PREC.
+            #
+            # This branch CANNOT fire for simple Bessel zeros: at a simple
+            # zero z_0, |J_nu'(z_0)| > 0, so |J_nu(mid)| ~ |J_nu'(z_0)| * dist(mid, z_0).
+            # For the bracket to have reached TARGET = 1e-21 width, dist(mid, z_0) <= 5e-22,
+            # giving |J_nu(mid)| ~ 2e-22.  At MAX_BISECT_PREC = 1536 bits (~462 decimal
+            # digits), ARB certifies values down to ~10^{-462}, which is far below 2e-22.
+            # Undecidability at this precision would require mid to be within ~10^{-462}
+            # of the zero, which cannot happen before the bracket width drops to TARGET.
+            #
+            # If this branch is ever reached, something is wrong (wrong zero, non-simple
+            # zero, or a precision bug): raise rather than returning a value without a
+            # certificate, which would silently corrupt the strip location.
+            raise RuntimeError(
+                f"ARB bisection: sign undecidable at MAX_BISECT_PREC={MAX_BISECT_PREC} "
+                f"for J_{nu_int} zero #{m_int}.  Bracket width = {hi - lo}.  "
+                f"This should not occur for simple Bessel zeros."
+            )
 
         # Update bracket using the certified sign
         lo_neg = flo < _ZERO
