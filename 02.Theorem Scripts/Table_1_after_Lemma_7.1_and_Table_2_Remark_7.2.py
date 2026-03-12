@@ -303,16 +303,18 @@ def build_gaps(strips, T_max_arb):
 
 # ── Integration ───────────────────────────────────────────────────────────────
 
-def integrate_unsigned(b_arb, M_int):
+def integrate_unsigned(b_arb, M_int, T_upper=None):
     """
     (1/pi) int_0^T prod_{k=1}^M |J_0(b_k t)| dt  via strip decomposition.
     acb.integral applied on gap intervals only (analytic, sign-definite).
+    T_upper defaults to the module-level T_UPPER (2000).
     Returns ARB ball.
     """
     ctx.prec = ARB_PREC
-    b_acb    = [acb(bk) for bk in b_arb[:M_int]]
-    strips   = collect_all_strips(b_arb, M_int, T_MAX_ARB)
-    gaps     = build_gaps(strips, T_MAX_ARB)
+    T_arb  = arb(T_upper) if T_upper is not None else T_MAX_ARB
+    b_acb  = [acb(bk) for bk in b_arb[:M_int]]
+    strips = collect_all_strips(b_arb, M_int, T_arb)
+    gaps   = build_gaps(strips, T_arb)
 
     I = _ZERO
     for (t_lo, t_hi) in gaps:
