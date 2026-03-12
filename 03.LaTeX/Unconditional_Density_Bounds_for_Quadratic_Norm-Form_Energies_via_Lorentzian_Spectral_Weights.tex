@@ -9,6 +9,7 @@
 \usepackage{graphicx}
 \graphicspath{{../04.LaTex Figures/}}
 \usepackage{longtable}
+\usepackage{fancyhdr}
 
 \hypersetup{colorlinks=true,linkcolor=red,citecolor=blue,urlcolor=blue}
 
@@ -53,6 +54,29 @@
 \begin{document}
 \raggedbottom
 
+% ── Footer navigation: "Back to Table of Contents" on pages 4+ ──
+\pagestyle{fancy}
+\fancyhf{}                          % clear all headers/footers
+\fancyhead[C]{\leftmark}            % restore amsart-style header
+\fancyfoot[C]{\thepage}             % page number centered
+\fancyfoot[R]{%
+  \ifnum\value{page}>3
+    {\scriptsize\hyperref[toc]{[\,Back to Table of Contents\,]}}%
+  \fi}
+\renewcommand{\headrulewidth}{0pt}  % no header rule (amsart default)
+\renewcommand{\footrulewidth}{0pt}
+% Also apply to plain style (first page of sections in amsart)
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\thepage}%
+  \fancyfoot[R]{%
+    \ifnum\value{page}>3
+      {\scriptsize\hyperref[toc]{[\,Back to Table of Contents\,]}}%
+    \fi}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
+
 \begin{abstract}
 For a real quadratic field $\Q(\sqrt{d})$, we study the norm-form energy
 $N = S_\zeta^2 - d \cdot S_L^2$, where $S_\zeta$ and $S_L$ are Lorentzian-weighted
@@ -80,6 +104,7 @@ Appendix F tabulates between 1004 and 1044 zeros at 70 decimal places for $L(s,\
 
 \maketitle
 \setcounter{tocdepth}{2}
+\phantomsection\label{toc}
 \tableofcontents
 
 %% ================================================================
