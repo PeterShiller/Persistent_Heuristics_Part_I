@@ -214,6 +214,35 @@ def certify_case2b():
     return results
 
 
+def certify_case2b_rationals():
+    """
+    Certify the exact rational values of c_d displayed in the table of Section 12.3.
+
+    The Klingen--Siegel theorem guarantees that c_d = sqrt(d)*L(2,chi_d)/pi^2
+    is rational for every d (it equals a specific Bernoulli--Euler number up to
+    a conductor factor).  The paper lists the rational p/q for each d in
+    {2, 5, 6, 7, 10, 11, 13, 14, 15, 17, 19, 21} as a convenience; this
+    function certifies each displayed value by verifying
+
+        |c_d(ARB) - p/q| < 1e-100
+
+    as a decisive ARB predicate.  At 512-bit working precision the ARB ball
+    for c_d has radius ~10^{-150}, so the threshold is achieved if and only
+    if the displayed rational is exact.
+
+    Returns a dict  d -> (p, q, c_d_ball, err_ball, certified).
+    """
+    results = {}
+    for d, (p, q) in C_D_DISPLAY.items():
+        L2 = L_hurwitz(arb(2), d)
+        c_d = arb(d).sqrt() * L2 / arb.pi() ** 2
+        rational_approx = arb(p) / arb(q)
+        err = abs(c_d - rational_approx)
+        certified = bool(err < arb("1e-100"))
+        results[d] = (p, q, c_d, err, certified)
+    return results
+
+
 # ---------------------------------------------------------------------------
 # Case 3: s >= 4, all d
 # ---------------------------------------------------------------------------
@@ -328,6 +357,20 @@ if __name__ == "__main__":
         p, q, c_d_ball, diff, ok = c2b[d]
         print(f"  {d:>3}  {p}/{q:<6}  {str(c_d_ball):>45}  {str(diff):>25}  {ok}")
     print(f"  All certified != 1/6 (ARB disjointness): {c2b_ok}")
+    print()
+
+    # --- Case 2b rational table verification ---
+    c2b_rat = certify_case2b_rationals()
+    c2b_rat_ok = all(v[4] for v in c2b_rat.values())
+    all_certified &= c2b_rat_ok
+    print("Case 2b (rational table)  [extension: Section 12.3 table values]")
+    print(f"  Certifies |c_d(ARB) - p/q| < 1e-100 for each displayed rational.")
+    print(f"  {'d':>3}  {'p/q':>6}  {'|c_d - p/q| (ARB)':>45}  certified")
+    print(f"  {'-'*70}")
+    for d in sorted(c2b_rat):
+        p, q, c_d_ball, err, ok = c2b_rat[d]
+        print(f"  {d:>3}  {p}/{q:<4}  {str(err):>45}  {ok}")
+    print(f"  All displayed rationals certified exact: {c2b_rat_ok}")
     print()
 
     # --- Case 3 ---
