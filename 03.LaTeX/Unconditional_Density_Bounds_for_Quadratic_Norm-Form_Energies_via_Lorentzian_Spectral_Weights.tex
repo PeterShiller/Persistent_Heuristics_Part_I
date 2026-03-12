@@ -2322,7 +2322,7 @@ For the density integral~\eqref{eq:f0-bessel}: $f_{S_L}(0) = \frac{1}{\pi}\int_0
   f_{S_L^{(20)}}(0) = 8.312883337454846\ldots \;\pm\; 5.84 \times 10^{-44}.
 \]
 
-For the mean absolute value~\eqref{eq:Eabs-bessel}: $\E[|S_\zeta|] = \frac{2}{\pi}\int_\epsilon^{T} \frac{1 - \prod_{k=1}^{20} J_0(a_k t)}{t^2}\,dt$ with $\epsilon = 10^{-30}$ and $T = 50{,}000$, where $a_k = 2/(\tfrac{1}{4} + \gamma_k^2)$ for $\zeta$ zeros, plus the analytic correction $(2/\pi)/T$ for $\int_T^\infty t^{-2}\,dt$ and the negligible Bessel envelope tail (bounded below $10^{-17}$ in ARB).  The integrand is $O(1)$ near $t = 0$ (since $1 - \prod J_0(a_k t) = O(t^2)$); the Petras algorithm handles the removable singularity by adaptive subdivision.  ARB quadrature at 512-bit precision yields:
+For the mean absolute value~\eqref{eq:Eabs-bessel}: $\E[|S_\zeta|] = \frac{2}{\pi}\int_\epsilon^{T} \frac{1 - \prod_{k=1}^{20} J_0(a_k t)}{t^2}\,dt$ with $\epsilon = 10^{-30}$ and $T = 50{,}000$, where $a_k = 2/(\tfrac{1}{4} + \gamma_k^2)$ for $\zeta$ zeros, plus the analytic correction $(2/\pi)/T$ for $\int_T^\infty t^{-2}\,dt$ and the negligible Bessel envelope tail (bounded below $10^{-17}$ in ARB).  The integrand is $O(1)$ near $t = 0$ (since $1 - \prod J_0(a_k t) = O(t^2)$); the Petras algorithm handles the removable singularity by adaptive subdivision.  ARB quadrature at 256-bit precision yields:
 \[
   \E[|S_\zeta|] = 0.00717406056590\ldots \;\pm\; 2.58 \times 10^{-62}.
 \]
@@ -2333,9 +2333,7 @@ The product $C(5) = 2 \cdot f_{S_L}(0) \cdot \E[|S_\zeta|] = 0.1193$ is certifie
 
 \subsection{PSLQ integer relation search}\label{subsec:pslq}
 
-This subsection and the next complete the proof of Proposition~\ref{prop:resonance-cert}.  The 70-digit zero ordinates of Appendix~\ref{app:chi5-highprec}, certified by ARB (Appendix~\ref{app:certification}), serve as input to the PSLQ algorithm.
-
-Integer relation detection uses the PSLQ algorithm (Ferguson--Bailey--Arno~\cite{FBA1999}) via \texttt{mpmath.pslq}.  The 70-digit ARB-certified zero ordinates from Appendix~\ref{app:chi5-highprec} serve as input at 80-digit working precision.
+This subsection and the next complete the proof of Proposition~\ref{prop:resonance-cert}.  Integer relation detection uses the PSLQ algorithm (Ferguson--Bailey--Arno~\cite{FBA1999}) via \texttt{mpmath.pslq}.  The 70-digit ARB-certified zero ordinates from Appendix~\ref{app:chi5-highprec} serve as input at 80-digit working precision.
 
 \begin{center}
 \renewcommand{\arraystretch}{1.1}
