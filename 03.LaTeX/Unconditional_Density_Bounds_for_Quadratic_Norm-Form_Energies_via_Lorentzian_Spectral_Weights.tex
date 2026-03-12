@@ -67,7 +67,7 @@ At fixed $M$ the bound is nontrivial only for sufficiently large $d$; the $O(1/\
 infinite resonance lattice $\Lambda_\infty$ has finite rank (verified to have
 rank $0$ for $M \leq 20$), the sharp asymptotic
 $\dens\{N > 0\} = C(d)/\sqrt{d} + o(1/\sqrt{d})$ holds.  For $d = 5$,
-$C(5) = 2\,f_{S_L}(0)\cdot\E[|S_\zeta|] = 0.1191$; the constant depends on $d$
+$C(5) = 2\,f_{S_L}(0)\cdot\E[|S_\zeta|] = 0.1193$; the constant depends on $d$
 through the zeros of $L(s,\chi_d)$, and $C(d) = O(1/\log d)$ as $d \to \infty$.
 
 \medskip
@@ -115,7 +115,7 @@ We prove unconditionally that:
 
 \item \textbf{Effective density bound} (Theorem~\ref{thm:density}): $\dens\{N > 0\} \leq 2\|f_{S_L^{(M)}}\|_\infty \cdot (W_1(\zeta)/\sqrt{d} + \epsilon_M)$ unconditionally at any verified truncation level $M$.
 
-\item \textbf{Density rate and exact asymptotic} (Corollary~\ref{cor:density-rate}, Theorem~\ref{thm:arctan}): $\dens\{N > 0\} = O(1/\sqrt{d})$, sharpened to $\dens\{N > 0\} = C(d)/\sqrt{d} + o(1/\sqrt{d})$, under the hypothesis that the infinite resonance lattice $\Lambda_\infty$ has finite rank $d_\infty < \infty$ (a hypothesis; computationally consistent with $d_M = 0$ for $M \leq 20$, but not a consequence of that finite truncation fact).  For $d = 5$, $C(5) = 0.1191$; the constant $C(d) = O(1/\log d)$ as $d \to \infty$.
+\item \textbf{Density rate and exact asymptotic} (Corollary~\ref{cor:density-rate}, Theorem~\ref{thm:arctan}): $\dens\{N > 0\} = O(1/\sqrt{d})$, sharpened to $\dens\{N > 0\} = C(d)/\sqrt{d} + o(1/\sqrt{d})$, under the hypothesis that the infinite resonance lattice $\Lambda_\infty$ has finite rank $d_\infty < \infty$ (a hypothesis; computationally consistent with $d_M = 0$ for $M \leq 20$, but not a consequence of that finite truncation fact).  For $d = 5$, $C(5) = 0.1193$; the constant $C(d) = O(1/\log d)$ as $d \to \infty$.
 \end{enumerate}
 
 These results do not assume the Riemann Hypothesis for either function. The spacelike property is robust to the choice of weight function (see Section~\ref{subsec:weight-robustness}).  As a byproduct of the low-lying zero dominance proof, we obtain a universal first-zero bound $\gamma_1'(d) < 14.13$ for all fundamental discriminants (Proposition~\ref{prop:first-zero-bound}).
@@ -1503,7 +1503,7 @@ At any fixed truncation level $M$, the bound has the form $A_M/\sqrt{d} + B_M$ w
 \end{remark}
 
 \begin{remark}[Dependence on $d$]\label{rem:d-dependence}
-The weights $b_k = w(\gamma_k')$, the tail $\epsilon_M = \sum_{k > M} b_k$, and the density $\|f_{S_L^{(M)}}\|_\infty$ all depend on $d$ through the zeros of $L(s,\chi_d)$.  Theorem~\ref{thm:density} is valid for every $d$ and every $M$, but the numerical evaluations in this paper ($\epsilon_{20}$, $f_{S_L^{(20)}}(0) = 8.3129$, and $C(5) = 0.1191$) are computed for $d = 5$.  At fixed $M = 20$, the certified value $\epsilon_{20} = 0.0308$ gives $B_{20} = 2\|f_{S_L^{(20)}}\|_\infty \cdot \epsilon_{20} \leq 2 \times 10.517 \times 0.0308 \approx 0.648 < 1$, so the unconditional bound is already nontrivial (strictly below $1$) at $M = 20$ for all $d \geq 1$.  For the $O(1/\sqrt{d})$ rate (Corollary~\ref{cor:density-rate}), $M$ must grow with $d$, with the required growth rate depending on the zero distribution of $L(s,\chi_d)$.
+The weights $b_k = w(\gamma_k')$, the tail $\epsilon_M = \sum_{k > M} b_k$, and the density $\|f_{S_L^{(M)}}\|_\infty$ all depend on $d$ through the zeros of $L(s,\chi_d)$.  Theorem~\ref{thm:density} is valid for every $d$ and every $M$, but the numerical evaluations in this paper ($\epsilon_{20}$, $f_{S_L^{(20)}}(0) = 8.3129$, and $C(5) = 0.1193$) are computed for $d = 5$.  At fixed $M = 20$, the certified value $\epsilon_{20} = 0.0308$ gives $B_{20} = 2\|f_{S_L^{(20)}}\|_\infty \cdot \epsilon_{20} \leq 2 \times 10.517 \times 0.0308 \approx 0.648 < 1$, so the unconditional bound is already nontrivial (strictly below $1$) at $M = 20$ for all $d \geq 1$.  For the $O(1/\sqrt{d})$ rate (Corollary~\ref{cor:density-rate}), $M$ must grow with $d$, with the required growth rate depending on the zero distribution of $L(s,\chi_d)$.
 \end{remark}
 
 \begin{corollary}[Density rate under resonance absence]\label{cor:density-rate}
@@ -1633,7 +1633,7 @@ where $C(d)$ depends on $d$ (through $f_{S_L}(0)$, which depends on the spectral
 \begin{equation}\label{eq:C_integral}
   C(d) = \lim_{d\to\infty}\sqrt{d}\cdot 2\int_0^{W_1(L)} f_{S_L}(y)\, \overline{F}_{|S_\zeta|}(\sqrt{d}\, y)\, dy,
 \end{equation}
-where $\overline{F}_{|S_\zeta|}(u) = P(|S_\zeta| > u)$ denotes the survival function of $|S_\zeta|$.  For $d = 5$, $C(5) = 0.1191$ (Section~\ref{sec:null-crossing}).
+where $\overline{F}_{|S_\zeta|}(u) = P(|S_\zeta| > u)$ denotes the survival function of $|S_\zeta|$.  For $d = 5$, $C(5) = 0.1193$ (Section~\ref{sec:null-crossing}).
 
 The Gaussian approximation
 \[
@@ -1661,7 +1661,7 @@ Since $\overline{F}_{|S_\zeta|}(u) = 0$ for $u > W_1(\zeta)$ and $f_{S_L}(u/\sqr
 \]
 which identifies $C(d) = 2f_{S_L}(0)\int_0^{W_1(\zeta)} \overline{F}_{|S_\zeta|}(u)\, du$.
 
-The factored form $C(d) = 2f_{S_L}(0)\cdot\E[|S_\zeta|]$ (Corollary~\ref{cor:C-factored}), with both factors computed by rigorous ARB quadrature, gives $C(5) = 0.1191$ certified to four significant figures.
+The factored form $C(d) = 2f_{S_L}(0)\cdot\E[|S_\zeta|]$ (Corollary~\ref{cor:C-factored}), with both factors computed by rigorous ARB quadrature, gives $C(5) = 0.1193$ certified to four significant figures.
 \end{proof}
 
 The integral in the identification of $C$ admits a closed evaluation.
@@ -1676,7 +1676,7 @@ where the two factors are independently computable from the Bessel product chara
   f_{S_L}(0) &= \frac{1}{\pi}\int_0^\infty \prod_{k=1}^M J_0(b_k t)\, dt, \label{eq:f0-bessel}\\[4pt]
   \E[|S_\zeta|] &= \frac{2}{\pi}\int_0^\infty \frac{1 - \prod_{k=1}^M J_0(a_k t)}{t^2}\, dt. \label{eq:Eabs-bessel}
 \end{align}
-Numerically, $f_{S_L}(0) = 8.3129$ and $\E[|S_\zeta|] = 0.00716$, giving $C(5) = 0.1191$.  Both values were computed for $d = 5$ via rigorous ARB quadrature (\texttt{acb.integral}) at 256-bit precision; see Appendix~\ref{sec:numerical}, \S\ref{subsec:bessel-integrals}.  These are the exact $M \to \infty$ limiting values, not truncation-level approximations: the telescoping bound (\S\ref{sec:infinite}) certifies that corrections from zeros beyond $M = 20$ contribute less than $10^{-3}$ to $f_{S_L}(0)$ and less than $10^{-5}$ to $C$.
+Numerically, $f_{S_L}(0) = 8.3129$ and $\E[|S_\zeta|] = 0.00717$, giving $C(5) = 0.1193$.  Both values were computed for $d = 5$ via rigorous ARB quadrature (\texttt{acb.integral}) at 256-bit precision; see Appendix~\ref{sec:numerical}, \S\ref{subsec:bessel-integrals}.  These are the exact $M \to \infty$ limiting values, not truncation-level approximations: the telescoping bound (\S\ref{sec:infinite}) certifies that corrections from zeros beyond $M = 20$ contribute less than $10^{-3}$ to $f_{S_L}(0)$ and less than $10^{-5}$ to $C$.
 \end{corollary}
 
 \begin{proof}
@@ -1701,11 +1701,11 @@ Formula & Value & Source of approximation \\
 \midrule
 Unconditional bound & $2f_{S_L}(0)\cdot W_1(\zeta) = 0.531$ & $\sup|S_\zeta|$ replaces $\E[|S_\zeta|]$ \\
 Gaussian (arctan) & $2\sigma_\zeta/(\pi\sigma_L) = 0.145$ & Gaussian densities replace J.--W. \\
-Exact & $2f_{S_L}(0)\cdot \E[|S_\zeta|] = 0.1191$ ($d = 5$) & (none) \\
+Exact & $2f_{S_L}(0)\cdot \E[|S_\zeta|] = 0.1193$ ($d = 5$) & (none) \\
 \bottomrule
 \end{tabular}
 \end{center}
-The unconditional bound exceeds the exact value by a factor of $W_1(\zeta)/\E[|S_\zeta|] = 4.46$.  This is the reciprocal of the containment tightness ratio $\E[|S_\zeta|]/W_1(\zeta) = 0.224$ (Remark~\ref{rem:tightness}).  The entire slack in the unconditional bound therefore arises from the containment step, which replaces $\E[|S_\zeta|]$ with $\sup|S_\zeta|$.  The Gaussian approximation overestimates $C$ by $22\%$ (predicting $0.145$ instead of $0.1191$).  The factored form decomposes this discrepancy: the Gaussian density $1/(\sqrt{2\pi}\,\sigma_L)$ overestimates $f_{S_L}(0)$ by $27\%$ (compact support flattens the Jessen--Wintner density at the origin), while the Gaussian mean $\sigma_\zeta\sqrt{2/\pi}$ underestimates $\E[|S_\zeta|]$ by $4\%$ (compact support concentrates mass).  The two errors partially cancel.
+The unconditional bound exceeds the exact value by a factor of $W_1(\zeta)/\E[|S_\zeta|] = 4.45$.  This is the reciprocal of the containment tightness ratio $\E[|S_\zeta|]/W_1(\zeta) = 0.225$ (Remark~\ref{rem:tightness}).  The entire slack in the unconditional bound therefore arises from the containment step, which replaces $\E[|S_\zeta|]$ with $\sup|S_\zeta|$.  The Gaussian approximation overestimates $C$ by $22\%$ (predicting $0.145$ instead of $0.1193$).  The factored form decomposes this discrepancy: the Gaussian density $1/(\sqrt{2\pi}\,\sigma_L)$ overestimates $f_{S_L}(0)$ by $27\%$ (compact support flattens the Jessen--Wintner density at the origin), while the Gaussian mean $\sigma_\zeta\sqrt{2/\pi}$ underestimates $\E[|S_\zeta|]$ by $5\%$ (compact support concentrates mass).  The two errors partially cancel.
 \end{remark}
 
 \begin{remark}[Two density values]\label{rem:two-densities}
@@ -1716,7 +1716,7 @@ computed by rigorous ARB quadrature to 44 decimal places.  The value $8.3129$ (C
 the density of the \emph{limiting} Jessen--Wintner distribution at the origin; the $M = 20$
 truncation captures this to the displayed precision, consistent with the convergence from below established in the telescoping
 argument.
-Only the value $8.3129$ enters the formula $C(5) = 2f_{S_L}(0)\cdot\E[|S_\zeta|] = 0.1191$.
+Only the value $8.3129$ enters the formula $C(5) = 2f_{S_L}(0)\cdot\E[|S_\zeta|] = 0.1193$.
 \end{remark}
 \begin{center}
 \renewcommand{\arraystretch}{1.1}
@@ -1737,7 +1737,7 @@ $10{,}000$ & $0.001191$ & $0.001450$ & $0.007$ \\
 \section{Numerical Verification}\label{sec:numerics}
 %% ================================================================
 
-All numerical results in this section are derived from the ARB-certified ingredients established in the preceding sections: the Besicovitch constants $\sigma_\zeta$, $\sigma_L$ (Section~\ref{sec:cesaro}), the unsigned Bessel product integrals $f_{\mathrm{main}}^{(M)}$ (\S\ref{sec:finite}), the tail sums $\epsilon_M$ (\S\ref{sec:infinite}), and the leading constant $C(5) = 2f_{S_L}(0)\cdot\E[|S_\zeta|] = 0.1191$ (Corollary~\ref{cor:C-factored}).
+All numerical results in this section are derived from the ARB-certified ingredients established in the preceding sections: the Besicovitch constants $\sigma_\zeta$, $\sigma_L$ (Section~\ref{sec:cesaro}), the unsigned Bessel product integrals $f_{\mathrm{main}}^{(M)}$ (\S\ref{sec:finite}), the tail sums $\epsilon_M$ (\S\ref{sec:infinite}), and the leading constant $C(5) = 2f_{S_L}(0)\cdot\E[|S_\zeta|] = 0.1193$ (Corollary~\ref{cor:C-factored}).
 
 
 \subsection{Density verification}
@@ -1795,7 +1795,7 @@ The argument proceeds in three logically independent stages.
 
 \textbf{Stage 2: Finite truncation and stability.}  At any fixed verified truncation level $M$, the effective density bound (Theorem~\ref{thm:density}) gives $\dens\{N_d > 0\} \leq A_M/\sqrt{d} + B_M$, which is nontrivial for sufficiently large $d$.  The $O(1/\sqrt{d})$ rate (Corollary~\ref{cor:density-rate}) follows under the hypothesis that $\Lambda_\infty$ has finite rank $d_\infty < \infty$ (a hypothesis extending the finite truncation fact $d_M = 0$, verified for $M \leq 20$), which provides a uniform bound on the density and allows the truncation level to grow with $d$.
 
-\textbf{Stage 3: Verified refinements.}  Under computationally verified resonance absence at $M = 20$, the telescoping argument (Theorem~\ref{thm:telescoping}) establishes $f_{S_L}(0) < \infty$ for the full infinite series, and the exact formula $\dens\{N_d > 0\} = C(d)/\sqrt{d} + o(1/\sqrt{d})$ follows from the computable marginal densities (Theorem~\ref{thm:arctan}), with $C(5) = 0.1191$.  No result in this paper assumes GRH or the Grand Simplicity Hypothesis.
+\textbf{Stage 3: Verified refinements.}  Under computationally verified resonance absence at $M = 20$, the telescoping argument (Theorem~\ref{thm:telescoping}) establishes $f_{S_L}(0) < \infty$ for the full infinite series, and the exact formula $\dens\{N_d > 0\} = C(d)/\sqrt{d} + o(1/\sqrt{d})$ follows from the computable marginal densities (Theorem~\ref{thm:arctan}), with $C(5) = 0.1193$.  No result in this paper assumes GRH or the Grand Simplicity Hypothesis.
 
 \begin{remark}[The $M \to \infty$ barrier]\label{rem:M-infty}
 The one step we cannot make unconditionally is the passage from verified resonance absence at a fixed $M$ to $d_\infty < \infty$.  Proving $d_\infty = 0$ would require either GSH or an unconditional proof that zero ordinates of $L$-functions admit no integer linear relations.  The numerical vacuity of the fixed-$M$ bound (Remark~\ref{rem:d-dependence}) and the role of $d_\infty$ in the rate (Remark~\ref{rem:finite-suffices}) are discussed in Section~\ref{sec:compare}.
@@ -2320,12 +2320,12 @@ For the density integral~\eqref{eq:f0-bessel}: $f_{S_L}(0) = \frac{1}{\pi}\int_0
   f_{S_L^{(20)}}(0) = 8.312883337454846\ldots \;\pm\; 5.84 \times 10^{-44}.
 \]
 
-For the mean absolute value~\eqref{eq:Eabs-bessel}: $\E[|S_\zeta|] = \frac{2}{\pi}\int_\epsilon^{T} \frac{1 - \prod_{k=1}^{20} J_0(a_k t)}{t^2}\,dt$ with $\epsilon = 10^{-3}$ and $T = 50{,}000$, where $a_k = 2/(\tfrac{1}{4} + \gamma_k^2)$ for $\zeta$ zeros.  The integrand is $O(1)$ near $t = 0$ (since $1 - \prod J_0(a_k t) = O(t^2)$); the contribution from $[0, \epsilon]$ is bounded by $(\sum_k a_k^2/4) \cdot \epsilon < 4 \times 10^{-8}$ and added to the main integral.  ARB quadrature yields:
+For the mean absolute value~\eqref{eq:Eabs-bessel}: $\E[|S_\zeta|] = \frac{2}{\pi}\int_\epsilon^{T} \frac{1 - \prod_{k=1}^{20} J_0(a_k t)}{t^2}\,dt$ with $\epsilon = 10^{-30}$ and $T = 50{,}000$, where $a_k = 2/(\tfrac{1}{4} + \gamma_k^2)$ for $\zeta$ zeros, plus the analytic correction $(2/\pi)/T$ for $\int_T^\infty t^{-2}\,dt$ and the negligible Bessel envelope tail (bounded below $10^{-17}$ in ARB).  The integrand is $O(1)$ near $t = 0$ (since $1 - \prod J_0(a_k t) = O(t^2)$); the Petras algorithm handles the removable singularity by adaptive subdivision.  ARB quadrature at 512-bit precision yields:
 \[
-  \E[|S_\zeta|] = 0.00716132817045\ldots \;\pm\; 2.20 \times 10^{-24}.
+  \E[|S_\zeta|] = 0.00717406056590\ldots \;\pm\; 2.58 \times 10^{-62}.
 \]
 
-The product $C(5) = 2 \cdot f_{S_L}(0) \cdot \E[|S_\zeta|] = 0.1191$ is certified to four significant figures.
+The product $C(5) = 2 \cdot f_{S_L}(0) \cdot \E[|S_\zeta|] = 0.1193$ is certified to four significant figures.
 
 \medskip\noindent\textbf{Unsigned Bessel product integrals.}  Several tables in Sections~\ref{sec:finite}--\ref{sec:infinite} report integrals of the form $\frac{1}{\pi}\int_0^T \prod_{k=1}^M |J_{n_k}(b_k t)|\, dt$, where the absolute values introduce cusps at every zero of each Bessel factor.  Because \texttt{acb.integral} (the Petras algorithm) assumes analyticity in a strip around the integration path, it is not directly applicable to these integrands.  All unsigned integrals in this paper are therefore evaluated by \emph{strip decomposition}: the domain $[0, T]$ is partitioned at the certified zeros of every Bessel factor into thin \emph{strips} (of half-width $\Delta = 10^{-20}$ in the argument $b_k t$, centered on each zero) and the \emph{gaps} between them.  On each gap the integrand is analytic and sign-definite, so \texttt{acb.integral} is rigorous.  On each strip the integrand is bounded by the Landau constant $b = 0.675$ (Landau~\cite{Landau2000}, Theorem~1), giving a per-strip error of $O(\Delta)$ which is negligible ($< 10^{-17}$) in all cases.  Bessel zeros are computed entirely in ARB via McMahon asymptotic seeds (DLMF~10.21.19) followed by certified trichotomy bisection; IVT, non-overlap, and certified ordering checks are performed for every zero.  This architecture is shared by the ancillary scripts for the tables after Lemma~\ref{lem:Jdecay}, Remark~\ref{rem:J0role}, Lemma~\ref{lem:monotone}, Remark~\ref{rem:signed}, and Lemma~\ref{lem:selfref}.
 
