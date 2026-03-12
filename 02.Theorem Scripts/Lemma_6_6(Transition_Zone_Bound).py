@@ -29,7 +29,7 @@ floating-point library is used in any load-bearing computation.
 
 Algorithm
 ---------
-acb.integral (acb_calc_integrate, Petras algorithm, 256-bit ARB) requires
+acb.integral (Petras algorithm, 256-bit ARB) requires
 an analytic integrand.  The absolute-value integrand is handled by dividing
 (0, T] into:
 
