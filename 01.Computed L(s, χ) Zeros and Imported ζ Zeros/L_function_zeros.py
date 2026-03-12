@@ -55,8 +55,8 @@ _META = {
     6: {"q": 24, "field": "Q(sqrt(6))", "Delta_K": 24, "num_zeros": 1039, "digits": 70},
     7: {"q": 28, "field": "Q(sqrt(7))", "Delta_K": 28, "num_zeros": 1044, "digits": 70},
     10: {"q": 40, "field": "Q(sqrt(10))", "Delta_K": 40, "num_zeros": 1040, "digits": 70},
-    11: {"q": 44, "field": "Q(sqrt(11))", "Delta_K": 44, "num_zeros": 1000, "digits": 70},
-    13: {"q": 13, "field": "Q(sqrt(13))", "Delta_K": 13, "num_zeros": 1000, "digits": 70},
+    11: {"q": 44, "field": "Q(sqrt(11))", "Delta_K": 44, "num_zeros": 1038, "digits": 70},
+    13: {"q": 13, "field": "Q(sqrt(13))", "Delta_K": 13, "num_zeros": 1020, "digits": 70},
 }
 
 # ══════════════════════════════════════════════════════════════
