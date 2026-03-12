@@ -10,7 +10,7 @@ Part of the [Persistent Heuristics](https://github.com/PeterShiller/Persistent_H
 
 **Zenodo:** [https://doi.org/10.5281/zenodo.18783098](https://doi.org/10.5281/zenodo.18783098)
 
-The paper is on arXiv. The scripts and data in this repository are also archived on Zenodo.
+arXiv contains the main paper only. Zenodo has an exact copy of the paper, scripts, and data in this repository.
 
 ## Abstract
 
