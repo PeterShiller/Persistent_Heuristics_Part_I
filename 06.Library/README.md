@@ -64,6 +64,17 @@ zeta.get_zero(1)
 ph1-compute-zeros --d 5 --nzeros 1000 --high-precision
 ```
 
+Flags:
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--d` | Squarefree discriminant (2,3,5,6,7,10,11,13) | required |
+| `--nzeros` | Number of zeros to compute | 20 |
+| `--high-precision` | Use 1500-bit Newton for ~70-digit zeros | off |
+| `--grid-step` | Grid step for sign-change scan | 0.05 |
+| `--margin` | Safety margin for T_max | 1.10 |
+| `--skip-verify` | Skip Phase 4 completeness verification | off |
+
 ## Data
 
 | d  | conductor q | zeros | sealed | T_seal |

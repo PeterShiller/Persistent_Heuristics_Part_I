@@ -84,6 +84,9 @@ def _load():
                     pass
             # Remove internal modules from _sys.modules so they are not
             # importable as a side effect of loading the compute pipeline.
+            # Note: "Kronecker_character_data" is the internal module name used by
+            # compute_Lfunc_zeros.py for character tables.  If that file is ever
+            # refactored to change the import name, update this list accordingly.
             for _key in ("Kronecker_character_data", "_compute_Lfunc_zeros"):
                 _sys.modules.pop(_key, None)
         _mod = mod

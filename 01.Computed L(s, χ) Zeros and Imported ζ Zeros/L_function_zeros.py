@@ -49,6 +49,8 @@ from decimal import Decimal, getcontext
 # ══════════════════════════════════════════════════════════════
 
 _META = {
+    # num_zeros values below are initial estimates; they are overwritten by
+    # len(_ZEROS[d]) after the data arrays are loaded (see below).
     2: {"q": 8, "field": "Q(sqrt(2))", "Delta_K": 8, "num_zeros": 1016, "digits": 70},
     3: {"q": 12, "field": "Q(sqrt(3))", "Delta_K": 12, "num_zeros": 1043, "digits": 70},
     5: {"q": 5, "field": "Q(sqrt(5))", "Delta_K": 5, "num_zeros": 1004, "digits": 70},
@@ -8433,6 +8435,14 @@ _ZEROS[13] = [
     ("969.3190186631839911016476543565589942576999218385751450330083066802607949", 3.91, -448),
     ("969.6572583482234836374359885892584460774206122689588671536370111783609151", 1.00, -581),
 ]
+
+
+# ══════════════════════════════════════════════════════════════
+# Derive num_zeros from data (prevents stale metadata)
+# ══════════════════════════════════════════════════════════════
+
+for _d in _META:
+    _META[_d]["num_zeros"] = len(_ZEROS[_d])
 
 
 # ══════════════════════════════════════════════════════════════
