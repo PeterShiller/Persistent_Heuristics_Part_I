@@ -654,7 +654,7 @@ For all $T > 0$, a three-region argument analogous to Case~2 applies to a repres
 
 \smallskip\noindent\emph{Region~2: $T \in [0.01, 50]$.}  A grid scan over the representative five-zero configuration with spacing $\Delta = 5 \times 10^{-4}$ gives grid minimum $h = 0.002006$ at $T \approx 4.24$.  The Lipschitz discretization error is $L\Delta = 5.28 \times 10^{-5}$, so the certified minimum is $0.001953$, exceeding the threshold by a factor of $11.5\times$.
 
-\smallskip\noindent\emph{Region~3: $T \geq 50$.}  The analytic bound $h(T) \geq c_0 W_2 - \mathcal{I}/T$ applies; the critical threshold is $T_{\mathrm{crit}} \leq 19.0$, well below the overlap at $T = 50$.
+\smallskip\noindent\emph{Region~3: $T \geq 50$.}  The analytic bound $h(T) \geq c_0 W_2 - \mathcal{I}/T$ applies; the critical threshold is $T_{\mathrm{crit}} \leq 3.1$, well below the overlap at $T = 50$.
 
 \smallskip\noindent The three regions overlap and certify the inequality for all $T > 0$ at the representative configuration; every actual configuration with $d \geq 14$ has at least five zeros (by BMOR) and a diagonal margin of $2.7\times$, so the inequality holds universally.
 
@@ -1040,7 +1040,7 @@ $50$ & $1.41 \times 10^{-14}$ & $4.1 \times 10^{-9}$ & $1.9 \times 10^{-15}$ \\
 
 The computed values lie below the subcritical scaling $(e/4)^N$ for all tabulated $N$, confirming exponential suppression.  The transition scaling $N^{-8.67}$ is displayed without its multiplicative constant from Lemma~\ref{lem:Jdecay} (which depends on $\{b_k\}$ and is large at these parameters); it governs the large-$N$ asymptotics but does not serve as a pointwise bound without the constant.  The actual decay is faster than either scaling predicts, because the $\sqrt{2/(\pi x)}$ estimate does not account for oscillatory cancellations in the Bessel product.
 
-\medskip\noindent\textbf{Reproducibility.}  The values of $I_{\mathbf{n}}$ were computed by ARB quadrature (\texttt{acb.integral}, 256-bit precision) with the integrand
+\medskip\noindent\textbf{Reproducibility.}  The values of $I_{\mathbf{n}}$ were computed by ARB quadrature via strip decomposition (\texttt{acb.integral} on gap intervals; see \S\ref{subsec:bessel-integrals}, 256-bit precision) with the integrand
 \[
   \frac{1}{\pi}\,|J_N(b_1 t)|\,|J_N(b_2 t)|\prod_{k=3}^{20}|J_0(b_k t)|,
 \]
@@ -1174,7 +1174,7 @@ For every $M \geq 1$,
 Since $|J_0(b_{M+1} t)| \leq 1$ for all $t \geq 0$, the integrand can only decrease pointwise.
 \end{proof}
 
-The main-term sequence $\{f_{\mathrm{main}}^{(M)}\}$ is therefore a decreasing sequence bounded below by zero, and converges to a finite limit.  The values in the following table were computed by rigorous numerical quadrature of $\frac{1}{\pi}\int_0^T \prod_{k=1}^M |J_0(b_k t)|\, dt$ with $T = 2000$ using ARB's \texttt{acb.integral} at 256-bit precision.  These are the \emph{unsigned} main-term integrals and serve as upper bounds on $\|f_{S_L^{(M)}}\|_\infty$; the \emph{signed} integrals that equal the actual density $f^{(M)}(0)$ under verified resonance absence are smaller (see Remark~\ref{rem:signed}).
+The main-term sequence $\{f_{\mathrm{main}}^{(M)}\}$ is therefore a decreasing sequence bounded below by zero, and converges to a finite limit.  The values in the following table were computed by strip decomposition (\S\ref{subsec:bessel-integrals}) of $\frac{1}{\pi}\int_0^T \prod_{k=1}^M |J_0(b_k t)|\, dt$ with $T = 2000$ using ARB's \texttt{acb.integral} at 256-bit precision.  These are the \emph{unsigned} main-term integrals and serve as upper bounds on $\|f_{S_L^{(M)}}\|_\infty$; the \emph{signed} integrals that equal the actual density $f^{(M)}(0)$ under verified resonance absence are smaller (see Remark~\ref{rem:signed}).
 
 \begin{center}
 \renewcommand{\arraystretch}{1.1}
@@ -1213,7 +1213,7 @@ $20$ & $10.517$ & $8.313$ \\
 \end{tabular}
 }
 \end{center}
-This is consistent: each additional $J_0(b_k t)$ factor reduces the absolute value of the integrand but also reduces the negative lobes, pushing the signed integral upward.  The finiteness proof uses only the unsigned bound.  The monotone increase of the signed integral confirms that $f^{(M)}(0)$ converges to $f_{S_L}(0) = 8.3129$ from below.  Both columns are the integrals over $[0, T]$ with $T = 2000$, computed by ARB quadrature at $256$-bit precision.  Certified upper bounds on the tail $(1/\pi)\int_T^\infty \prod_{k=1}^M |J_0(b_k t)|\,dt$ via the envelope bound $|J_0(x)| \leq \sqrt{2/(\pi x)}$ are reported in the ancillary script; they range from $O(1)$ for $M = 3$ to below $10^{-8}$ for $M = 20$.
+This is consistent: each additional $J_0(b_k t)$ factor reduces the absolute value of the integrand but also reduces the negative lobes, pushing the signed integral upward.  The finiteness proof uses only the unsigned bound.  The monotone increase of the signed integral confirms that $f^{(M)}(0)$ converges to $f_{S_L}(0) = 8.3129$ from below.  Both columns are the integrals over $[0, T]$ with $T = 2000$ at $256$-bit ARB precision; the unsigned column uses strip decomposition (\S\ref{subsec:bessel-integrals}), the signed column uses direct \texttt{acb.integral} (the integrand $\prod J_0$ is analytic).  Certified upper bounds on the tail $(1/\pi)\int_T^\infty \prod_{k=1}^M |J_0(b_k t)|\,dt$ via the envelope bound $|J_0(x)| \leq \sqrt{2/(\pi x)}$ are reported in the ancillary script; they range from $O(1)$ for $M = 3$ to below $10^{-8}$ for $M = 20$.
 \end{remark}
 
 
@@ -1261,7 +1261,7 @@ $30$ & $6.26 \times 10^{-2}$ & $4.93 \times 10^{-4}$ & $127$ \\
 \end{tabular}
 \end{center}
 
-The ratio $I_{\mathbf{n}}/b_M$ is bounded and stabilizing, confirming $C_M \leq C$ uniformly.  For $n_M = 2$, the ratio $I_{\mathbf{n}}/b_M^2$ similarly stabilizes near $1550$.  Each entry $I_{\mathbf{n}}$ in the table corresponds to a resonance vector with $n_M = 1$ and all other components zero; the integral was evaluated by ARB quadrature (\texttt{acb.integral}, 256-bit precision, $T = 2000$).
+The ratio $I_{\mathbf{n}}/b_M$ is bounded and stabilizing, confirming $C_M \leq C$ uniformly.  For $n_M = 2$, the ratio $I_{\mathbf{n}}/b_M^2$ similarly stabilizes near $1550$.  Each entry $I_{\mathbf{n}}$ in the table corresponds to a resonance vector with $n_M = 1$ and all other components zero; the integral was evaluated by strip decomposition (\S\ref{subsec:bessel-integrals}; \texttt{acb.integral} on gap intervals, 256-bit precision, $T = 2000$).
 
 The telescoping bound follows.
 
@@ -2327,6 +2327,8 @@ For the mean absolute value~\eqref{eq:Eabs-bessel}: $\E[|S_\zeta|] = \frac{2}{\p
 
 The product $C(5) = 2 \cdot f_{S_L}(0) \cdot \E[|S_\zeta|] = 0.1191$ is certified to four significant figures.
 
+\medskip\noindent\textbf{Unsigned Bessel product integrals.}  Several tables in Sections~\ref{sec:finite}--\ref{sec:infinite} report integrals of the form $\frac{1}{\pi}\int_0^T \prod_{k=1}^M |J_{n_k}(b_k t)|\, dt$, where the absolute values introduce cusps at every zero of each Bessel factor.  Because \texttt{acb.integral} (the Petras algorithm) assumes analyticity in a strip around the integration path, it is not directly applicable to these integrands.  All unsigned integrals in this paper are therefore evaluated by \emph{strip decomposition}: the domain $[0, T]$ is partitioned at the certified zeros of every Bessel factor into thin \emph{strips} (of half-width $\Delta = 10^{-20}$ in the argument $b_k t$, centered on each zero) and the \emph{gaps} between them.  On each gap the integrand is analytic and sign-definite, so \texttt{acb.integral} is rigorous.  On each strip the integrand is bounded by the Landau constant $b = 0.675$ (Landau~\cite{Landau2000}, Theorem~1), giving a per-strip error of $O(\Delta)$ which is negligible ($< 10^{-17}$) in all cases.  Bessel zeros are computed entirely in ARB via McMahon asymptotic seeds (DLMF~10.21.19) followed by certified trichotomy bisection; IVT, non-overlap, and certified ordering checks are performed for every zero.  This architecture is shared by the ancillary scripts for the tables after Lemma~\ref{lem:Jdecay}, Remark~\ref{rem:J0role}, Lemma~\ref{lem:monotone}, Remark~\ref{rem:signed}, and Lemma~\ref{lem:selfref}.
+
 \subsection{PSLQ integer relation search}\label{subsec:pslq}
 
 This subsection and the next complete the proof of Proposition~\ref{prop:resonance-cert}.  The 70-digit zero ordinates of Appendix~\ref{app:chi5-highprec}, certified by ARB (Appendix~\ref{app:certification}), serve as input to the PSLQ algorithm.
@@ -3023,6 +3025,11 @@ N.\,M.~Katz and P.~Sarnak,
 L.~Kuipers and H.~Niederreiter,
 \emph{Uniform Distribution of Sequences},
 Pure and Applied Mathematics, Wiley-Interscience, New York, 1974.
+
+\bibitem{Landau2000}
+L.\,J.~Landau,
+``Bessel functions: Monotonicity and bounds,''
+\emph{J.\ London Math.\ Soc.}\ (2) \textbf{61} (2000), no.~1, 197--215.
 
 \bibitem{Li1997}
 X.-J.~Li,
