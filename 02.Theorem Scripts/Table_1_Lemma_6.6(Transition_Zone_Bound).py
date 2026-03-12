@@ -1,5 +1,5 @@
 """
-Lemma_6_6(Transition_Zone_Bound).py  --  ARB-rigorous certification of Lemma 6.6
+Table_1_Lemma_6.6(Transition_Zone_Bound).py  --  ARB-rigorous certification of Lemma 6.6 (Table 1)
 ==================================================================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
@@ -190,7 +190,7 @@ External-input qualifications
 
 Usage
 -----
-  python3 "Lemma_6_6(Transition_Zone_Bound).py"
+  python3 "Table_1_Lemma_6.6(Transition_Zone_Bound).py"
   Expected runtime: ~5--10 minutes (N=50 requires ~3950 strips,
   each requiring ARB bisection to 1e-21).
 
