@@ -57,7 +57,8 @@
 % ── Footer navigation: "Back to Table of Contents" on pages 4+ ──
 \pagestyle{fancy}
 \fancyhf{}                          % clear all headers/footers
-\fancyhead[C]{\leftmark}            % restore amsart-style header
+\fancyhead[CE]{\leftmark}           % even pages: author name
+\fancyhead[CO]{\rightmark}          % odd pages: short title
 \fancyfoot[C]{\thepage}             % page number centered
 \fancyfoot[R]{%
   \ifnum\value{page}>3
