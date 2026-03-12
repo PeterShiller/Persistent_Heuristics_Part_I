@@ -130,8 +130,8 @@ Step 5: Certified integration and strip-error bound.
   acb(b) -- pure ARB limits, no float().  Strip contributions bounded
   by B_N * width / pi, all in ARB.
 
-J_0(z) workaround.
-  In python-flint 0.8.0, acb.bessel_j(z, acb(0)) = 0 (order-zero bug).
+J_0(z) via DLMF 10.6.1 recurrence.
+  J_0(z) = (2/z) J_1(z) - J_2(z), valid for Re(z) > 0.
   We use J_0(z) = (2/z) J_1(z) - J_2(z)  (DLMF 10.6.1), valid for Re(z)>0.
   Integration starts at T_EPS = 10^{-30}.
 
@@ -253,7 +253,7 @@ _TWO  = arb(2)
 # ── Bessel evaluation ─────────────────────────────────────────────────────────
 
 def J0_acb(z):
-    """J_0(z) = (2/z) J_1(z) - J_2(z)  [DLMF 10.6.1; avoids flint 0.8.0 bug]."""
+    """J_0(z) = (2/z) J_1(z) - J_2(z)  [DLMF 10.6.1]."""
     return acb(2) * acb.bessel_j(z, acb(1)) / z - acb.bessel_j(z, acb(2))
 
 def JN_acb(z, N_int):

@@ -88,7 +88,7 @@ _TWO = arb(2)
 # ── Bessel function ───────────────────────────────────────────────────────────
 
 def J0_acb(z_acb):
-    """J_0(z) via recurrence (DLMF 10.6.1); avoids python-flint 0.8.0 bug."""
+    """J_0(z) via recurrence (DLMF 10.6.1)."""
     return (acb(_TWO) * acb.bessel_j(z_acb, acb(1)) / z_acb
             - acb.bessel_j(z_acb, acb(_TWO)))
 

@@ -60,8 +60,7 @@ Strip merging:
 
 Bessel zeros:
   - J_0 zeros for factors k = 1, ..., M-1 (inactive).  J_0(z) computed
-    via J_0(z) = (2/z)J_1(z) - J_2(z) (DLMF 10.6.1) to avoid the
-    python-flint 0.8.0 bug where acb.bessel_j(z, acb(0)) = 0.
+    via J_0(z) = (2/z)J_1(z) - J_2(z) (DLMF 10.6.1).
   - J_1 zeros for factor k = M (active).  McMahon (DLMF 10.21.19)
     with BRACKET = 1.5; accurate for all m >= 1 in (0, 2000].
 
@@ -133,7 +132,6 @@ def J0_real(x_arb):
     """
     J_0(x) as a real ARB ball, via
         J_0(x) = (2/x)J_1(x) - J_2(x)    (DLMF 10.6.1).
-    Avoids the python-flint 0.8.0 bug where acb.bessel_j(z, acb(0)) = 0.
     """
     z = acb(x_arb)
     return (acb(_TWO) * acb.bessel_j(z, acb(1)) / z
