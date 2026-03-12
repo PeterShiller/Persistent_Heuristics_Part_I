@@ -11,8 +11,8 @@ This script certifies the three numerical constants in Theorem 9.4
 Corollary 9.5 (Factored form of the leading constant):
 
     f_{S_L}(0)  = 8.3129   (central density of L-function spectral sum)
-    E[|S_zeta|] = 0.00716  (mean absolute value of zeta spectral sum)
-    C(5)        = 0.1191   (leading constant in the density law)
+    E[|S_zeta|] = 0.00717  (mean absolute value of zeta spectral sum)
+    C(5)        = 0.1193   (leading constant in the density law)
 
 via the formulas (Corollary 9.5, equations (eq:f0-bessel) and (eq:Eabs-bessel)):
 
@@ -42,13 +42,13 @@ f_{S_L}(0): computed as (1/pi) * int_0^{T_L} prod J_0(b_k t) dt + tail,
 
 E[|S_zeta|]: split as
     (2/pi) * [int_0^{T_Z} (1 - phi_z(t)) / t^2 dt  +  1/T_Z  +  phi-tail],
-    where T_Z = 10000, phi_z(t) = prod_{k=1}^M J_0(a_k t), and the
-    analytic correction 1/T_Z = 1e-4 accounts for int_{T_Z}^inf 1/t^2 dt.
+    where T_Z = 50000, phi_z(t) = prod_{k=1}^M J_0(a_k t), and the
+    analytic correction 1/T_Z = 2e-5 accounts for int_{T_Z}^inf 1/t^2 dt.
     The residual phi-tail |int_{T_Z}^inf phi_z(t)/t^2 dt| is bounded by
-    the Bessel envelope: for all a_k * T_Z >= 1 (verified below), this
-    bound is certified to be < 2e-17 in ARB.  The integrand (1-phi_z)/t^2
-    has a removable singularity at t=0 with limit sigma_zeta^2/2; the
-    Petras algorithm in acb.integral handles this by adaptive subdivision.
+    the Bessel envelope; the certified ARB bound at T=50000 is < 3e-25.
+    The integrand (1-phi_z)/t^2 has a removable singularity at t=0 with
+    limit sigma_zeta^2/2; the Petras algorithm in acb.integral handles
+    this by adaptive subdivision.
 
 PASS criterion: certified ARB predicate
     bool(abs(computed - paper) / abs(paper) < REL_TOL) == True
@@ -184,20 +184,9 @@ def compute_f0(b):
     T_L_arb = arb(T_L)
     tail    = bessel_tail_bound(b, M, T_L_arb)
 
-    # Inflate the ARB ball by the tail uncertainty: result in [integral - tail, integral + tail]
-    # In ARB: add an interval of radius `tail` centred at 0.
-    # arb(0) + tail * arb(-1,1) is not standard; instead use arb arithmetic:
-    # integral.add_error is not available in python-flint, so we construct
-    # a ball [integral.mid - tail, integral.mid + tail] by adding arb(0, tail).
-    # python-flint supports: arb(mid=x, rad=r) via arb(x, r) only for numeric r.
-    # We instead use: result = integral + arb(0)*arb(1) where we set radius via
-    # the union approach: [integral - tail, integral + tail].
-    # Cleanest approach: result = integral + arb_ball_zero(tail)
-    # where arb_ball_zero(r) = r * arb(-1, 1) ... not clean.
-    # Use: result_lo = integral - tail; result_hi = integral + tail
-    # then result = (result_lo + result_hi)/2 with rad = (result_hi - result_lo)/2.
-    # But this loses the ARB ball from quadrature.
-    # Standard practice: just return integral and tail separately and combine in reporting.
+    # The tail bound (~9.5e-9 at T=2000) is the dominant uncertainty;
+    # the quadrature ball radius (~5e-73) is negligible by comparison.
+    # Return them separately so main() can report both.
     return integral, tail, T_L_arb
 
 
@@ -278,12 +267,9 @@ def main():
     t1 = time.time()
     f0_integral, f0_tail, _ = compute_f0(b)
     print(f"        Integral (ARB): {f0_integral}")
-    print(f"        Tail bound:     {f0_tail}")
-    # Certified value: integral with additional tail uncertainty
-    # Report midpoint; tail << radius of integral ball for this problem.
-    f0_certified = f0_integral  # tail is negligible vs quadrature ball for paper comparison
-    print(f"        f_{{S_L}}(0) certified (integral + tail inflation):")
-    print(f"          {f0_certified} +/- {f0_tail} (tail, one-sided)")
+    print(f"        Tail bound:     {f0_tail}  (dominant uncertainty)")
+    print(f"        f_{{S_L}}(0) = integral +/- tail (one-sided):")
+    print(f"          {f0_integral} +/- {f0_tail}")
     ok_f0 = arb_matches(f0_integral, PAPER_F0, "f0")
     print(f"        [{time.time()-t1:.1f}s]")
     print()
