@@ -100,7 +100,7 @@ T_EPS           = arb("1e-30")
 T_MAX_ARB       = arb(T_UPPER)
 REL_TOL_INT     = 2**(-200)  # acb.integral relative tolerance
 DELTA           = arb("1e-20")
-LANDAU_C        = arb("0.7857")  # |J_N(x)| <= LANDAU_C * N^{-1/3} (DLMF 10.14.3)
+LANDAU_C        = arb("0.675")   # |J_N(x)| < LANDAU_C * N^{-1/3}  (Landau 2000, Thm 1; best constant b = 0.674885...)
 
 # ── Paper table values ────────────────────────────────────────────────────────
 # ARB-certified strip-decomposition results; these are the values used in
@@ -362,7 +362,7 @@ def strip_error_bound(M_int, strips):
     ARB upper bound on the total strip contribution.
 
     Each strip has width (t_hi - t_lo) <= 2*DELTA/b_k.  On any strip,
-    the active J_1 factor is bounded by LANDAU_C = 0.7857 and each
+    the active J_1 factor is bounded by LANDAU_C = 0.675 and each
     of the M-1 inactive J_0 factors is bounded by 1.  The (1/pi)
     prefactor is included.
 
