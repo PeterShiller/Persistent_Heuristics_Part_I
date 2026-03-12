@@ -59,6 +59,18 @@ Sealed zero data for all eight quadratic characters (chi_2 through chi_13) at 70
 
 Seventeen self-contained Python scripts, one per theorem, proposition, or table in the paper. Each script certifies its result using ARB interval arithmetic and prints PASS/FAIL. Dependencies: `python-flint >= 0.8.0`, `sympy >= 1.12` (two scripts only). No external data files needed beyond the zero tables in `01.*/`.
 
+### `03.LaTeX/`
+
+LaTeX source files for the main paper (63 pages) and Appendix F (186 pages).
+
+### `04.LaTeX Figures/`
+
+Figure PDFs included by the LaTeX source: the norm-form plot and the density convergence plot.
+
+### `05.PDF/`
+
+Compiled PDFs of the main paper and Appendix F.
+
 ### `06.Library/`
 
 A pip-installable data API for the zero tables. See [`06.Library/README.md`](06.Library/README.md) for installation and usage.
