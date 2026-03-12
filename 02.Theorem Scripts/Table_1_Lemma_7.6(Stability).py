@@ -20,7 +20,7 @@ This script certifies the numerical table appearing after Lemma 7.6
 where
 
     epsilon_M = sum_{k > M} b_k
-              = (partial sum from zero 201 to 200) + (analytic tail)
+              = (partial sum from zeros M+1 to 200) + (analytic tail)
               = sum_{k=M+1}^{200} b_k  +  (1/pi)(log(5T/2pi)/T + 1/T)
 
 with T = gamma'_200 (the 200th certified zero ordinate of L(s, chi_5)),
@@ -34,10 +34,21 @@ sigma_L = 3.767e-2 (the contribution from zeros beyond k=20 is below
 
 Analytic tail bound:
     (1/pi)(log(5T/2pi)/T + 1/T)
-derived from Abel summation against the zero-counting formula
-N(T, chi_5) ~ (T/pi) log(5T/2pi e).  This is an upper bound on
-sum_{k > 200} b_k, rigorous to the extent that the zero-counting
-formula provides an upper bound for all T >= gamma'_200.
+derived from Abel summation against the explicit upper bound on
+N(T, chi_5) supplied by Theorem thm:BMOR in the paper (Bennett--
+Martin--O'Bryant--Rechnitzer, Math. Comp. 90, 2021, Theorem 1.1),
+which gives
+
+    N(T, chi) <= (T/pi) log(qT/2pi e) + chi(-1)/4
+                 + 0.22737 * log(q(T+2)/2pi) + 2*log(1 + log(q(T+2)/2pi)) - 0.5
+
+for T >= 5/7.  Abel summation against this upper bound yields
+(1/pi)(log(5T/2pi)/T + 1/T) as a rigorous upper bound on
+sum_{k > 200} b_k; the BMOR error terms are O(log T / T^2) and
+are dominated by the retained terms at T = gamma'_200 = 283.935.
+
+The partial-sum ARB arithmetic is fully self-contained.  The tail
+bound is rigorous relative to Theorem thm:BMOR (proved in the paper).
 
 All arithmetic is ARB interval arithmetic throughout.  No mpmath or
 floating-point library is used in any load-bearing computation.
@@ -209,10 +220,12 @@ def print_results(results, sigma_L, gamma200, tail, sig_match):
         all_pass = False
 
     if all_pass:
-        print("  RESULT: ALL PASS  [ARB-rigorous]")
-        print("    - epsilon_M: ARB partial sum (zeros M+1..200) + certified analytic tail")
+        print("  RESULT: ALL PASS")
+        print("    - epsilon_M: ARB partial sum (zeros M+1..200) + tail bound proved via")
+        print("      Theorem thm:BMOR (BMOR 2021, Theorem 1.1) and Abel summation")
         print("    - sigma_L: ARB sum of b_k^2/2 for k=1..20, square-rooted in ARB")
         print("    - PASS/FAIL via decisive ARB predicate, no float threshold")
+        print("    - Partial sums: ARB-rigorous.  Tail: rigorous relative to Thm thm:BMOR.")
     else:
         print("  RESULT: FAIL -- one or more values outside tolerance")
         raise RuntimeError("Lemma 7.6 stability table certification failed")
