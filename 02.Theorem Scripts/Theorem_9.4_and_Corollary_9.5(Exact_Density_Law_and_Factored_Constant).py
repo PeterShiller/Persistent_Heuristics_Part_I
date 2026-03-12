@@ -1,12 +1,12 @@
 """
-Theorem_9.4(Exact_Density_Law).py
+Theorem_9.4_and_Corollary_9.5(Exact_Density_Law_and_Factored_Constant).py
 ===================================
 Ancillary data module for:
     Shiller, P. (2026). Unconditional Density Bounds for Quadratic
     Norm-Form Energies via Lorentzian Spectral Weights.
     arXiv:2603.00301.  Zenodo: https://doi.org/10.5281/zenodo.18783098
 
-This script certifies the three numerical constants in Theorem 9.4
+This script certifies the three numerical constants in Theorem 9.4 and Corollary 9.5
 (Exact density law for quadratic norm-form energies) and
 Corollary 9.5 (Factored form of the leading constant):
 
@@ -244,7 +244,7 @@ def main():
     t0 = time.time()
 
     print()
-    print("Theorem 9.4 / Corollary 9.5 -- Exact Density Constants -- ARB Certification")
+    print("Theorem 9.4 and Corollary 9.5 -- Exact Density Constants -- ARB Certification")
     print("=" * 78)
     print(f"  M = {M} zeros; precision = {ARB_PREC}-bit ARB; quadrature rel_tol = 2^(-200).")
     print()
@@ -323,7 +323,7 @@ def main():
         print("    Petras algorithm) at 256-bit precision with certified tail bounds.")
     else:
         print("  RESULT: FAIL")
-        raise RuntimeError("Theorem 9.4 ARB certification failed.")
+        raise RuntimeError("Theorem 9.4 and Corollary 9.5 ARB certification failed.")
     print()
 
 
