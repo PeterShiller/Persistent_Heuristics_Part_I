@@ -1359,11 +1359,11 @@ If $|S_L(\delta)| < \varepsilon$, then $|S_L^{(M)}(\delta)| \leq |S_L(\delta)| +
 \toprule
 $M$ & $\epsilon_M$ for $L(s,\chi_5)$ & $\epsilon_M/\sigma_L$ \\
 \midrule
-$5$ & $0.0626$ & $1.659$ \\
-$10$ & $0.0447$ & $1.186$ \\
-$15$ & $0.0361$ & $0.956$ \\
-$20$ & $0.0307$ & $0.814$ \\
-$25$ & $0.0270$ & $0.716$ \\
+$5$ & $0.06273$ & $1.665$ \\
+$10$ & $0.04488$ & $1.192$ \\
+$15$ & $0.03619$ & $0.961$ \\
+$20$ & $0.03085$ & $0.819$ \\
+$25$ & $0.02715$ & $0.721$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1503,7 +1503,7 @@ At any fixed truncation level $M$, the bound has the form $A_M/\sqrt{d} + B_M$ w
 \end{remark}
 
 \begin{remark}[Dependence on $d$]\label{rem:d-dependence}
-The weights $b_k = w(\gamma_k')$, the tail $\epsilon_M = \sum_{k > M} b_k$, and the density $\|f_{S_L^{(M)}}\|_\infty$ all depend on $d$ through the zeros of $L(s,\chi_d)$.  Theorem~\ref{thm:density} is valid for every $d$ and every $M$, but the numerical evaluations in this paper ($\epsilon_{20}$, $f_{S_L^{(20)}}(0) = 8.3129$, and $C(5) = 0.1191$) are computed for $d = 5$.  At fixed $M = 20$, the constant $B_{20}$ exceeds $1$ for $d = 5$ (since $\epsilon_{20} = 0.0687$), making the unconditional bound numerically vacuous at this truncation level.  The bound becomes nontrivial for $d \gtrsim 10^4$ at $M = 20$.  For the $O(1/\sqrt{d})$ rate (Corollary~\ref{cor:density-rate}), $M$ must grow with $d$, with the required growth rate depending on the zero distribution of $L(s,\chi_d)$.
+The weights $b_k = w(\gamma_k')$, the tail $\epsilon_M = \sum_{k > M} b_k$, and the density $\|f_{S_L^{(M)}}\|_\infty$ all depend on $d$ through the zeros of $L(s,\chi_d)$.  Theorem~\ref{thm:density} is valid for every $d$ and every $M$, but the numerical evaluations in this paper ($\epsilon_{20}$, $f_{S_L^{(20)}}(0) = 8.3129$, and $C(5) = 0.1191$) are computed for $d = 5$.  At fixed $M = 20$, the certified value $\epsilon_{20} = 0.0308$ gives $B_{20} = 2\|f_{S_L^{(20)}}\|_\infty \cdot \epsilon_{20} \leq 2 \times 10.517 \times 0.0308 \approx 0.648 < 1$, so the unconditional bound is already nontrivial (strictly below $1$) at $M = 20$ for all $d \geq 1$.  For the $O(1/\sqrt{d})$ rate (Corollary~\ref{cor:density-rate}), $M$ must grow with $d$, with the required growth rate depending on the zero distribution of $L(s,\chi_d)$.
 \end{remark}
 
 \begin{corollary}[Density rate under resonance absence]\label{cor:density-rate}
