@@ -266,11 +266,13 @@ def main():
     print(f"        Signed quadrature on [{T_EPS_STR}, {T_L}]; Bessel tail at T={T_L}.")
     t1 = time.time()
     f0_integral, f0_tail, _ = compute_f0(b)
-    print(f"        Integral (ARB): {f0_integral}")
-    print(f"        Tail bound:     {f0_tail}  (dominant uncertainty)")
-    print(f"        f_{{S_L}}(0) = integral +/- tail (one-sided):")
-    print(f"          {f0_integral} +/- {f0_tail}")
-    ok_f0 = arb_matches(f0_integral, PAPER_F0, "f0")
+    # Inflate the quadrature ball by the certified tail bound to form the
+    # full rigorous enclosure: f_{S_L}(0) in [f0_integral - f0_tail, f0_integral + f0_tail].
+    f0_certified = f0_integral + arb(0, f0_tail)
+    print(f"        Quadrature ball (ARB): {f0_integral}")
+    print(f"        Tail bound:            {f0_tail}")
+    print(f"        Full enclosure:        {f0_certified}")
+    ok_f0 = arb_matches(f0_certified, PAPER_F0, "f0")
     print(f"        [{time.time()-t1:.1f}s]")
     print()
 
@@ -278,18 +280,22 @@ def main():
     print(f"  [2/3] E[|S_zeta|]: (2/pi) int_0^inf (1 - phi_z(t)) / t^2 dt ...")
     print(f"        Split: integral on [{T_EPS_STR}, {T_Z}] + (2/pi)/T_Z + phi-tail.")
     t1 = time.time()
-    eabs_val, eabs_ptail, _ = compute_eabs(a)
-    print(f"        E[|S_zeta|] (ARB): {eabs_val}")
-    print(f"        Phi-tail bound:    {eabs_ptail}  (negligible)")
+    eabs_main, eabs_ptail, _ = compute_eabs(a)
+    # Inflate by the certified phi-tail bound.
+    eabs_certified = eabs_main + arb(0, eabs_ptail)
+    print(f"        Main value (ARB):  {eabs_main}")
+    print(f"        Phi-tail bound:    {eabs_ptail}")
+    print(f"        Full enclosure:    {eabs_certified}")
     print(f"        Analytic correction (2/pi)/T_Z = {arb(2)/arb.pi()/arb(T_Z)}")
-    ok_eabs = arb_matches(eabs_val, PAPER_EABS, "eabs")
+    ok_eabs = arb_matches(eabs_certified, PAPER_EABS, "eabs")
     print(f"        [{time.time()-t1:.1f}s]")
     print()
 
     # ── C(5) ─────────────────────────────────────────────────────────────────
     print("  [3/3] C(5) = 2 * f_{S_L}(0) * E[|S_zeta|] ...")
-    C5 = arb(2) * f0_integral * eabs_val
-    print(f"        C(5) (ARB): {C5}")
+    # Propagate full certified enclosures into C(5).
+    C5 = arb(2) * f0_certified * eabs_certified
+    print(f"        C(5) (ARB, full enclosure): {C5}")
     ok_C5 = arb_matches(C5, PAPER_C5, "C5")
     print()
 
