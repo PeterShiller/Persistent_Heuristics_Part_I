@@ -1,4 +1,4 @@
-\documentclass[12pt]{amsart}
+\documentclass[12pt,reqno]{amsart}
 \usepackage{amsmath,amssymb}
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
@@ -7,16 +7,40 @@
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{hyperref}
+\usepackage{fancyhdr}
 \hypersetup{colorlinks=true,linkcolor=red,citecolor=blue,urlcolor=blue}
 
 \title[Persistent Heuristics I]{Unconditional Density Bounds for Quadratic Norm-Form Energies via Lorentzian Spectral Weights\\[0.5em]
 \textnormal{\large Persistent Heuristics~I: Mini Monograph~I}}
 \author{Peter Shiller}
 \address{Independent Researcher}
-\date{}
+\date{March 12, 2026}
 
 \begin{document}
 \maketitle
+
+% ── Footer navigation: "Back to Quick Links" on pages 2+ ──
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[CE]{\leftmark}           % even pages: author name
+\fancyhead[CO]{\rightmark}          % odd pages: short title
+\fancyfoot[C]{\thepage}
+\fancyfoot[R]{%
+  \ifnum\value{page}>1
+    {\scriptsize\hyperref[sec:quicklinks]{[\,Back to Quick Links\,]}}%
+  \fi}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\thepage}%
+  \fancyfoot[R]{%
+    \ifnum\value{page}>1
+      {\scriptsize\hyperref[sec:quicklinks]{[\,Back to Quick Links\,]}}%
+    \fi}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
 
 \appendix
 \setcounter{section}{5}
@@ -69,7 +93,6 @@ Total & & 8244 & \\
 \label{subsec:chi2}
 
 The first 1016 zeros of $L(s,\chi_2)$ are given here to 70 decimal places.  The fundamental discriminant of $\Q(\sqrt{2})$ is $\Delta_K = 8$, since $2 \equiv 2 \pmod{4}$.  The character satisfies $\chi_2(1) = \chi_2(7) = +1$, $\chi_2(3) = \chi_2(5) = -1$, with $\chi_2(n) = 0$ for $\gcd(n,8) > 1$.  Certified upper bounds on $|L(\tfrac{1}{2}+i\gamma_k',\chi_2)|$ appear in the rightmost column.
-\hfill{\small\hyperref[sec:quicklinks]{[\,back to quick links\,]}}
 
 \renewcommand{\arraystretch}{1.1}
 \setlength{\LTleft}{\fill}
@@ -1115,7 +1138,6 @@ $1016$ & $1032.27335712900710834808687663500172580770088116526601909533772733553
 \label{subsec:chi3}
 
 The first 1043 zeros of $L(s,\chi_3)$ are given here to 70 decimal places.  The fundamental discriminant of $\Q(\sqrt{3})$ is $\Delta_K = 12$, since $3 \equiv 3 \pmod{4}$.  The character satisfies $\chi_3(1) = \chi_3(11) = +1$, $\chi_3(5) = \chi_3(7) = -1$, with $\chi_3(n) = 0$ for $\gcd(n,12) > 1$.  Certified upper bounds on $|L(\tfrac{1}{2}+i\gamma_k',\chi_3)|$ appear in the rightmost column.
-\hfill{\small\hyperref[sec:quicklinks]{[\,back to quick links\,]}}
 
 \renewcommand{\arraystretch}{1.1}
 \setlength{\LTleft}{\fill}
@@ -2188,7 +2210,6 @@ $1043$ & $999.541453665688121203767363429012998932254213129749777630301976711343
 \label{subsec:chi5}
 
 The first 1004 zeros of $L(s,\chi_5)$ are given here to 70 decimal places.  The fundamental discriminant of $\Q(\sqrt{5})$ is $\Delta_K = 5$, since $5 \equiv 1 \pmod{4}$.  The character satisfies $\chi_5(1) = \chi_5(4) = +1$, $\chi_5(2) = \chi_5(3) = -1$, with $\chi_5(n) = 0$ for $\gcd(n,5) > 1$.  Certified upper bounds on $|L(\tfrac{1}{2}+i\gamma_k',\chi_5)|$ appear in the rightmost column.
-\hfill{\small\hyperref[sec:quicklinks]{[\,back to quick links\,]}}
 
 \renewcommand{\arraystretch}{1.1}
 \setlength{\LTleft}{\fill}
@@ -3222,7 +3243,6 @@ $1004$ & $1093.45713947815635433913363955471760910796279617548218204653058536317
 \label{subsec:chi6}
 
 The first 1039 zeros of $L(s,\chi_6)$ are given here to 70 decimal places.  The fundamental discriminant of $\Q(\sqrt{6})$ is $\Delta_K = 24$, since $6 \equiv 2 \pmod{4}$.  The character satisfies $\chi_6(1,5,19,23) = +1$, $\chi_6(7,11,13,17) = -1$, with $\chi_6(n) = 0$ for $\gcd(n,24) > 1$.  Certified upper bounds on $|L(\tfrac{1}{2}+i\gamma_k',\chi_6)|$ appear in the rightmost column.
-\hfill{\small\hyperref[sec:quicklinks]{[\,back to quick links\,]}}
 
 \renewcommand{\arraystretch}{1.1}
 \setlength{\LTleft}{\fill}
@@ -4291,7 +4311,6 @@ $1039$ & $911.676626227149453203881768986616334229747742867452061955885333855099
 \label{subsec:chi7}
 
 The first 1044 zeros of $L(s,\chi_7)$ are given here to 70 decimal places.  The fundamental discriminant of $\Q(\sqrt{7})$ is $\Delta_K = 28$, since $7 \equiv 3 \pmod{4}$.  The character satisfies $\chi_7(1,3,9,19,25,27) = +1$, $\chi_7(5,11,13,15,17,23) = -1$, with $\chi_7(n) = 0$ for $\gcd(n,28) > 1$.  Certified upper bounds on $|L(\tfrac{1}{2}+i\gamma_k',\chi_7)|$ appear in the rightmost column.
-\hfill{\small\hyperref[sec:quicklinks]{[\,back to quick links\,]}}
 
 \renewcommand{\arraystretch}{1.1}
 \setlength{\LTleft}{\fill}
@@ -5365,7 +5384,6 @@ $1044$ & $898.688764305330207652209871729754783822674892547342320737598999863016
 \label{subsec:chi10}
 
 The first 1040 zeros of $L(s,\chi_{10})$ are given here to 70 decimal places.  The fundamental discriminant of $\Q(\sqrt{10})$ is $\Delta_K = 40$, since $10 \equiv 2 \pmod{4}$.  The character satisfies $\chi_{10}(1,3,9,13,27,31,37,39) = +1$, $\chi_{10}(7,11,17,19,21,23,29,33) = -1$, with $\chi_{10}(n) = 0$ for $\gcd(n,40) > 1$.  Certified upper bounds on $|L(\tfrac{1}{2}+i\gamma_k',\chi_{10})|$ appear in the rightmost column.
-\hfill{\small\hyperref[sec:quicklinks]{[\,back to quick links\,]}}
 
 \renewcommand{\arraystretch}{1.1}
 \setlength{\LTleft}{\fill}
@@ -6435,7 +6453,6 @@ $1040$ & $858.649617397259068871938876550153301382416293480924143713240497287582
 \label{subsec:chi11}
 
 The first 1038 zeros of $L(s,\chi_{11})$ are given here to 70 decimal places.  The fundamental discriminant of $\Q(\sqrt{11})$ is $\Delta_K = 44$, since $11 \equiv 3 \pmod{4}$.  The character satisfies $\chi_{11}(1,5,7,9,19,25,35,37,39,43) = +1$, $\chi_{11}(3,13,15,17,21,23,27,29,31,41) = -1$, with $\chi_{11}(n) = 0$ for $\gcd(n,44) > 1$.  Certified upper bounds on $|L(\tfrac{1}{2}+i\gamma_k',\chi_{11})|$ appear in the rightmost column.
-\hfill{\small\hyperref[sec:quicklinks]{[\,back to quick links\,]}}
 
 \renewcommand{\arraystretch}{1.1}
 \setlength{\LTleft}{\fill}
@@ -7503,7 +7520,6 @@ $1038$ & $847.872743479780799180082995674962856543876382466114343267814907493926
 \label{subsec:chi13}
 
 The first 1020 zeros of $L(s,\chi_{13})$ are given here to 70 decimal places.  The fundamental discriminant of $\Q(\sqrt{13})$ is $\Delta_K = 13$, since $13 \equiv 1 \pmod{4}$.  The character satisfies $\chi_{13}(1,3,4,9,10,12) = +1$, $\chi_{13}(2,5,6,7,8,11) = -1$, with $\chi_{13}(n) = 0$ for $\gcd(n,13) > 1$.  Certified upper bounds on $|L(\tfrac{1}{2}+i\gamma_k',\chi_{13})|$ appear in the rightmost column.
-\hfill{\small\hyperref[sec:quicklinks]{[\,back to quick links\,]}}
 
 \renewcommand{\arraystretch}{1.1}
 \setlength{\LTleft}{\fill}
@@ -8548,6 +8564,5 @@ $1020$ & $969.657258348223483637435988589258446077420612268958867153637011178360
 \setlength{\LTleft}{0pt}
 \setlength{\LTright}{0pt}
 
-\hfill{\small\hyperref[sec:quicklinks]{[\,back to quick links\,]}}
 
 \end{document}
