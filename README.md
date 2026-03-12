@@ -6,9 +6,11 @@ Part of the [Persistent Heuristics](https://github.com/PeterShiller/Persistent_H
 
 **Author:** Peter Shiller (Independent Researcher)
 
-**Paper:** [arXiv:2603.00301](https://doi.org/10.48550/arXiv.2603.00301)
+**arXiv:** [https://arxiv.org/abs/2603.00301](https://arxiv.org/abs/2603.00301)
 
-**Data:** [Zenodo DOI 10.5281/zenodo.18783098](https://doi.org/10.5281/zenodo.18783098)
+**Zenodo:** [https://doi.org/10.5281/zenodo.18783098](https://doi.org/10.5281/zenodo.18783098)
+
+The paper is on arXiv. The scripts and data in this repository are also archived on Zenodo.
 
 ## Abstract
 
